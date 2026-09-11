@@ -1,0 +1,66 @@
+{
+  "sections": {
+    "hero": {
+      "type": "hero",
+      "settings": {
+        "layout": "statement",
+        "foot_left": "Help",
+        "foot_right": "Replies within one business day"
+      },
+      "blocks": {
+        "h": {
+          "type": "heading",
+          "settings": {
+            "text": "Questions, answered.",
+            "size": "lg",
+            "tag": "h1"
+          }
+        }
+      },
+      "block_order": [
+        "h"
+      ]
+    },
+    "faq": {
+      "type": "faq",
+      "settings": {
+        "heading": ""
+      },
+      "blocks": {
+        "a": {
+          "type": "question"
+        },
+        "b": {
+          "type": "question",
+          "settings": {
+            "question": "Can I return something?",
+            "answer": "<p>Yes. You have 30 days from delivery. Start a return from your account page.</p>"
+          }
+        },
+        "c": {
+          "type": "question",
+          "settings": {
+            "question": "Do you ship internationally?",
+            "answer": "<p>We ship to most countries. Duties are shown at checkout so there are no surprises.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "a",
+        "b",
+        "c"
+      ]
+    },
+    "contact": {
+      "type": "contact-form",
+      "settings": {
+        "heading": "Still stuck? Write to us"
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "faq",
+    "contact"
+  ]
+}

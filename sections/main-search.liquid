@@ -1,0 +1,44 @@
+{{ 'component-collection.css' | asset_url | stylesheet_tag }}
+{{ 'component-product-card.css' | asset_url | stylesheet_tag }}
+{{ 'component-price.css' | asset_url | stylesheet_tag }}
+{{ 'component-button.css' | asset_url | stylesheet_tag }}
+<section class="section">
+  <div class="container">
+    <form action="{{ routes.search_url }}" method="get" role="search" class="container--narrow" style="margin: 0 auto var(--space-10); display:flex; gap: var(--space-2)">
+      <label class="visually-hidden" for="search-input">{{ 'general.search.label' | t }}</label>
+      <input class="input" type="search" id="search-input" name="q" value="{{ search.terms | escape }}" placeholder="{{ 'general.search.placeholder' | t }}" autocomplete="off"{% unless search.performed %} autofocus{% endunless %}>
+      <input type="hidden" name="options[prefix]" value="last">
+      <button type="submit" class="btn">{{ 'general.search.submit' | t }}</button>
+    </form>
+    {%- if search.performed -%}
+      {%- assign terms = search.terms | escape -%}
+      {%- paginate search.results by 24 -%}
+        {%- if search.results_count == 0 -%}
+          <p class="empty-state">{{ 'general.search.no_results' | t: terms: terms }}</p>
+        {%- else -%}
+          <p class="text-muted" style="margin-bottom: var(--space-6)">{{ 'general.search.results_count' | t: count: search.results_count, terms: terms }}</p>
+          <div class="grid">
+            {%- for item in search.results -%}
+              {%- if item.object_type == 'product' -%}
+                {%- render 'product-card', product: item, quick_add: settings.card_quick_add, quick_view: settings.card_quick_view, show_swatches: settings.card_swatches, show_hover_image: settings.card_hover_image -%}
+              {%- else -%}
+                <article class="stack" style="--stack-gap: var(--space-2)">
+                  <p class="text-sm text-muted">{{ item.object_type }}</p>
+                  <h3><a href="{{ item.url }}">{{ item.title }}</a></h3>
+                  <p class="text-sm text-muted">{{ item.content | strip_html | truncatewords: 24 }}</p>
+                </article>
+              {%- endif -%}
+            {%- endfor -%}
+          </div>
+          {%- render 'pagination', paginate: paginate -%}
+        {%- endif -%}
+      {%- endpaginate -%}
+    {%- endif -%}
+  </div>
+</section>
+{% schema %}
+{
+  "name": "t:sections.main_search.name",
+  "settings": []
+}
+{% endschema %}

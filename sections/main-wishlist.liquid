@@ -1,0 +1,29 @@
+{{ 'component-product-card.css' | asset_url | stylesheet_tag }}
+{{ 'component-collection.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'wishlist.js' | asset_url }}" defer></script>
+
+<section class="section">
+  <div class="container">
+    <div class="section__head" style="margin-bottom: var(--space-8)">
+      <h1>{{ page.title | default: 'Wishlist' }}</h1>
+    </div>
+
+    <wishlist-grid class="wishlist-grid">
+      <div class="wishlist-grid__empty empty-state stack" style="display: none;">
+        <p>{{ 'products.wishlist.empty' | t | default: 'Your wishlist is currently empty.' }}</p>
+        <a href="{{ routes.all_products_collection_url }}" class="btn">{{ 'general.continue_shopping' | t }}</a>
+      </div>
+
+      <div class="grid grid--2 grid--4@md wishlist-grid__items" style="display: none; gap: var(--space-6);">
+        {%- comment -%} Dynamically filled by <wishlist-grid> {%- endcomment -%}
+      </div>
+    </wishlist-grid>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Wishlist",
+  "settings": []
+}
+{% endschema %}

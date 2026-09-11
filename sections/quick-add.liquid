@@ -1,0 +1,34 @@
+{%- comment -%}
+  Quick add — rendered through the Section Rendering API (/products/handle?section_id=quick-add)
+  and injected into <quick-add-modal> by quick-add.js. Not available in the editor.
+{%- endcomment -%}
+{{ 'component-product.css' | asset_url | stylesheet_tag }}
+{{ 'component-price.css' | asset_url | stylesheet_tag }}
+{{ 'component-button.css' | asset_url | stylesheet_tag }}
+{{ 'component-quick-add.css' | asset_url | stylesheet_tag }}
+{%- liquid
+  assign section_id = 'quick-add-' | append: product.id
+-%}
+<div class="quick-add__content" data-section="{{ section_id }}">
+  <button type="button" class="ctrl quick-add__close" data-quick-add-close aria-label="{{ 'accessibility.close' | t }}">{% render 'icon', name: 'close', size: 18 %}</button>
+  <div class="quick-add__media">
+    {%- if product.featured_image -%}
+      {%- render 'media', image: product.featured_image, sizes: '(min-width: 48em) 24rem, 100vw', widths: '400, 600, 800' -%}
+    {%- else -%}
+      {% assign ph = product.id | divided_by: 20 | modulo: 6 | plus: 1 %}{% render 'placeholder', kind: 'product', index: ph, sizes: '(min-width: 48em) 24rem, 100vw' %}
+    {%- endif -%}
+  </div>
+  <div class="quick-add__body">
+    {%- if settings.card_show_vendor and product.vendor != blank -%}<p class="product__vendor">{{ product.vendor }}</p>{%- endif -%}
+    <h2 class="quick-add__title"><a href="{{ product.url }}">{{ product.title }}</a></h2>
+    {%- render 'price', product: product, class: 'product__price' -%}
+    {%- render 'product-form', product: product, section_id: section_id, show_quantity: settings.product_show_quantity, show_dynamic_checkout: false -%}
+    <a href="{{ product.url }}" class="link quick-add__details">{{ 'products.view_details' | t }}</a>
+  </div>
+</div>
+{% schema %}
+{
+  "name": "t:sections.quick_add.name",
+  "settings": []
+}
+{% endschema %}

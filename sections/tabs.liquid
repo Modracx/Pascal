@@ -1,0 +1,44 @@
+<section class="section" {{ section.shopify_attributes }}>
+  <div class="container{% if section.settings.narrow %} container--narrow{% endif %}">
+    {%- if section.settings.heading != blank -%}<div class="section__header"><h2>{{ section.settings.heading }}</h2></div>{%- endif -%}
+    {%- render 'tabs', items: section.blocks, style: section.settings.style, align: section.settings.align, id: section.id -%}
+  </div>
+</section>
+{% schema %}
+{
+  "name": "t:sections.tabs.name",
+  "settings": [
+    {"type": "text", "id": "heading", "label": "t:sections.all.heading"},
+    {"type": "select", "id": "style", "label": "t:sections.all.style", "options": [{"value": "line", "label": "t:sections.tabs.settings.style.options__1.label"}, {"value": "pills", "label": "t:sections.tabs.settings.style.options__2.label"}], "default": "line"},
+    {"type": "select", "id": "align", "label": "t:sections.all.alignment", "options": [{"value": "start", "label": "t:sections.tabs.settings.align.options__1.label"}, {"value": "center", "label": "t:sections.tabs.settings.align.options__2.label"}], "default": "start"},
+    {"type": "checkbox", "id": "narrow", "label": "t:sections.tabs.settings.narrow.label", "default": true}
+  ],
+  "blocks": [
+    {
+      "type": "tab",
+      "name": "t:sections.tabs.blocks.tab.name",
+      "settings": [
+        {"type": "text", "id": "heading", "label": "t:sections.tabs.blocks.tab.settings.heading.label", "default": "Details"},
+        {"type": "richtext", "id": "content", "label": "t:sections.tabs.blocks.tab.settings.content.label", "default": "<p>Write the tab content here, or pick a page below.</p>"},
+        {"type": "page", "id": "page", "label": "t:sections.tabs.blocks.tab.settings.page.label"}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.tabs.presets.name",
+      "blocks": [
+        {"type": "tab"},
+        {
+          "type": "tab",
+          "settings": {"heading": "Materials", "content": "<p>Solid oak, linseed oil finish. Brass hardware.</p>"}
+        },
+        {
+          "type": "tab",
+          "settings": {"heading": "Care", "content": "<p>Wipe with a damp cloth. Re-oil once a year.</p>"}
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

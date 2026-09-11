@@ -1,0 +1,12 @@
+{%- comment -%}
+  Pickup availability — rendered through the Section Rendering API
+  (/products/handle?section_id=pickup-availability&variant=ID) and swapped in by pickup-availability.js
+  when the variant changes. The product page renders the same snippet inline. Not available in the editor.
+{%- endcomment -%}
+{%- render 'pickup-availability', product: product -%}
+{% schema %}
+{
+  "name": "t:sections.pickup_availability.name",
+  "settings": []
+}
+{% endschema %}

@@ -1,0 +1,51 @@
+{{ 'section-extras.css' | asset_url | stylesheet_tag }}
+{%- if section.settings.layout == 'carousel' -%}{{ 'component-carousel.css' | asset_url | stylesheet_tag }}<script src="{{ 'carousel.js' | asset_url }}" defer></script>{%- endif -%}
+<section class="section" {{ section.shopify_attributes }}>
+  <div class="container">
+    {%- if section.settings.heading != blank -%}<div class="section__header"><h2>{{ section.settings.heading }}</h2></div>{%- endif -%}
+    {%- if section.settings.layout == 'carousel' -%}<scroll-carousel class="carousel">{%- endif -%}
+    <div class="{% if section.settings.layout == 'carousel' %}carousel__track{% else %}testimonials{% endif %}" style="--columns: {{ section.blocks.size | at_least: 1 | at_most: 3 }}; --per-view: 3; --slide-w: 85%"{% if section.settings.layout == 'carousel' %} data-track{% endif %}>
+      {%- for block in section.blocks -%}
+        <blockquote class="testimonial" {{ block.shopify_attributes }}>
+          {%- if block.settings.stars > 0 -%}
+            <div class="testimonial__stars" aria-label="{{ 'products.rating_stars' | t: count: block.settings.stars }}">{%- for i in (1..block.settings.stars) -%}{% render 'icon', name: 'star', size: 16 %}{%- endfor -%}</div>
+          {%- endif -%}
+          <p class="testimonial__quote">{{ block.settings.quote }}</p>
+          <footer class="testimonial__author">{{ block.settings.author }}{% if block.settings.detail != blank %}, {{ block.settings.detail }}{% endif %}</footer>
+        </blockquote>
+      {%- endfor -%}
+    </div>
+    {%- if section.settings.layout == 'carousel' -%}<div class="carousel__nav" style="margin-top: var(--space-6)"><button type="button" class="ctrl" data-prev aria-label="{{ 'general.previous' | t }}"><span style="display:inline-flex;transform:rotate(180deg)">{% render 'icon', name: 'arrow', size: 16 %}</span></button><button type="button" class="ctrl" data-next aria-label="{{ 'general.next' | t }}">{% render 'icon', name: 'arrow', size: 16 %}</button></div></scroll-carousel>{%- endif -%}
+  </div>
+</section>
+{% schema %}
+{
+  "name": "t:sections.testimonials.name",
+  "settings": [
+    {"type": "text", "id": "heading", "label": "t:sections.all.heading", "default": "What customers say"},
+    {"type": "select", "id": "layout", "label": "t:sections.all.layout", "options": [{"value": "grid", "label": "t:sections.testimonials.settings.layout.options__1.label"}, {"value": "carousel", "label": "t:sections.testimonials.settings.layout.options__2.label"}], "default": "grid"}
+  ],
+  "blocks": [
+    {
+      "type": "testimonial",
+      "name": "t:sections.testimonials.blocks.testimonial.name",
+      "settings": [
+        {"type": "range", "id": "stars", "label": "t:sections.testimonials.blocks.testimonial.settings.stars.label", "min": 0, "max": 5, "step": 1, "default": 5},
+        {"type": "textarea", "id": "quote", "label": "t:sections.testimonials.blocks.testimonial.settings.quote.label", "default": "The best thing I have bought this year. It arrived in two days and it is exactly as described."},
+        {"type": "text", "id": "author", "label": "t:sections.testimonials.blocks.testimonial.settings.author.label", "default": "Sam R."},
+        {"type": "text", "id": "detail", "label": "t:sections.testimonials.blocks.testimonial.settings.detail.label", "default": "Verified buyer"}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.testimonials.presets.name",
+      "blocks": [
+        {"type": "testimonial"},
+        {"type": "testimonial"},
+        {"type": "testimonial"}
+      ]
+    }
+  ]
+}
+{% endschema %}

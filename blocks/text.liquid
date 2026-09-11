@@ -1,0 +1,14 @@
+<div class="rte block-text block-text--{{ block.settings.size }}" {{ block.shopify_attributes }}>{{ block.settings.text }}</div>
+{% stylesheet %}
+  .block-text--sm { font-size: var(--text-sm); }
+  .block-text--lg { font-size: var(--text-lg); }
+{% endstylesheet %}
+{% schema %}
+{
+  "name": "t:blocks.text.name",
+  "settings": [
+    {"type": "richtext", "id": "text", "label": "t:sections.all.text", "default": "<p>Share something about your brand.</p>"},
+    {"type": "select", "id": "size", "label": "t:sections.all.size", "options": [{"value": "sm", "label": "t:blocks.text.settings.size.options__1.label"}, {"value": "md", "label": "t:blocks.text.settings.size.options__2.label"}, {"value": "lg", "label": "t:blocks.text.settings.size.options__3.label"}], "default": "md"}
+  ]
+}
+{% endschema %}

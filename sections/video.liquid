@@ -1,0 +1,41 @@
+{{ 'section-extras.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'video-facade.js' | asset_url }}" defer></script>
+{%- assign s = section.settings -%}
+<section class="section" {{ section.shopify_attributes }}>
+  <div class="container">
+    {%- if s.heading != blank -%}<div class="section__header"><h2>{{ s.heading }}</h2></div>{%- endif -%}
+    <div class="video">
+      <video-facade>
+        <button type="button" class="video__poster" aria-label="{{ 'general.play_video' | t }}">
+          {%- if s.poster != blank -%}{%- render 'media', image: s.poster, sizes: '100vw', widths: '800, 1200, 1600, 2000' -%}{%- elsif s.video != blank -%}{{ s.video.preview_image | image_url: width: 1600 | image_tag: loading: 'lazy', alt: '' }}{%- endif -%}
+          <span class="video__play">{% render 'icon', name: 'play', size: 28 %}</span>
+        </button>
+        <template>
+          {%- if s.video != blank -%}
+            {{ s.video | video_tag: controls: true, autoplay: true, playsinline: true, muted: false }}
+          {%- elsif s.video_url != blank -%}
+            {%- if s.video_url.type == 'youtube' -%}
+              <iframe src="https://www.youtube-nocookie.com/embed/{{ s.video_url.id }}?autoplay=1&rel=0" title="{{ s.heading | escape }}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
+            {%- elsif s.video_url.type == 'vimeo' -%}
+              <iframe src="https://player.vimeo.com/video/{{ s.video_url.id }}?autoplay=1" title="{{ s.heading | escape }}" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+            {%- endif -%}
+          {%- endif -%}
+        </template>
+      </video-facade>
+    </div>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "t:sections.video.name",
+  "settings": [
+    {"type": "text", "id": "heading", "label": "t:sections.all.heading"},
+    {"type": "video", "id": "video", "label": "t:sections.video.settings.video.label", "info": "t:sections.video.settings.video.info"},
+    {"type": "video_url", "id": "video_url", "label": "t:sections.video.settings.video_url.label", "accept": ["youtube", "vimeo"], "info": "t:sections.video.settings.video_url.info"},
+    {"type": "image_picker", "id": "poster", "label": "t:sections.video.settings.poster.label"}
+  ],
+  "presets": [
+    {"name": "t:sections.video.presets.name"}
+  ]
+}
+{% endschema %}

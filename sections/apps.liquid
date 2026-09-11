@@ -1,0 +1,22 @@
+{%- comment -%}
+  Apps — an empty section that accepts app blocks, so apps can be added to any page from the editor.
+{%- endcomment -%}
+<section class="section{% unless section.settings.full_width %} container{% endunless %}" data-section="{{ section.id }}">
+  {%- for block in section.blocks -%}
+    {%- render block -%}
+  {%- endfor -%}
+</section>
+{% schema %}
+{
+  "name": "t:sections.apps.name",
+  "settings": [
+    {"type": "checkbox", "id": "full_width", "label": "t:sections.apps.settings.full_width.label", "default": false}
+  ],
+  "blocks": [
+    {"type": "@app"}
+  ],
+  "presets": [
+    {"name": "t:sections.apps.presets.name"}
+  ]
+}
+{% endschema %}

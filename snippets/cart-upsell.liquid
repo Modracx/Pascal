@@ -1,0 +1,32 @@
+{%- liquid
+  assign upsell = settings.cart_upsell_collection
+  assign in_cart = cart.items | map: 'product_id'
+-%}
+{%- if upsell != blank -%}
+  {%- assign shown = 0 -%}
+  <div class="cart-upsell">
+    <p class="cart-upsell__heading">{{ 'cart.upsell_heading' | t }}</p>
+    {%- for product in upsell.products limit: 8 -%}
+      {%- if in_cart contains product.id or product.available == false -%}{%- continue -%}{%- endif -%}
+      {%- if shown >= limit -%}{%- break -%}{%- endif -%}
+      {%- assign shown = shown | plus: 1 -%}
+      <div class="cart-upsell__item">
+        {{ product.featured_image | image_url: width: 120 | image_tag: loading: 'lazy', width: 56, height: 56, alt: product.featured_image.alt | escape }}
+        <div>
+          <a href="{{ product.url }}">{{ product.title }}</a>
+          <div class="text-muted">{{ product.price | money }}</div>
+        </div>
+        {%- if product.variants.size == 1 -%}
+          <product-form>
+            {%- form 'product', product -%}
+              <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+              <button type="submit" class="btn btn--sm btn--secondary">{{ 'cart.add' | t }}</button>
+            {%- endform -%}
+          </product-form>
+        {%- else -%}
+          <a href="{{ product.url }}" class="btn btn--sm btn--secondary">{{ 'products.choose_options' | t }}</a>
+        {%- endif -%}
+      </div>
+    {%- endfor -%}
+  </div>
+{%- endif -%}

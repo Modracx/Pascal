@@ -1,0 +1,38 @@
+{{ 'section-extras.css' | asset_url | stylesheet_tag }}
+{{ 'component-button.css' | asset_url | stylesheet_tag }}
+<section class="section"><div class="container">
+  <div class="section__header"><h1>{{ 'customer.account.addresses' | t }}</h1></div>
+  <div class="account account--split">
+    {%- render 'account-nav' -%}
+    <div class="stack" style="--stack-gap: var(--space-6)">
+      <details class="address">
+        <summary class="btn btn--secondary" style="display:inline-flex">{{ 'customer.address.add' | t }}</summary>
+        <div style="margin-top: var(--space-4)">{%- render 'address-form', id: 'new' -%}</div>
+      </details>
+      {%- paginate customer.addresses by 10 -%}
+        {%- for address in customer.addresses -%}
+          <div class="address">
+            {%- if address == customer.default_address -%}<span class="badge">{{ 'customer.address.default_label' | t }}</span>{%- endif -%}
+            {{ address | format_address }}
+            <div style="display:flex;gap:var(--space-3)">
+              <details>
+                <summary style="text-decoration:underline">{{ 'customer.address.edit' | t }}</summary>
+                <div style="margin-top: var(--space-4)">{%- render 'address-form', address: address, id: address.id -%}</div>
+              </details>
+              {%- form 'customer_address', address -%}
+                <button type="submit" name="_method" value="delete" style="text-decoration:underline" onclick="return confirm('{{ 'customer.address.delete_confirm' | t }}')">{{ 'customer.address.delete' | t }}</button>
+              {%- endform -%}
+            </div>
+          </div>
+        {%- endfor -%}
+        {%- render 'pagination', paginate: paginate -%}
+      {%- endpaginate -%}
+    </div>
+  </div>
+</div></section>
+{% schema %}
+{
+  "name": "t:sections.main_addresses.name",
+  "settings": []
+}
+{% endschema %}

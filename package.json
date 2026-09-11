@@ -1,0 +1,11 @@
+{
+  "name": "Pascal",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Pascal — a performance-first, design-system-first, conversion-first Shopify theme.",
+  "scripts": {
+    "dev": "shopify theme dev",
+    "check": "shopify theme check",
+    "push": "shopify theme push"
+  }
+}

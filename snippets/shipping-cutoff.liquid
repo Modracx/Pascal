@@ -1,0 +1,10 @@
+{%- comment -%}
+  Same-day dispatch countdown.
+  Params: cutoff_hour (e.g. 14 for 2 PM)
+{%- endcomment -%}
+{%- assign hour = cutoff_hour | default: settings.shipping_cutoff_hour | default: 14 -%}
+<script src="{{ 'shipping-cutoff.js' | asset_url }}" defer></script>
+<shipping-cutoff cutoff-hour="{{ hour }}" class="shipping-cutoff text-sm" style="display: none; align-items: center; gap: var(--space-2); padding: var(--space-2) var(--space-3); background: var(--color-plate); border-radius: var(--radius-sm); margin-block: var(--space-2);">
+  {% render 'icon', name: 'truck', size: 16 %}
+  <span>Order within <strong data-cutoff-time></strong> for <strong>same-day dispatch</strong></span>
+</shipping-cutoff>

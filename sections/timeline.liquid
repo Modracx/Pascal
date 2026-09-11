@@ -1,0 +1,54 @@
+{{ 'section-premium.css' | asset_url | stylesheet_tag }}
+<section class="section" {{ section.shopify_attributes }}>
+  <div class="container">
+    {%- if section.settings.heading != blank -%}<div class="section__header"><h2>{{ section.settings.heading }}</h2></div>{%- endif -%}
+    <div class="timeline">
+      {%- for block in section.blocks -%}
+        <div class="timeline__item" {{ block.shopify_attributes }}>
+          <div class="timeline__year">{{ block.settings.year }}</div>
+          <div>
+            <h3>{{ block.settings.heading }}</h3>
+            <div class="rte">{{ block.settings.text }}</div>
+            {%- if block.settings.image != blank -%}{%- render 'media', image: block.settings.image, sizes: '(min-width: 48em) 40rem, 100vw', widths: '600, 900, 1200' -%}{%- else -%}{%- render 'placeholder', kind: 'article', index: forloop.index, sizes: '(min-width: 48em) 40rem, 100vw' -%}{%- endif -%}
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "t:sections.timeline.name",
+  "settings": [
+    {"type": "text", "id": "heading", "label": "t:sections.all.heading", "default": "How we got here"}
+  ],
+  "blocks": [
+    {
+      "type": "entry",
+      "name": "t:sections.timeline.blocks.entry.name",
+      "settings": [
+        {"type": "text", "id": "year", "label": "t:sections.timeline.blocks.entry.settings.year.label", "default": "2019"},
+        {"type": "text", "id": "heading", "label": "t:sections.all.heading", "default": "A bench and one lathe"},
+        {"type": "richtext", "id": "text", "label": "t:sections.all.text", "default": "<p>We started in a rented garage with a single lathe and a list of things we wished existed.</p>"},
+        {"type": "image_picker", "id": "image", "label": "t:sections.all.image"}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.timeline.presets.name",
+      "blocks": [
+        {"type": "entry"},
+        {
+          "type": "entry",
+          "settings": {"year": "2022", "heading": "The workshop", "text": "<p>Four people, a proper kiln, and the first products we were proud to put our name on.</p>"}
+        },
+        {
+          "type": "entry",
+          "settings": {"year": "2026", "heading": "Today", "text": "<p>Still small. Still checking every piece by hand before it ships.</p>"}
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

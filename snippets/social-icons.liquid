@@ -1,0 +1,32 @@
+{%- liquid
+  assign links = ''
+  if settings.social_instagram_link != blank
+    assign links = links | append: 'instagram|' | append: settings.social_instagram_link | append: ','
+  endif
+  if settings.social_facebook_link != blank
+    assign links = links | append: 'facebook|' | append: settings.social_facebook_link | append: ','
+  endif
+  if settings.social_tiktok_link != blank
+    assign links = links | append: 'tiktok|' | append: settings.social_tiktok_link | append: ','
+  endif
+  if settings.social_x_link != blank
+    assign links = links | append: 'x|' | append: settings.social_x_link | append: ','
+  endif
+  if settings.social_youtube_link != blank
+    assign links = links | append: 'youtube|' | append: settings.social_youtube_link | append: ','
+  endif
+  if settings.social_pinterest_link != blank
+    assign links = links | append: 'pinterest|' | append: settings.social_pinterest_link | append: ','
+  endif
+  assign items = links | split: ','
+-%}
+{%- if items.size > 0 -%}
+<ul class="social" role="list">
+  {%- for item in items -%}
+    {%- assign parts = item | split: '|' -%}
+    {%- if parts[1] != blank -%}
+      <li><a href="{{ parts[1] }}" target="_blank" rel="noopener">{% render 'icon', name: parts[0], size: 18 %}<span class="visually-hidden">{{ parts[0] | capitalize }}</span></a></li>
+    {%- endif -%}
+  {%- endfor -%}
+</ul>
+{%- endif -%}

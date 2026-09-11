@@ -1,0 +1,5 @@
+.price { display: inline-flex; flex-wrap: wrap; align-items: baseline; gap: var(--space-2); font-variant-numeric: tabular-nums; }
+.price__current { font-weight: 400; }
+.price--sale .price__current { color: var(--color-sale); }
+.price__compare { color: var(--color-muted); text-decoration: line-through; }
+.price__unit { width: 100%; font-size: var(--text-xs); color: var(--color-muted); }

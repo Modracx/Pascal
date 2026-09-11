@@ -1,0 +1,53 @@
+{%- if section.blocks.size > 0 -%}
+{{ 'section-announcement.css' | asset_url | stylesheet_tag }}
+<style>:root { --announcement-height: 2.25rem; }</style>
+<div class="ticker" role="region" aria-label="{{ 'general.announcement' | t }}" style="--ticker-speed: {{ section.settings.speed }}s" {{ section.shopify_attributes }}>
+  <div class="ticker__track">
+    {%- for half in (1..2) -%}
+      <div class="ticker__half"{% if half == 2 %} aria-hidden="true"{% endif %}>
+        {%- for pass in (1..6) -%}
+          {%- for block in section.blocks -%}
+            <span class="ticker__item"{% if half == 1 and pass == 1 %} {{ block.shopify_attributes }}{% endif %}>
+              {%- if block.settings.link != blank -%}<a href="{{ block.settings.link }}">{{ block.settings.text }}</a>{%- else -%}{{ block.settings.text }}{%- endif -%}
+            </span>
+          {%- endfor -%}
+        {%- endfor -%}
+      </div>
+    {%- endfor -%}
+  </div>
+</div>
+{%- endif -%}
+{% schema %}
+{
+  "name": "t:sections.announcement_bar.name",
+  "settings": [
+    {"type": "range", "id": "speed", "label": "t:sections.announcement_bar.settings.speed.label", "min": 10, "max": 60, "step": 5, "unit": "s", "default": 30, "info": "t:sections.announcement_bar.settings.speed.info"}
+  ],
+  "blocks": [
+    {
+      "type": "announcement",
+      "name": "t:sections.announcement_bar.blocks.announcement.name",
+      "settings": [
+        {"type": "text", "id": "text", "label": "t:sections.all.text", "default": "Free shipping on orders over $75"},
+        {"type": "url", "id": "link", "label": "t:sections.all.link"}
+      ]
+    }
+  ],
+  "default": {
+    "blocks": [
+      {
+        "type": "announcement",
+        "settings": {"text": "Free shipping on orders over $75"}
+      },
+      {
+        "type": "announcement",
+        "settings": {"text": "30-day returns, no questions"}
+      },
+      {
+        "type": "announcement",
+        "settings": {"text": "Made in small batches"}
+      }
+    ]
+  }
+}
+{% endschema %}

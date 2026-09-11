@@ -1,0 +1,49 @@
+{{ 'section-content.css' | asset_url | stylesheet_tag }}
+<section class="section" {{ section.shopify_attributes }}>
+  <div class="container">
+    {%- if section.settings.heading != blank -%}<div class="section__header"><h2>{{ section.settings.heading }}</h2></div>{%- endif -%}
+    <div class="grid" style="--cols-desktop: {{ section.blocks.size | at_least: 2 | at_most: 4 }}">
+      {%- for block in section.blocks -%}
+        {%- assign c = block.settings.collection -%}
+        <a class="collection-list__item" href="{{ c.url | default: '#' }}" {{ block.shopify_attributes }}>
+          <div class="collection-list__media">
+            {%- if c.featured_image != blank -%}
+              {%- render 'media', image: c.featured_image, sizes: '(min-width: 48em) 25vw, 50vw', widths: '360, 540, 720, 900' -%}
+            {%- else -%}
+              {% render 'placeholder', kind: 'tile', index: forloop.index, sizes: '(min-width: 48em) 25vw, 50vw' %}
+            {%- endif -%}
+          </div>
+          <h3>{{ block.settings.title | default: c.title | default: 'Collection' }}</h3>
+        </a>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "t:sections.collection_list.name",
+  "settings": [
+    {"type": "text", "id": "heading", "label": "t:sections.all.heading", "default": "Shop by category"}
+  ],
+  "blocks": [
+    {
+      "type": "collection",
+      "name": "t:sections.collection_list.blocks.collection.name",
+      "settings": [
+        {"type": "collection", "id": "collection", "label": "t:sections.all.collection"},
+        {"type": "text", "id": "title", "label": "t:sections.collection_list.blocks.collection.settings.title.label"}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.collection_list.presets.name",
+      "blocks": [
+        {"type": "collection"},
+        {"type": "collection"},
+        {"type": "collection"}
+      ]
+    }
+  ]
+}
+{% endschema %}

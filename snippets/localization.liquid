@@ -1,0 +1,22 @@
+{%- if settings.show_country_selector and localization.available_countries.size > 1 or settings.show_language_selector and localization.available_languages.size > 1 -%}
+  {%- assign form_id = 'localization-' | append: id -%}
+  {%- form 'localization', class: 'localization', id: form_id -%}
+    {%- if settings.show_country_selector and localization.available_countries.size > 1 -%}
+      <label class="visually-hidden" for="country-{{ id }}">{{ 'general.localization.country' | t }}</label>
+      <select class="select" id="country-{{ id }}" name="country_code">
+        {%- for country in localization.available_countries -%}
+          <option value="{{ country.iso_code }}"{% if country.iso_code == localization.country.iso_code %} selected{% endif %}>{{ country.name }} ({{ country.currency.iso_code }} {{ country.currency.symbol }})</option>
+        {%- endfor -%}
+      </select>
+    {%- endif -%}
+    {%- if settings.show_language_selector and localization.available_languages.size > 1 -%}
+      <label class="visually-hidden" for="locale-{{ id }}">{{ 'general.localization.language' | t }}</label>
+      <select class="select" id="locale-{{ id }}" name="locale_code">
+        {%- for language in localization.available_languages -%}
+          <option value="{{ language.iso_code }}"{% if language.iso_code == localization.language.iso_code %} selected{% endif %}>{{ language.endonym_name | capitalize }}</option>
+        {%- endfor -%}
+      </select>
+    {%- endif -%}
+    <button type="submit" class="btn btn--sm btn--secondary">{{ 'general.localization.update' | t }}</button>
+  {%- endform -%}
+{%- endif -%}

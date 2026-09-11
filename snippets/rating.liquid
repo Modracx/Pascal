@@ -1,0 +1,11 @@
+{%- comment -%} Reads the standard reviews metafields written by review apps. Params: product {%- endcomment -%}
+{%- if product.metafields.reviews.rating.value != blank -%}
+  {%- assign r = product.metafields.reviews.rating.value.rating | round: 1 -%}
+  {%- assign count = product.metafields.reviews.rating_count | default: 0 -%}
+  <div class="rating" role="img" aria-label="{{ 'products.rating_label' | t: rating: r, count: count }}">
+    <span class="rating__stars" aria-hidden="true">
+      {%- for i in (1..5) -%}<span style="{% if i > r %}opacity:0.25{% endif %}">{% render 'icon', name: 'star', size: 14 %}</span>{%- endfor -%}
+    </span>
+    <span>{{ r }} ({{ count }})</span>
+  </div>
+{%- endif -%}

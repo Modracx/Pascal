@@ -1,0 +1,37 @@
+{{ 'section-extras.css' | asset_url | stylesheet_tag }}
+{{ 'component-button.css' | asset_url | stylesheet_tag }}
+<section class="section" {{ section.shopify_attributes }}>
+  <div class="container">
+    <div class="newsletter">
+      <h2>{{ section.settings.heading }}</h2>
+      {%- if section.settings.text != blank -%}<p>{{ section.settings.text }}</p>{%- endif -%}
+      {%- assign form_id = 'newsletter-' | append: section.id -%}
+      {%- form 'customer', id: form_id -%}
+        <input type="hidden" name="contact[tags]" value="newsletter">
+        {%- assign success = 'general.newsletter.success' | t -%}
+        {%- render 'form-errors', form: form, success: success -%}
+        {%- unless form.posted_successfully? -%}
+          {%- assign label = 'general.newsletter.label' | t -%}
+          {%- assign placeholder = 'general.newsletter.placeholder' | t -%}
+          {%- assign field_id = 'newsletter-email-' | append: section.id -%}
+          <div class="newsletter__pill">
+            {%- render 'field', id: field_id, name: 'contact[email]', label: label, label_hidden: true, type: 'email', placeholder: placeholder, autocomplete: 'email', required: true, errors: form.errors, field: 'email' -%}
+            <button type="submit" class="btn">{{ 'general.newsletter.submit' | t }}</button>
+          </div>
+        {%- endunless -%}
+      {%- endform -%}
+    </div>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "t:sections.newsletter.name",
+  "settings": [
+    {"type": "text", "id": "heading", "label": "t:sections.all.heading", "default": "Get first pick"},
+    {"type": "text", "id": "text", "label": "t:sections.all.text", "default": "New arrivals and small-batch drops, before anyone else. One email a month."}
+  ],
+  "presets": [
+    {"name": "t:sections.newsletter.presets.name"}
+  ]
+}
+{% endschema %}

@@ -1,0 +1,20 @@
+{%- comment -%} Horizontal group for buttons or small items. Accepts any theme block. {%- endcomment -%}
+<div class="block-group block-group--{{ block.settings.align }}" {{ block.shopify_attributes }}>
+  {% content_for 'blocks' %}
+</div>
+{% stylesheet %}
+  .block-group { display: flex; flex-wrap: wrap; gap: var(--space-3); }
+  .block-group--center { justify-content: center; }
+  .block-group--end { justify-content: flex-end; }
+{% endstylesheet %}
+{% schema %}
+{
+  "name": "t:blocks.group.name",
+  "blocks": [
+    {"type": "@theme"}
+  ],
+  "settings": [
+    {"type": "select", "id": "align", "label": "t:sections.all.alignment", "options": [{"value": "start", "label": "t:blocks.group.settings.align.options__1.label"}, {"value": "center", "label": "t:blocks.group.settings.align.options__2.label"}, {"value": "end", "label": "t:blocks.group.settings.align.options__3.label"}], "default": "start"}
+  ]
+}
+{% endschema %}

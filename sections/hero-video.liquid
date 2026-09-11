@@ -1,0 +1,44 @@
+{{ 'section-hero.css' | asset_url | stylesheet_tag }}
+{{ 'component-button.css' | asset_url | stylesheet_tag }}
+{%- assign s = section.settings -%}
+<section class="hero hero--cover hero--video{% if s.center %} hero--center{% endif %}" style="--hero-height: {{ s.height }}vh; --hero-overlay: {{ s.overlay | divided_by: 100.0 }}" {{ section.shopify_attributes }}>
+  <div class="hero__media reveal reveal--media">
+    {%- if s.video != blank -%}
+      {{ s.video | video_tag: autoplay: true, loop: true, muted: true, playsinline: true, controls: false, preload: 'metadata', image_size: '1600x' }}
+    {%- elsif s.poster != blank -%}
+      {%- render 'media', image: s.poster, sizes: '100vw', priority: true -%}
+    {%- else -%}{% render 'placeholder', kind: 'wide', index: 1, priority: true %}{%- endif -%}
+    <div class="hero__overlay"></div>
+  </div>
+  <div class="hero__body"><div class="hero__text reveal reveal--2">{% content_for 'blocks' %}</div></div>
+</section>
+{% schema %}
+{
+  "name": "t:sections.hero_video.name",
+  "blocks": [
+    {"type": "@theme"}
+  ],
+  "settings": [
+    {"type": "video", "id": "video", "label": "t:sections.hero_video.settings.video.label", "info": "t:sections.hero_video.settings.video.info"},
+    {"type": "image_picker", "id": "poster", "label": "t:sections.hero_video.settings.poster.label"},
+    {"type": "range", "id": "height", "label": "t:sections.all.height", "min": 50, "max": 100, "step": 5, "unit": "vh", "default": 90},
+    {"type": "range", "id": "overlay", "label": "t:sections.all.overlay", "min": 0, "max": 80, "step": 5, "unit": "%", "default": 35},
+    {"type": "checkbox", "id": "center", "label": "t:sections.hero_video.settings.center.label", "default": true}
+  ],
+  "presets": [
+    {
+      "name": "t:sections.hero_video.presets.name",
+      "blocks": [
+        {
+          "type": "heading",
+          "settings": {"text": "Made by hand, in Lisbon", "size": "lg", "tag": "h1"}
+        },
+        {
+          "type": "button",
+          "settings": {"label": "Watch the film", "style": "outline-light"}
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

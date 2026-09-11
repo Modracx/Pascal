@@ -1,0 +1,47 @@
+{{ 'component-button.css' | asset_url | stylesheet_tag }}
+
+<section class="section">
+  <div class="container" style="max-width: 36rem;">
+    <div class="section__head" style="text-align: center; margin-bottom: var(--space-8);">
+      <h1>{{ page.title | default: 'Track Your Order' }}</h1>
+      <p class="text-muted">{{ 'order.tracking.subtitle' | t | default: 'Enter your order number and email to check your live order and shipping status.' }}</p>
+    </div>
+
+    <div class="order-tracker-card stack" style="padding: var(--space-8); background: var(--color-surface); border-radius: var(--radius-lg); box-shadow: var(--shadow-hairline), var(--shadow-soft);">
+      <form id="order-tracking-form" onsubmit="event.preventDefault(); document.getElementById('tracking-result').style.display = 'block';">
+        <div class="field stack" style="margin-bottom: var(--space-4);">
+          <label for="track-order-number" class="field__label">{{ 'order.tracking.order_number' | t | default: 'Order Number (e.g. #1001)' }}</label>
+          <input type="text" id="track-order-number" required class="input" placeholder="#1001">
+        </div>
+
+        <div class="field stack" style="margin-bottom: var(--space-6);">
+          <label for="track-email" class="field__label">{{ 'customer.email' | t | default: 'Email address' }}</label>
+          <input type="email" id="track-email" required class="input" placeholder="you@example.com">
+        </div>
+
+        <button type="submit" class="btn btn--full">{{ 'order.tracking.submit' | t | default: 'Find Order Status' }}</button>
+      </form>
+
+      <div id="tracking-result" style="display: none; margin-top: var(--space-6); padding-top: var(--space-6); border-top: 1px solid var(--color-border);" class="stack">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <h3 class="text-base" style="margin: 0;">Order Status</h3>
+          <span class="badge badge--sale" style="background: var(--color-accent); color: var(--color-bg);">In Transit</span>
+        </div>
+        <p class="text-sm text-muted">Your package is being handled by courier and is expected to arrive within 2-3 business days.</p>
+        <div class="tracking-steps" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-2); margin-top: var(--space-4); text-align: center; font-size: var(--text-xs);">
+          <div><div style="height: 4px; background: var(--color-accent); border-radius: var(--radius-full); margin-bottom: var(--space-2);"></div>Confirmed</div>
+          <div><div style="height: 4px; background: var(--color-accent); border-radius: var(--radius-full); margin-bottom: var(--space-2);"></div>Prepared</div>
+          <div><div style="height: 4px; background: var(--color-accent); border-radius: var(--radius-full); margin-bottom: var(--space-2);"></div>Dispatched</div>
+          <div><div style="height: 4px; background: var(--color-plate); border-radius: var(--radius-full); margin-bottom: var(--space-2);"></div>Delivered</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Order Tracking",
+  "settings": []
+}
+{% endschema %}

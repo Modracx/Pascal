@@ -1,0 +1,156 @@
+{{ 'component-header.css' | asset_url | stylesheet_tag }}
+{{ 'component-search.css' | asset_url | stylesheet_tag }}
+{%- if settings.predictive_search_enabled -%}<script src="{{ 'predictive-search.js' | asset_url }}" defer></script>{%- endif -%}
+{%- liquid
+  assign hs = section.settings
+  assign header_class = 'header'
+  if hs.sticky
+    assign header_class = header_class | append: ' header--sticky'
+  endif
+  if hs.layout == 'centered'
+    assign header_class = header_class | append: ' header--centered'
+  endif
+  if hs.transparent_home and request.page_type == 'index'
+    assign header_class = header_class | append: ' header--transparent'
+  endif
+-%}
+<header class="{{ header_class }}" data-section="{{ section.id }}"{% if hs.transparent_home and request.page_type == 'index' and hs.transparent_light %} style="--header-over-color: #fff"{% endif %}>
+  <div class="container header__inner">
+    {%- comment -%} Mobile menu: a <details> element. Zero JavaScript. {%- endcomment -%}
+    <details class="menu-toggle">
+      <summary aria-label="{{ 'accessibility.open_menu' | t }}">
+        <span class="icon-menu">{% render 'icon', name: 'menu', size: 22 %}</span>
+        <span class="icon-close">{% render 'icon', name: 'close', size: 22 %}</span>
+      </summary>
+      <nav class="menu-panel" aria-label="{{ section.settings.menu.title }}">
+        {%- for link in section.settings.menu.links -%}
+          {%- if link.links.size > 0 -%}
+            <details>
+              <summary>{{ link.title }}</summary>
+              <div class="menu-panel__sub">
+                <a href="{{ link.url }}">{{ link.title }}</a>
+                {%- for child in link.links -%}<a href="{{ child.url }}">{{ child.title }}</a>{%- endfor -%}
+              </div>
+            </details>
+          {%- else -%}
+            <a href="{{ link.url }}"{% if link.current %} aria-current="page"{% endif %}>{{ link.title }}</a>
+          {%- endif -%}
+        {%- endfor -%}
+      </nav>
+    </details>
+
+    <nav class="nav" aria-label="{{ section.settings.menu.title }}">
+      <ul class="nav__list" role="list">
+        {%- for link in section.settings.menu.links -%}
+          {%- liquid
+            assign mega = blank
+            for block in section.blocks
+              if block.type == 'mega' and block.settings.menu_item == link.title
+                assign mega = block
+              endif
+            endfor
+          -%}
+          <li class="nav__item{% if mega != blank %} nav__item--mega{% endif %}">
+            {%- if mega != blank -%}
+              <details>
+                <summary class="nav__link" aria-haspopup="true">{{ link.title }}{% render 'icon', name: 'chevron', size: 14 %}</summary>
+                <div class="nav__mega">
+                  <div class="container nav__mega-inner" style="--mega-cols: {{ link.links.size | at_least: 1 | at_most: 4 }}">
+                    {%- for child in link.links -%}
+                      <div class="nav__mega-col">
+                        <a href="{{ child.url }}">{{ child.title }}</a>
+                        {%- for grandchild in child.links -%}<a href="{{ grandchild.url }}">{{ grandchild.title }}</a>{%- endfor -%}
+                      </div>
+                    {%- endfor -%}
+                    {%- if mega.settings.image != blank -%}
+                      <a class="nav__mega-image" href="{{ mega.settings.link | default: link.url }}" {{ mega.shopify_attributes }}>{{ mega.settings.image | image_url: width: 800 | image_tag: loading: 'lazy', alt: mega.settings.image.alt | escape }}</a>
+                    {%- endif -%}
+                  </div>
+                </div>
+              </details>
+            {%- elsif link.links.size > 0 -%}
+              <details>
+                <summary class="nav__link" aria-haspopup="true">{{ link.title }}{% render 'icon', name: 'chevron', size: 14 %}</summary>
+                <div class="nav__sub">
+                  {%- for child in link.links -%}<a href="{{ child.url }}">{{ child.title }}</a>{%- endfor -%}
+                </div>
+              </details>
+            {%- else -%}
+              <a class="nav__link" href="{{ link.url }}"{% if link.current %} aria-current="page"{% endif %}>{{ link.title }}</a>
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+      </ul>
+    </nav>
+
+    <a class="header__logo" href="{{ routes.root_url }}">
+      {%- if settings.logo != blank -%}
+        {{ settings.logo | image_url: width: 400 | image_tag: widths: '200, 400', sizes: '200px', alt: shop.name, loading: 'eager', width: settings.logo.width, height: settings.logo.height, style: 'max-height:' | append: section.settings.logo_height | append: 'px' }}
+      {%- else -%}
+        {{ shop.name }}
+      {%- endif -%}
+    </a>
+
+    {%- liquid
+      assign search_label = 'general.search.label' | t
+      assign account_label = 'general.account' | t
+      assign cart_label = 'general.cart' | t
+    -%}
+    <div class="header__actions">
+      <details class="search-toggle">
+        <summary aria-label="{{ search_label }}">{% render 'icon', name: 'search', size: 22 %}</summary>
+        <div class="search-panel">
+          <predictive-search data-limit="6">
+            <form action="{{ routes.search_url }}" method="get" role="search" class="search-panel__form">
+              <label class="visually-hidden" for="header-search">{{ search_label }}</label>
+              <input class="input" type="search" id="header-search" name="q" placeholder="{{ 'general.search.placeholder' | t }}" autocomplete="off">
+              <input type="hidden" name="options[prefix]" value="last">
+              <button type="submit" class="btn">{{ 'general.search.submit' | t }}</button>
+            </form>
+            <div class="predictive" data-predictive-results hidden></div>
+          </predictive-search>
+        </div>
+      </details>
+      {%- if settings.wishlist_enable -%}
+        <script src="{{ 'wishlist.js' | asset_url }}" defer></script>
+        <a class="header__icon" href="{{ routes.root_url }}pages/wishlist" aria-label="{{ 'products.wishlist.title' | t | default: 'Wishlist' }}" style="position: relative;">
+          {% render 'icon', name: 'heart', size: 20 %}
+          <wishlist-count class="header__count" style="display: none;"></wishlist-count>
+        </a>
+      {%- endif -%}
+      {%- if shop.customer_accounts_enabled -%}
+        <a class="header__icon" href="{{ routes.account_url }}">{% render 'icon', name: 'account', size: 22, label: account_label %}</a>
+      {%- endif -%}
+      <a class="header__icon" href="{{ routes.cart_url }}"{% if settings.cart_type == 'drawer' %} data-cart-drawer-trigger{% endif %}>
+        {% render 'icon', name: 'cart', size: 22, label: cart_label %}
+        <span class="header__count" data-cart-count="{{ cart.item_count }}"><span class="header__count-text">{{ cart.item_count }}</span></span>
+      </a>
+    </div>
+  </div>
+</header>
+
+{% schema %}
+{
+  "name": "t:sections.header.name",
+  "settings": [
+    {"type": "link_list", "id": "menu", "label": "t:sections.header.settings.menu.label", "default": "main-menu"},
+    {"type": "select", "id": "layout", "label": "t:sections.all.layout", "options": [{"value": "left", "label": "t:sections.header.settings.layout.options__1.label"}, {"value": "centered", "label": "t:sections.header.settings.layout.options__2.label"}], "default": "centered"},
+    {"type": "range", "id": "logo_height", "label": "t:sections.header.settings.logo_height.label", "min": 20, "max": 80, "step": 4, "unit": "px", "default": 40},
+    {"type": "checkbox", "id": "sticky", "label": "t:sections.header.settings.sticky.label", "default": true},
+    {"type": "header", "content": "t:sections.header.settings.header__1.content"},
+    {"type": "checkbox", "id": "transparent_home", "label": "t:sections.header.settings.transparent_home.label", "default": true, "info": "t:sections.header.settings.transparent_home.info"},
+    {"type": "checkbox", "id": "transparent_light", "label": "t:sections.header.settings.transparent_light.label", "default": true}
+  ],
+  "blocks": [
+    {
+      "type": "mega",
+      "name": "t:sections.header.blocks.mega.name",
+      "settings": [
+        {"type": "text", "id": "menu_item", "label": "t:sections.header.blocks.mega.settings.menu_item.label", "info": "t:sections.header.blocks.mega.settings.menu_item.info"},
+        {"type": "image_picker", "id": "image", "label": "t:sections.all.image"},
+        {"type": "url", "id": "link", "label": "t:sections.header.blocks.mega.settings.link.label"}
+      ]
+    }
+  ]
+}
+{% endschema %}

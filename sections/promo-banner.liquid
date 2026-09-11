@@ -1,0 +1,40 @@
+{{ 'section-extras.css' | asset_url | stylesheet_tag }}
+<section class="section" {{ section.shopify_attributes }}>
+  <div class="container">
+    <div class="promo{% if section.settings.center %} promo--center{% endif %}" style="{% if section.settings.bg.alpha != 0 and section.settings.bg != blank %}--promo-bg: {{ section.settings.bg }};{% endif %}{% if section.settings.color.alpha != 0 and section.settings.color != blank %}--promo-color: {{ section.settings.color }};{% endif %}">
+      {% content_for 'blocks' %}
+    </div>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "t:sections.promo_banner.name",
+  "blocks": [
+    {"type": "@theme"}
+  ],
+  "settings": [
+    {"type": "color", "id": "bg", "label": "t:sections.promo_banner.settings.bg.label"},
+    {"type": "color", "id": "color", "label": "t:sections.all.text"},
+    {"type": "checkbox", "id": "center", "label": "t:sections.promo_banner.settings.center.label", "default": true}
+  ],
+  "presets": [
+    {
+      "name": "t:sections.promo_banner.presets.name",
+      "blocks": [
+        {
+          "type": "heading",
+          "settings": {"text": "Free shipping this weekend"}
+        },
+        {
+          "type": "text",
+          "settings": {"text": "<p>No code needed. Applied automatically at checkout on all orders.</p>"}
+        },
+        {
+          "type": "button",
+          "settings": {"label": "Shop the sale"}
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

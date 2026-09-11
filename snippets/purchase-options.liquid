@@ -1,0 +1,49 @@
+{%- comment -%}
+  Selling plan selector for products with a subscriptions app. One radio per plan, grouped by plan group,
+  with the current variant's allocated price. Params: product, variant, section_id.
+  Renders nothing when the product has no selling plans.
+{%- endcomment -%}
+{%- if product.selling_plan_groups.size > 0 -%}
+  {%- liquid
+    assign selected_plan = product.selected_selling_plan
+    assign name = 'selling_plan'
+  -%}
+  <fieldset class="field purchase-options" data-purchase-options>
+    <legend class="field__label">{{ 'products.purchase_options.label' | t }}</legend>
+    <div class="purchase-options__list">
+      {%- unless product.requires_selling_plan -%}
+        <label class="choice purchase-options__option">
+          <input type="radio" name="{{ name }}" value=""{% unless selected_plan %} checked{% endunless %}>
+          <span class="purchase-options__name">{{ 'products.purchase_options.one_time' | t }}</span>
+          <span class="purchase-options__price">{{ variant.price | money }}</span>
+        </label>
+      {%- endunless -%}
+      {%- for group in product.selling_plan_groups -%}
+        {%- if product.selling_plan_groups.size > 1 -%}<p class="purchase-options__group text-xs text-muted">{{ group.name }}</p>{%- endif -%}
+        {%- for plan in group.selling_plans -%}
+          {%- liquid
+            assign allocation = blank
+            for a in variant.selling_plan_allocations
+              if a.selling_plan.id == plan.id
+                assign allocation = a
+              endif
+            endfor
+            assign checked = false
+            if selected_plan.id == plan.id
+              assign checked = true
+            elsif product.requires_selling_plan and selected_plan == blank and forloop.parentloop.first and forloop.first
+              assign checked = true
+            endif
+          -%}
+          <label class="choice purchase-options__option">
+            <input type="radio" name="{{ name }}" value="{{ plan.id }}"{% if checked %} checked{% endif %}{% if allocation == blank %} disabled{% endif %}>
+            <span class="purchase-options__name">{{ plan.name }}{% if plan.description != blank %}<span class="purchase-options__desc text-xs text-muted">{{ plan.description }}</span>{% endif %}</span>
+            {%- if allocation != blank -%}
+              <span class="purchase-options__price">{{ allocation.price | money }}{% if allocation.compare_at_price > allocation.price %} <s class="text-muted">{{ allocation.compare_at_price | money }}</s>{% endif %}</span>
+            {%- endif -%}
+          </label>
+        {%- endfor -%}
+      {%- endfor -%}
+    </div>
+  </fieldset>
+{%- endif -%}

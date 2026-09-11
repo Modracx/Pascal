@@ -1,0 +1,16 @@
+{%- comment -%}
+  Form-level messages. Params: form (the form object), success (text to show when form.posted_successfully?).
+  Field errors are shown beside their fields by the field snippet; this announces the overall state:
+  a success line, a general error (Shopify's "form" key), or a one-line nudge toward the highlighted fields.
+{%- endcomment -%}
+{%- if form.posted_successfully? and success != blank -%}
+  <p class="form-success" role="status">{% render 'icon', name: 'check', size: 16 %}<span>{{ success }}</span></p>
+{%- elsif form.errors -%}
+  <div class="form-alert" role="alert">
+    {%- if form.errors contains 'form' -%}
+      <p>{{ form.errors.messages['form'] }}</p>
+    {%- else -%}
+      <p>{{ 'general.form.check_fields' | t }}</p>
+    {%- endif -%}
+  </div>
+{%- endif -%}

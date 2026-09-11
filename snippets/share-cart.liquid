@@ -1,0 +1,21 @@
+{%- comment -%}
+  Share Cart button with rich feedback animation & toast.
+{%- endcomment -%}
+<script src="{{ 'share-cart.js' | asset_url }}" defer></script>
+<share-cart
+  class="share-cart"
+  data-share-message="{{ 'cart.share_message' | t | default: 'Check out my cart:' }}"
+  data-copied-text="{{ 'cart.share_copied' | t | default: 'Link copied!' }}"
+>
+  <button type="button" class="btn btn--ghost btn--small share-cart__button" aria-label="{{ 'cart.share_cart' | t | default: 'Share cart' }}">
+    <span class="share-cart__icons">
+      <span class="share-cart__icon share-cart__icon--share">{% render 'icon', name: 'share', size: 15 %}</span>
+      <span class="share-cart__icon share-cart__icon--check">{% render 'icon', name: 'check', size: 15 %}</span>
+    </span>
+    <span class="share-cart__label">{{ 'cart.share_cart' | t | default: 'Share cart' }}</span>
+  </button>
+  <div class="share-cart__toast" role="status" aria-live="polite">
+    <span class="share-cart__toast-icon">{% render 'icon', name: 'check', size: 14 %}</span>
+    <span>{{ 'cart.share_copied' | t | default: 'Cart link copied to clipboard!' }}</span>
+  </div>
+</share-cart>

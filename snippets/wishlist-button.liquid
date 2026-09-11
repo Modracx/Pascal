@@ -1,0 +1,19 @@
+{%- comment -%}
+  Zero-app Wishlist toggle button.
+  Usage: {% render 'wishlist-button', product: product, class: 'product-card__wishlist' %}
+{%- endcomment -%}
+<script src="{{ 'wishlist.js' | asset_url }}" defer></script>
+<wishlist-button
+  class="wishlist-btn-wrap {{ class }}"
+  data-product-handle="{{ product.handle }}"
+  data-add-text="{{ 'products.wishlist.add' | t | default: 'Save' }}"
+  data-saved-text="{{ 'products.wishlist.saved' | t | default: 'Saved' }}"
+>
+  <button
+    type="button"
+    class="wishlist-btn"
+    aria-label="{{ 'products.wishlist.toggle' | t | default: 'Toggle wishlist' }}"
+  >
+    {% render 'icon', name: 'heart', size: 18 %}
+  </button>
+</wishlist-button>

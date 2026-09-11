@@ -1,0 +1,102 @@
+{
+  "sections": {
+    "hero": {
+      "type": "hero",
+      "settings": {
+        "layout": "collage"
+      },
+      "blocks": {
+        "h": {
+          "type": "heading",
+          "settings": {
+            "text": "Autumn lookbook",
+            "size": "lg",
+            "tag": "h1"
+          }
+        }
+      },
+      "block_order": [
+        "h"
+      ]
+    },
+    "look1": {
+      "type": "shop-the-look",
+      "settings": {
+        "heading": "Look one"
+      },
+      "blocks": {
+        "a": {
+          "type": "spot",
+          "settings": {
+            "x": 30,
+            "y": 40
+          }
+        },
+        "b": {
+          "type": "spot",
+          "settings": {
+            "x": 65,
+            "y": 70
+          }
+        }
+      },
+      "block_order": [
+        "a",
+        "b"
+      ]
+    },
+    "grid": {
+      "type": "bento-grid",
+      "blocks": {
+        "a": {
+          "type": "tile",
+          "settings": {
+            "size": "tall"
+          }
+        },
+        "b": {
+          "type": "tile",
+          "settings": {
+            "size": "wide"
+          }
+        },
+        "c": {
+          "type": "tile"
+        },
+        "d": {
+          "type": "tile"
+        }
+      },
+      "block_order": [
+        "a",
+        "b",
+        "c",
+        "d"
+      ]
+    },
+    "look2": {
+      "type": "shop-the-look",
+      "settings": {
+        "heading": "Look two"
+      },
+      "blocks": {
+        "a": {
+          "type": "spot",
+          "settings": {
+            "x": 45,
+            "y": 55
+          }
+        }
+      },
+      "block_order": [
+        "a"
+      ]
+    }
+  },
+  "order": [
+    "hero",
+    "look1",
+    "grid",
+    "look2"
+  ]
+}

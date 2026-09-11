@@ -1,0 +1,40 @@
+{{ 'section-extras.css' | asset_url | stylesheet_tag }}
+{{ 'component-button.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'countdown-timer.js' | asset_url }}" defer></script>
+{%- assign s = section.settings -%}
+{%- assign end_iso = s.end_date | append: 'T' | append: s.end_time | append: ':00' -%}
+<section class="section" {{ section.shopify_attributes }}>
+  <div class="container">
+    <div class="countdown">
+      <h2>{{ s.heading }}</h2>
+      {%- if s.text != blank -%}<p class="text-muted">{{ s.text }}</p>{%- endif -%}
+      <countdown-timer data-end="{{ end_iso }}" data-hide-when-done="{{ s.hide_when_done }}">
+        <div class="countdown__cells">
+          <div class="countdown__cell"><span class="countdown__num" data-d>0</span><span class="countdown__label">{{ 'general.countdown.days' | t }}</span></div>
+          <div class="countdown__cell"><span class="countdown__num" data-h>00</span><span class="countdown__label">{{ 'general.countdown.hours' | t }}</span></div>
+          <div class="countdown__cell"><span class="countdown__num" data-m>00</span><span class="countdown__label">{{ 'general.countdown.minutes' | t }}</span></div>
+          <div class="countdown__cell"><span class="countdown__num" data-s>00</span><span class="countdown__label">{{ 'general.countdown.seconds' | t }}</span></div>
+        </div>
+      </countdown-timer>
+      {%- if s.button_label != blank -%}<a href="{{ s.link }}" class="btn">{{ s.button_label }}</a>{%- endif -%}
+    </div>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "t:sections.countdown.name",
+  "settings": [
+    {"type": "paragraph", "content": "t:sections.countdown.settings.paragraph__1.content"},
+    {"type": "text", "id": "heading", "label": "t:sections.all.heading", "default": "Sale ends soon"},
+    {"type": "text", "id": "text", "label": "t:sections.all.text"},
+    {"type": "text", "id": "end_date", "label": "t:sections.countdown.settings.end_date.label", "default": "2026-12-31", "info": "t:sections.countdown.settings.end_date.info"},
+    {"type": "text", "id": "end_time", "label": "t:sections.countdown.settings.end_time.label", "default": "23:59", "info": "t:sections.countdown.settings.end_time.info"},
+    {"type": "checkbox", "id": "hide_when_done", "label": "t:sections.countdown.settings.hide_when_done.label", "default": true},
+    {"type": "text", "id": "button_label", "label": "t:sections.all.button_label", "default": "Shop the sale"},
+    {"type": "url", "id": "link", "label": "t:sections.all.link"}
+  ],
+  "presets": [
+    {"name": "t:sections.countdown.presets.name"}
+  ]
+}
+{% endschema %}

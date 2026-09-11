@@ -1,0 +1,35 @@
+{%- comment -%}
+  Pickup availability for the selected variant, from Shopify's local pickup locations. HTML only.
+  Params: product. Wrapped in <pickup-availability> by the product block; re-rendered by the
+  pickup-availability section when the variant changes. Renders nothing when no location offers pickup.
+{%- endcomment -%}
+{%- liquid
+  assign variant = product.selected_or_first_available_variant
+  assign pickups = variant.store_availabilities | where: 'pick_up_enabled', true
+  assign in_stock = pickups | where: 'available', true
+  assign first = in_stock.first
+-%}
+{%- if pickups.size > 0 -%}
+  <div class="pickup" data-pickup>
+    {%- if first -%}
+      <p class="pickup__status">{{ 'products.pickup.available' | t: location: first.location.name }}</p>
+      {%- if first.pick_up_time != blank -%}<p class="pickup__time text-xs text-muted">{{ first.pick_up_time }}</p>{%- endif -%}
+    {%- else -%}
+      <p class="pickup__status pickup__status--none">{{ 'products.pickup.unavailable' | t: location: pickups.first.location.name }}</p>
+    {%- endif -%}
+    {%- if pickups.size > 1 -%}
+      <details class="pickup__more">
+        <summary class="link text-xs">{{ 'products.pickup.check_other' | t: count: pickups.size }}</summary>
+        <ul class="pickup__list" role="list">
+          {%- for availability in pickups -%}
+            <li class="pickup__location{% unless availability.available %} pickup__location--out{% endunless %}">
+              <p class="pickup__name">{{ availability.location.name }}</p>
+              <p class="text-xs">{% if availability.available %}{{ 'products.pickup.in_stock' | t }}{% if availability.pick_up_time != blank %}, {{ availability.pick_up_time | downcase }}{% endif %}{% else %}{{ 'products.pickup.out_of_stock' | t }}{% endif %}</p>
+              {%- if availability.location.address.summary != blank -%}<p class="text-xs text-muted">{{ availability.location.address.summary }}</p>{%- endif -%}
+            </li>
+          {%- endfor -%}
+        </ul>
+      </details>
+    {%- endif -%}
+  </div>
+{%- endif -%}

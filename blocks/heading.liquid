@@ -1,0 +1,21 @@
+{%- liquid
+  assign tag = block.settings.tag | default: 'h2'
+-%}
+<{{ tag }} class="block-heading block-heading--{{ block.settings.size }}{% if block.settings.italic %} italic{% endif %}" {{ block.shopify_attributes }}>{{ block.settings.text }}</{{ tag }}>
+{% stylesheet %}
+  .block-heading--sm { font-size: var(--text-xl); }
+  .block-heading--md { font-size: var(--text-2xl); }
+  .block-heading--lg { font-size: var(--text-3xl); }
+  .block-heading.italic { font-style: italic; }
+{% endstylesheet %}
+{% schema %}
+{
+  "name": "t:blocks.heading.name",
+  "settings": [
+    {"type": "text", "id": "text", "label": "t:sections.all.text", "default": "Heading"},
+    {"type": "select", "id": "size", "label": "t:sections.all.size", "options": [{"value": "sm", "label": "t:blocks.heading.settings.size.options__1.label"}, {"value": "md", "label": "t:blocks.heading.settings.size.options__2.label"}, {"value": "lg", "label": "t:blocks.heading.settings.size.options__3.label"}], "default": "md"},
+    {"type": "checkbox", "id": "italic", "label": "t:blocks.heading.settings.italic.label", "default": false},
+    {"type": "select", "id": "tag", "label": "t:blocks.heading.settings.tag.label", "options": [{"value": "h1", "label": "t:blocks.heading.settings.tag.options__1.label"}, {"value": "h2", "label": "t:blocks.heading.settings.tag.options__2.label"}, {"value": "h3", "label": "t:blocks.heading.settings.tag.options__3.label"}, {"value": "p", "label": "t:blocks.heading.settings.tag.options__4.label"}], "default": "h2", "info": "t:blocks.heading.settings.tag.info"}
+  ]
+}
+{% endschema %}

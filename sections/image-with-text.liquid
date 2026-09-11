@@ -1,0 +1,47 @@
+{{ 'section-content.css' | asset_url | stylesheet_tag }}
+<section class="section" {{ section.shopify_attributes }}>
+  <div class="container image-text{% if section.settings.flip %} image-text--flip{% endif %}{% if section.settings.style == 'overlap' %} image-text--overlap{% endif %}">
+    <div class="image-text__media">
+      {%- if section.settings.image != blank -%}
+        {%- render 'media', image: section.settings.image, sizes: '(min-width: 48em) 50vw, 100vw', widths: '480, 720, 960, 1200, 1600' -%}
+      {%- else -%}
+        {% render 'placeholder', kind: 'portrait', index: 2, sizes: '(min-width: 48em) 50vw, 100vw' %}
+      {%- endif -%}
+    </div>
+    <div class="image-text__body">
+      {% content_for 'blocks' %}
+    </div>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "t:sections.image_with_text.name",
+  "blocks": [
+    {"type": "@theme"}
+  ],
+  "settings": [
+    {"type": "image_picker", "id": "image", "label": "t:sections.all.image"},
+    {"type": "checkbox", "id": "flip", "label": "t:sections.image_with_text.settings.flip.label", "default": false},
+    {"type": "select", "id": "style", "label": "t:sections.all.style", "options": [{"value": "side", "label": "t:sections.image_with_text.settings.style.options__1.label"}, {"value": "overlap", "label": "t:sections.image_with_text.settings.style.options__2.label"}], "default": "overlap"}
+  ],
+  "presets": [
+    {
+      "name": "t:sections.image_with_text.presets.name",
+      "blocks": [
+        {
+          "type": "heading",
+          "settings": {"text": "Made by people who use what they make"}
+        },
+        {
+          "type": "text",
+          "settings": {"text": "<p>Everything here is tested at our own tables first. If it does not earn a place in our homes, it does not earn a place in the shop.</p>"}
+        },
+        {
+          "type": "button",
+          "settings": {"label": "Our story", "style": "secondary"}
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

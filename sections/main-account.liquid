@@ -1,0 +1,47 @@
+{{ 'section-extras.css' | asset_url | stylesheet_tag }}
+{{ 'component-button.css' | asset_url | stylesheet_tag }}
+<section class="section"><div class="container">
+  <div class="section__header"><h1>{{ 'customer.account.welcome' | t: name: customer.first_name | default: customer.email }}</h1></div>
+  <div class="account account--split">
+    {%- render 'account-nav' -%}
+    <div class="stack" style="--stack-gap: var(--space-8)">
+      <div>
+        <h2 style="margin-bottom: var(--space-4)">{{ 'customer.account.orders' | t }}</h2>
+        {%- paginate customer.orders by 20 -%}
+          {%- if customer.orders.size > 0 -%}
+            <div class="table-wrap"><table class="table">
+              <thead><tr><th>{{ 'customer.orders.order' | t }}</th><th>{{ 'customer.orders.date' | t }}</th><th>{{ 'customer.orders.payment' | t }}</th><th>{{ 'customer.orders.fulfillment' | t }}</th><th>{{ 'customer.orders.total' | t }}</th></tr></thead>
+              <tbody>
+                {%- for order in customer.orders -%}
+                  <tr>
+                    <td><a href="{{ order.customer_url }}" style="text-decoration:underline">{{ order.name }}</a></td>
+                    <td>{{ order.created_at | date: '%b %d, %Y' }}</td>
+                    <td>{{ order.financial_status_label }}</td>
+                    <td>{{ order.fulfillment_status_label }}</td>
+                    <td>{{ order.total_price | money }}</td>
+                  </tr>
+                {%- endfor -%}
+              </tbody>
+            </table></div>
+            {%- render 'pagination', paginate: paginate -%}
+          {%- else -%}
+            <p class="text-muted">{{ 'customer.orders.none' | t }}</p>
+          {%- endif -%}
+        {%- endpaginate -%}
+      </div>
+      <div>
+        <h2 style="margin-bottom: var(--space-4)">{{ 'customer.account.details' | t }}</h2>
+        <div class="address">
+          {{ customer.default_address | format_address }}
+          <a href="{{ routes.account_addresses_url }}" style="text-decoration:underline">{{ 'customer.account.view_addresses' | t: count: customer.addresses_count }}</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div></section>
+{% schema %}
+{
+  "name": "t:sections.main_account.name",
+  "settings": []
+}
+{% endschema %}

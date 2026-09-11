@@ -1,0 +1,48 @@
+{{ 'component-product.css' | asset_url | stylesheet_tag }}
+{{ 'component-price.css' | asset_url | stylesheet_tag }}
+{{ 'component-button.css' | asset_url | stylesheet_tag }}
+{%- assign product = section.settings.product -%}
+<section class="section" data-section="{{ section.id }}" {{ section.shopify_attributes }}>
+  <div class="container product">
+    <div class="gallery gallery--stacked">
+      <div class="gallery__track">
+        <div class="gallery__item">
+          {%- if product != blank -%}
+            {%- render 'media', image: product.featured_image, sizes: '(min-width: 48em) 55vw, 100vw' -%}
+          {%- else -%}
+            {% assign ph = product.id | divided_by: 20 | modulo: 6 | plus: 1 %}{% render 'placeholder', kind: 'product', index: ph, sizes: '(min-width: 48em) 55vw, 100vw' %}
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+    <div class="product__info">
+      {%- if product != blank -%}
+        <div>
+          {%- if section.settings.show_vendor -%}<p class="product__vendor">{{ product.vendor }}</p>{%- endif -%}
+          <h2 class="product__title"><a href="{{ product.url }}">{{ product.title | escape }}</a></h2>
+        </div>
+        {%- render 'price', product: product, class: 'product__price' -%}
+        {%- if section.settings.show_description and product.description != blank -%}<div class="rte text-muted">{{ product.description | strip_html | truncatewords: 40 }}</div>{%- endif -%}
+        {%- render 'product-form', product: product, section_id: section.id, show_quantity: false, show_dynamic_checkout: section.settings.show_dynamic_checkout -%}
+        <a href="{{ product.url }}" class="text-sm" style="text-decoration: underline; text-underline-offset: 0.2em">{{ 'products.view_details' | t }}</a>
+      {%- else -%}
+        <h2 class="product__title">{{ 'products.placeholder_title' | t }}</h2>
+        <p class="text-muted">{{ 'products.placeholder_text' | t }}</p>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "t:sections.featured_product.name",
+  "settings": [
+    {"type": "product", "id": "product", "label": "t:sections.featured_product.settings.product.label"},
+    {"type": "checkbox", "id": "show_vendor", "label": "t:sections.featured_product.settings.show_vendor.label", "default": false},
+    {"type": "checkbox", "id": "show_description", "label": "t:sections.featured_product.settings.show_description.label", "default": true},
+    {"type": "checkbox", "id": "show_dynamic_checkout", "label": "t:sections.featured_product.settings.show_dynamic_checkout.label", "default": false}
+  ],
+  "presets": [
+    {"name": "t:sections.featured_product.presets.name"}
+  ]
+}
+{% endschema %}

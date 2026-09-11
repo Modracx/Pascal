@@ -1,0 +1,53 @@
+{{ 'section-premium.css' | asset_url | stylesheet_tag }}
+<section class="section section--tight" {{ section.shopify_attributes }}>
+  <div class="container">
+    <div class="features" style="--columns: {{ section.blocks.size | at_least: 2 | at_most: 4 }};{% if section.settings.center %} --feature-align: center; --feature-text: center;{% endif %}">
+      {%- for block in section.blocks -%}
+        <div class="feature" {{ block.shopify_attributes }}>
+          {% render 'icon', name: block.settings.icon, size: 28 %}
+          <h3>{{ block.settings.heading }}</h3>
+          {%- if block.settings.text != blank -%}<p>{{ block.settings.text }}</p>{%- endif -%}
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "t:sections.features.name",
+  "settings": [
+    {"type": "checkbox", "id": "center", "label": "t:sections.all.center", "default": false}
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "t:sections.features.blocks.feature.name",
+      "settings": [
+        {"type": "select", "id": "icon", "label": "t:sections.features.blocks.feature.settings.icon.label", "options": [{"value": "truck", "label": "t:sections.features.blocks.feature.settings.icon.options__1.label"}, {"value": "return", "label": "t:sections.features.blocks.feature.settings.icon.options__2.label"}, {"value": "shield", "label": "t:sections.features.blocks.feature.settings.icon.options__3.label"}, {"value": "star", "label": "t:sections.features.blocks.feature.settings.icon.options__4.label"}, {"value": "check", "label": "t:sections.features.blocks.feature.settings.icon.options__5.label"}, {"value": "pin", "label": "t:sections.features.blocks.feature.settings.icon.options__6.label"}], "default": "truck"},
+        {"type": "text", "id": "heading", "label": "t:sections.all.heading", "default": "Free shipping"},
+        {"type": "text", "id": "text", "label": "t:sections.all.text", "default": "On every order over $75."}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.features.presets.name",
+      "blocks": [
+        {"type": "feature"},
+        {
+          "type": "feature",
+          "settings": {"icon": "return", "heading": "30-day returns", "text": "Use it first. Send it back if it is not right."}
+        },
+        {
+          "type": "feature",
+          "settings": {"icon": "shield", "heading": "Repaired for life", "text": "If it wears out, we mend it."}
+        },
+        {
+          "type": "feature",
+          "settings": {"icon": "pin", "heading": "Made in Lisbon", "text": "In our own workshop."}
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

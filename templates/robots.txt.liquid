@@ -1,0 +1,13 @@
+{%- comment -%}
+  Shopify's default rules, kept editable. Add or remove directives per group below.
+  Reference: https://shopify.dev/docs/storefronts/themes/architecture/templates/robots-txt-liquid
+{%- endcomment -%}
+{%- for group in robots.default_groups -%}
+  {{- group.user_agent }}
+  {%- for rule in group.rules -%}
+    {{ rule }}
+  {%- endfor -%}
+  {%- if group.sitemap != blank %}
+    {{ group.sitemap }}
+  {%- endif %}
+{% endfor -%}

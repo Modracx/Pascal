@@ -1,0 +1,21 @@
+{
+  "sections": {
+    "main": { "type": "main-product", "blocks": {
+      "title": { "type": "title" },
+      "rating": { "type": "rating" },
+      "price": { "type": "price" },
+      "buy": { "type": "buy_buttons" },
+      "inventory": { "type": "inventory" },
+      "pickup": { "type": "pickup" },
+      "trust": { "type": "trust" },
+      "description": { "type": "description" },
+      "shipping": { "type": "collapsible", "settings": { "heading": "Shipping & returns", "content": "<p>Free shipping on orders over $75. 30-day returns.</p>" } },
+      "share": { "type": "share" }
+    }, "block_order": ["title", "rating", "price", "buy", "inventory", "pickup", "trust", "description", "shipping", "share"] },
+    "complementary": { "type": "product-recommendations", "settings": { "intent": "complementary", "limit": 4 } },
+    "related": { "type": "product-recommendations", "settings": { "intent": "related", "limit": 4 } },
+    "recent": { "type": "recently-viewed", "settings": {} }
+  },
+  "order": ["main", "complementary", "related", "recent"]
+}
+

@@ -1,0 +1,46 @@
+{%- liquid
+  assign threshold_1 = settings.free_shipping_threshold | times: 100
+  assign threshold_2 = settings.free_shipping_tier_2_threshold | times: 100
+  assign current = cart.total_price
+
+  assign target_threshold = threshold_1
+  if threshold_2 > threshold_1 and current >= threshold_1
+    assign target_threshold = threshold_2
+  endif
+
+  assign remaining = target_threshold | minus: current
+  assign max_threshold = threshold_2 | default: threshold_1
+  if max_threshold <= 0
+    assign max_threshold = threshold_1
+  endif
+
+  assign progress = 100
+  if max_threshold > 0 and current < max_threshold
+    assign progress = current | times: 100 | divided_by: max_threshold
+  endif
+-%}
+{%- if threshold_1 > 0 -%}
+  <div class="shipping-bar" style="--progress: {{ progress | at_most: 100 }}%">
+    <p class="shipping-bar__message">
+      {%- if current < threshold_1 -%}
+        {{ 'cart.free_shipping_remaining' | t: amount: remaining | money }}
+      {%- elsif threshold_2 > threshold_1 and current < threshold_2 -%}
+        {%- assign tier_2_remaining = threshold_2 | minus: current -%}
+        {%- assign reward_text = settings.free_shipping_tier_2_reward | default: 'a free gift' -%}
+        {% render 'icon', name: 'check', size: 14 %} {{ 'cart.free_shipping_unlocked' | t }} &bull; Add {{ tier_2_remaining | money }} for {{ reward_text }}!
+      {%- elsif threshold_2 > threshold_1 and current >= threshold_2 -%}
+        {%- assign reward_text = settings.free_shipping_tier_2_reward | default: 'a free gift' -%}
+        {% render 'icon', name: 'check', size: 14 %} {{ 'cart.free_shipping_unlocked' | t }} + {{ reward_text }} unlocked!
+      {%- else -%}
+        {% render 'icon', name: 'check', size: 16 %} {{ 'cart.free_shipping_unlocked' | t }}
+      {%- endif -%}
+    </p>
+    <div class="shipping-bar__track">
+      <div class="shipping-bar__fill"></div>
+      {%- if threshold_2 > threshold_1 -%}
+        {%- assign mark_1_pos = threshold_1 | times: 100 | divided_by: threshold_2 -%}
+        <span class="shipping-bar__step-mark" style="left: {{ mark_1_pos }}%" title="Free Shipping"></span>
+      {%- endif -%}
+    </div>
+  </div>
+{%- endif -%}

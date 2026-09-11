@@ -1,0 +1,5 @@
+node_modules/
+.shopify/
+config/settings_data.json.bak
+*.log
+.DS_Store

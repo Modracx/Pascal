@@ -1,0 +1,54 @@
+{%- comment -%}
+  Demo imagery for empty image slots, so the theme looks composed before a merchant uploads anything.
+  Still lifes generated in the theme palette, shipped in assets as demo-<kind>-<n>.jpg.
+  Params: kind (hero, editorial, portrait, square, tile, product, look, article, wide), index, sizes, priority, class
+{%- endcomment -%}
+{%- liquid
+  assign kind = kind | default: 'portrait'
+  case kind
+    when 'hero'
+      assign count = 2
+      assign w = 2000
+      assign h = 1250
+    when 'editorial'
+      assign count = 1
+      assign w = 2000
+      assign h = 1400
+    when 'square'
+      assign count = 2
+      assign w = 1400
+      assign h = 1400
+    when 'tile'
+      assign count = 3
+      assign w = 1200
+      assign h = 1500
+    when 'product'
+      assign count = 6
+      assign w = 1200
+      assign h = 1500
+    when 'look'
+      assign count = 1
+      assign w = 1600
+      assign h = 2000
+    when 'article'
+      assign count = 3
+      assign w = 1600
+      assign h = 1000
+    when 'wide'
+      assign count = 2
+      assign w = 2000
+      assign h = 1125
+    else
+      assign count = 4
+      assign w = 1200
+      assign h = 1500
+  endcase
+  assign i = index | default: 1 | minus: 1 | modulo: count | plus: 1
+  assign file = 'demo-' | append: kind | append: '-' | append: i | append: '.jpg'
+  assign sizes = sizes | default: '100vw'
+-%}
+<img class="placeholder{% if class %} {{ class }}{% endif %}"
+  src="{{ file | asset_img_url: '1200x' }}"
+  srcset="{{ file | asset_img_url: '600x' }} 600w, {{ file | asset_img_url: '900x' }} 900w, {{ file | asset_img_url: '1200x' }} 1200w, {{ file | asset_img_url: '1600x' }} 1600w, {{ file | asset_img_url: '2000x' }} 2000w"
+  sizes="{{ sizes }}" width="{{ w }}" height="{{ h }}" alt=""
+  {%- if priority %} loading="eager" fetchpriority="high"{% else %} loading="lazy"{% endif %}>

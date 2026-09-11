@@ -1,0 +1,113 @@
+.product { display: grid; gap: var(--space-8); }
+@media (min-width: 48em) { .product { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: var(--space-16); } }
+
+/* Gallery: scroll-snap on mobile, stacked on desktop. Thumbnails are anchor links — zero JS. */
+.gallery { position: relative; }
+.gallery__track { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; gap: var(--space-3); }
+.gallery__track::-webkit-scrollbar { display: none; }
+.gallery__item { flex: 0 0 100%; scroll-snap-align: start; overflow: hidden; background: var(--color-plate); border-radius: var(--radius-media); box-shadow: inset 0 0 0 1px rgb(27 26 23 / 0.04); }
+.gallery__item img { object-fit: var(--card-fit, cover); padding: var(--card-inset, 0); aspect-ratio: 4 / 5; width: 100%; mix-blend-mode: var(--card-blend, multiply); }
+.gallery__thumbs { display: flex; gap: var(--space-2); margin-top: var(--space-3); overflow-x: auto; scrollbar-width: none; padding: 2px; }
+.gallery__thumbs a { flex: 0 0 4rem; overflow: hidden; background: var(--color-plate); border-radius: var(--radius-sm); box-shadow: 0 0 0 1px transparent; transition: box-shadow var(--motion-fast), opacity var(--motion-fast); opacity: 0.8; }
+.gallery__thumbs a:hover, .gallery__thumbs a[aria-current] { box-shadow: 0 0 0 1.5px var(--color-ink); opacity: 1; }
+@media (min-width: 48em) {
+  .gallery--stacked .gallery__track { flex-direction: column; overflow: visible; scroll-snap-type: none; gap: var(--grid-gap); }
+  .gallery--grid .gallery__track { display: grid; grid-template-columns: 1fr 1fr; overflow: visible; scroll-snap-type: none; gap: var(--grid-gap); }
+  .gallery--grid .gallery__item:first-child { grid-column: 1 / -1; }
+  .gallery--grid .gallery__thumbs { display: none; }
+  .gallery--stacked .gallery__thumbs { display: none; }
+}
+
+.product__info { position: sticky; top: calc(var(--header-height) + var(--space-6)); display: grid; gap: var(--space-6); align-self: start; }
+.product__vendor { color: var(--color-muted); font-size: var(--text-xs); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: var(--space-3); }
+.product__title { font-size: var(--text-2xl); }
+.product__price { font-size: var(--text-lg); }
+.product__form { display: grid; gap: var(--space-5); }
+.product__buttons { display: grid; gap: var(--space-2); }
+.product__buttons .shopify-payment-button__button { border-radius: var(--radius-button) !important; min-height: 3.25rem; }
+.product__buttons .shopify-payment-button__button--unbranded { background: var(--color-accent) !important; }
+.product .tabs { margin-top: var(--space-2); }
+.form-status { color: var(--color-success); }
+.form-status--error { color: var(--color-sale); }
+
+.variant-picker { display: grid; gap: var(--space-4); }
+.variant-picker__values { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.variant-picker__values input { position: absolute; opacity: 0; pointer-events: none; }
+.variant-picker__values label { min-width: 2.75rem; padding: var(--space-2) var(--space-4); text-align: center; background: var(--color-surface); border: var(--border-width) solid var(--color-border-strong); border-radius: var(--radius-full); font-size: var(--text-sm); cursor: pointer; transition: border-color var(--motion-fast), background var(--motion-fast), color var(--motion-fast), transform var(--motion-fast) var(--ease-out); }
+.variant-picker__values label:hover { border-color: var(--color-ink); transform: translateY(-1px); }
+.variant-picker__values input:checked + label { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-bg); }
+.variant-picker__values input:focus-visible + label { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+.variant-picker__values input.is-unavailable + label { color: var(--color-muted); text-decoration: line-through; background: transparent; border-style: dashed; }
+
+/* Quantity stepper — compact pill. quantity-input.js wires the buttons; the input works without it. */
+.quantity { display: inline-flex; justify-self: start; align-items: center; height: 2.75rem; background: var(--color-surface); border: var(--border-width) solid var(--color-border-strong); border-radius: var(--radius-full); overflow: hidden; }
+.quantity__input { width: 2.5rem; height: 100%; padding: 0; text-align: center; border: 0; background: transparent; -moz-appearance: textfield; font-size: var(--text-sm); font-variant-numeric: tabular-nums; }
+.quantity__input::-webkit-inner-spin-button, .quantity__input::-webkit-outer-spin-button { appearance: none; }
+.quantity__input:focus { outline: none; }
+.quantity__btn { width: 2.5rem; height: 100%; display: inline-flex; align-items: center; justify-content: center; color: var(--color-muted); transition: background var(--motion-fast), color var(--motion-fast); }
+.quantity__btn:hover { background: var(--color-plate); color: var(--color-ink); }
+.quantity__btn svg { stroke-width: 1.5; }
+.quantity--sm { height: 2.125rem; }
+.quantity--sm .quantity__input { width: 2rem; font-size: var(--text-xs); }
+.quantity--sm .quantity__btn { width: 2rem; }
+
+ul.trust, .trust { display: grid; gap: var(--space-4); padding: var(--space-6) var(--space-6); background: var(--color-surface); border-radius: var(--radius-md); box-shadow: var(--shadow-hairline); font-size: var(--text-sm); }
+.trust__item { display: flex; gap: var(--space-4); align-items: center; }
+.trust__item svg { flex: 0 0 auto; width: 1.125rem; height: 1.125rem; stroke-width: 1.25; color: var(--color-accent); }
+
+.collapsible { border-top: var(--border-width) solid var(--color-border); }
+.collapsible:last-of-type { border-bottom: var(--border-width) solid var(--color-border); }
+.collapsible summary { display: flex; justify-content: space-between; align-items: center; gap: var(--space-4); padding-block: var(--space-4); font-weight: 500; transition: color var(--motion-fast); }
+.collapsible summary:hover { color: var(--color-accent); }
+.collapsible summary svg { flex: 0 0 auto; transition: transform var(--motion-normal) var(--ease-out); color: var(--color-muted); }
+.collapsible[open] summary svg { transform: rotate(45deg); }
+.collapsible__body { padding-bottom: var(--space-5); color: var(--color-muted); }
+
+/* Swatch chip — shared by the variant picker and product cards. The colour sits on the plate
+   behind the same quiet inner ring the theme gives images; an unrecognised name leaves the plate showing. */
+.swatch { position: relative; display: block; width: 2rem; height: 2rem; border-radius: var(--radius-full); background: var(--color-plate); overflow: hidden; }
+.swatch::before { content: ""; position: absolute; inset: 0; background: var(--swatch); }
+.swatch::after { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px rgb(27 26 23 / 0.08); }
+.swatch img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.swatch--sm { width: 0.875rem; height: 0.875rem; }
+
+/* Picker: the chip itself is the control. Selected draws an ink ring set off by a sliver of ground;
+   hover brings the bronze, the only place it appears. Unavailable is struck through with a hairline. */
+.variant-picker__selected { color: var(--color-ink); }
+.variant-picker__values--swatches { gap: var(--space-3); padding: 3px; }
+.variant-picker__values--swatches label { min-width: 0; padding: 0; border: 0; background: transparent; border-radius: var(--radius-full); line-height: 0; box-shadow: 0 0 0 2px transparent, 0 0 0 3.5px transparent; transition: box-shadow var(--motion-fast), transform var(--motion-fast) var(--ease-out); }
+.variant-picker__values--swatches label:hover { border: 0; box-shadow: 0 0 0 2px var(--color-bg), 0 0 0 3.5px var(--color-accent); transform: none; }
+.variant-picker__values--swatches input:checked + label { background: transparent; border: 0; color: inherit; box-shadow: 0 0 0 2px var(--color-bg), 0 0 0 3.5px var(--color-ink); }
+.variant-picker__values--swatches input:focus-visible + label { outline-offset: 5px; }
+.variant-picker__values--swatches input.is-unavailable + label { text-decoration: none; border: 0; background: transparent; }
+.variant-picker__values--swatches input.is-unavailable + label .swatch { opacity: 0.4; }
+.variant-picker__values--swatches input.is-unavailable + label .swatch::before { background: var(--swatch); }
+.variant-picker__values--swatches input.is-unavailable + label .swatch::after { background: linear-gradient(135deg, transparent calc(50% - 0.5px), var(--color-ink) calc(50% - 0.5px), var(--color-ink) calc(50% + 0.5px), transparent calc(50% + 0.5px)); }
+
+/* Choice rows — native checkbox or radio in ink, label beside it. Shared by purchase options and the gift card toggle. */
+.choice { display: flex; align-items: center; gap: var(--space-3); cursor: pointer; font-size: var(--text-sm); }
+.choice input { flex: 0 0 auto; width: 1rem; height: 1rem; margin: 0; accent-color: var(--color-ink); }
+.choice input:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+
+/* Purchase options: a hairline list, price on the right. */
+.purchase-options__list { display: grid; }
+.purchase-options__group { padding-top: var(--space-3); }
+.purchase-options__option { padding-block: var(--space-3); border-top: var(--border-width) solid var(--color-border); }
+.purchase-options__option:last-child { border-bottom: var(--border-width) solid var(--color-border); }
+.purchase-options__name { display: grid; gap: 2px; flex: 1 1 auto; }
+.purchase-options__price { margin-left: auto; font-variant-numeric: tabular-nums; color: var(--color-muted); }
+.purchase-options__option:has(input:checked) .purchase-options__price { color: var(--color-ink); }
+.purchase-options__option:has(input:disabled) { opacity: 0.4; cursor: default; }
+
+/* Quantity rules caption and volume pricing table. */
+.quantity-rules { display: flex; flex-wrap: wrap; gap: var(--space-1) var(--space-3); }
+.volume-pricing { margin-top: var(--space-2); }
+.volume-pricing__table { width: 100%; border-collapse: collapse; font-size: var(--text-sm); font-variant-numeric: tabular-nums; }
+.volume-pricing__table th { text-align: left; font-weight: 500; font-size: var(--text-xs); letter-spacing: 0.04em; color: var(--color-muted); padding-bottom: var(--space-2); }
+.volume-pricing__table td { padding-block: var(--space-2); border-top: var(--border-width) solid var(--color-border); }
+.volume-pricing__table td:last-child, .volume-pricing__table th:last-child { text-align: right; }
+
+/* Gift card recipient: the toggle reveals the fields. CSS handles the reveal; JS only keeps unused fields out of the request. */
+.recipient { display: grid; gap: var(--space-4); }
+.recipient__fields { display: none; gap: var(--space-4); padding: var(--space-5); background: var(--color-surface); border-radius: var(--radius-md); box-shadow: var(--shadow-hairline); }
+.recipient:has(.recipient__toggle input:checked) .recipient__fields, .recipient[data-open] .recipient__fields { display: grid; }

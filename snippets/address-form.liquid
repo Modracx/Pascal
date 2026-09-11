@@ -1,0 +1,2 @@
+{%- comment -%} Params: address (or blank for new), id {%- endcomment -%}
+{%- if address -%}{%- form 'customer_address', address -%}{%- render 'address-fields', form: form, id: id -%}{%- endform -%}{%- else -%}{%- form 'customer_address', customer.new_address -%}{%- render 'address-fields', form: form, id: id -%}{%- endform -%}{%- endif -%}

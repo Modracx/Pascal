@@ -1,0 +1,20 @@
+{%- unless request.page_type == 'index' -%}
+<nav class="breadcrumbs" aria-label="{{ 'general.breadcrumbs' | t }}">
+  <ol role="list" style="display:contents">
+    <li><a href="{{ routes.root_url }}">{{ 'general.home' | t }}</a></li>
+    {%- case request.page_type -%}
+      {%- when 'product' -%}
+        {%- if collection -%}<li><a href="{{ collection.url }}">{{ collection.title }}</a></li>{%- else -%}<li><a href="{{ routes.all_products_collection_url }}">{{ 'collections.all' | t }}</a></li>{%- endif -%}
+        <li aria-current="page">{{ product.title }}</li>
+      {%- when 'collection' -%}
+        <li><a href="{{ routes.collections_url }}">{{ 'general.collections' | t }}</a></li>
+        <li aria-current="page">{{ collection.title }}</li>
+      {%- when 'article' -%}
+        <li><a href="{{ blog.url }}">{{ blog.title }}</a></li>
+        <li aria-current="page">{{ article.title }}</li>
+      {%- else -%}
+        <li aria-current="page">{{ page_title }}</li>
+    {%- endcase -%}
+  </ol>
+</nav>
+{%- endunless -%}

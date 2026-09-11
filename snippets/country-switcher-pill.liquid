@@ -1,0 +1,35 @@
+{%- comment -%}
+  Country / Currency suggestion pill without intrusive modals.
+{%- endcomment -%}
+{%- if localization.available_countries.size > 1 -%}
+<div id="country-switcher-pill" class="country-pill" style="display: none; position: fixed; bottom: var(--space-4); left: var(--space-4); z-index: 50; background: var(--color-surface); padding: var(--space-3) var(--space-4); border-radius: var(--radius-full); box-shadow: var(--shadow-lift); border: var(--border-width) solid var(--color-border); font-size: var(--text-xs); align-items: center; gap: var(--space-3);">
+  <span>Shipping to <strong id="country-pill-name"></strong>?</span>
+  {%- form 'localization', id: 'country-pill-form' -%}
+    <input type="hidden" name="country_code" id="country-pill-code">
+    <button type="submit" class="btn btn--small btn--secondary" style="padding: var(--space-1) var(--space-3);">Switch</button>
+  {%- endform -%}
+  <button type="button" class="ctrl" onclick="document.getElementById('country-switcher-pill').remove(); localStorage.setItem('country_pill_dismissed', 'true');" aria-label="Dismiss" style="width: 1.5rem; height: 1.5rem; border: none; background: transparent; cursor: pointer;">
+    {% render 'icon', name: 'close', size: 14 %}
+  </button>
+</div>
+
+<script>
+  (function() {
+    if (localStorage.getItem('country_pill_dismissed')) return;
+    // Inspect timezone or language locale
+    const currentCountry = "{{ localization.country.iso_code }}";
+    // If user's browser language / timezone suggests another country, show pill
+    const userLocale = (navigator.language || '').split('-')[1]?.toUpperCase();
+    if (userLocale && userLocale !== currentCountry) {
+      const pill = document.getElementById('country-switcher-pill');
+      const codeInput = document.getElementById('country-pill-code');
+      const nameEl = document.getElementById('country-pill-name');
+      if (pill && codeInput && nameEl) {
+        codeInput.value = userLocale;
+        nameEl.textContent = userLocale;
+        pill.style.display = 'inline-flex';
+      }
+    }
+  })();
+</script>
+{%- endif -%}

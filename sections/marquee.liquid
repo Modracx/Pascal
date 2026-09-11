@@ -1,0 +1,56 @@
+{{ 'section-premium.css' | asset_url | stylesheet_tag }}
+<div class="marquee marquee--{{ section.settings.size | default: 'md' }}" style="--marquee-speed: {{ section.settings.speed | times: 6 }}s" aria-hidden="true" {{ section.shopify_attributes }}>
+  {%- comment -%}
+    Two identical halves so the loop is seamless at translateX(-50%). Each half repeats the words
+    six times so the track always outruns the viewport; under reduced motion only the first pass shows.
+  {%- endcomment -%}
+  <div class="marquee__track">
+    {%- for half in (1..2) -%}
+      {%- for pass in (1..6) -%}
+        {%- for block in section.blocks -%}<span{% if half == 1 and pass == 1 %} {{ block.shopify_attributes }}{% else %} class="marquee__repeat"{% endif %}>{% if block.settings.italic %}<em>{{ block.settings.text }}</em>{% else %}{{ block.settings.text }}{% endif %}</span>{%- endfor -%}
+      {%- endfor -%}
+    {%- endfor -%}
+  </div>
+</div>
+{% schema %}
+{
+  "name": "t:sections.marquee.name",
+  "settings": [
+    {"type": "select", "id": "size", "label": "t:sections.marquee.settings.size.label", "options": [{"value": "sm", "label": "t:sections.marquee.settings.size.options__1.label"}, {"value": "md", "label": "t:sections.marquee.settings.size.options__2.label"}, {"value": "lg", "label": "t:sections.marquee.settings.size.options__3.label"}], "default": "md"},
+    {"type": "range", "id": "speed", "label": "t:sections.marquee.settings.speed.label", "min": 20, "max": 90, "step": 5, "unit": "s", "default": 45}
+  ],
+  "blocks": [
+    {
+      "type": "word",
+      "name": "t:sections.marquee.blocks.word.name",
+      "settings": [
+        {"type": "text", "id": "text", "label": "t:sections.all.text", "default": "Made to last"},
+        {"type": "checkbox", "id": "italic", "label": "t:sections.marquee.blocks.word.settings.italic.label", "default": false}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.marquee.presets.name",
+      "blocks": [
+        {
+          "type": "word",
+          "settings": {"text": "Made to last"}
+        },
+        {
+          "type": "word",
+          "settings": {"text": "Small batches", "italic": true}
+        },
+        {
+          "type": "word",
+          "settings": {"text": "Repaired for life"}
+        },
+        {
+          "type": "word",
+          "settings": {"text": "Free shipping over $75", "italic": true}
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,50 @@
+{%- comment -%}
+  Bridges merchant settings to design tokens. Only tokens the merchant can change live here;
+  everything else stays in assets/tokens.css.
+{%- endcomment -%}
+{%- liquid
+  assign body_font = settings.body_font
+  assign heading_font = settings.heading_font
+  assign body_font_medium = body_font | font_modify: 'weight', '500'
+  assign heading_font_italic = heading_font | font_modify: 'style', 'italic'
+  assign card_inset = '0'
+  assign card_fit = 'cover'
+  if settings.card_image_fit == 'contain'
+    assign card_inset = '10%'
+    assign card_fit = 'contain'
+  endif
+-%}
+<style>
+  {{ body_font | font_face: font_display: 'swap' }}
+  {{ body_font_medium | font_face: font_display: 'swap' }}
+  {{ heading_font | font_face: font_display: 'swap' }}
+  {{ heading_font_italic | font_face: font_display: 'swap' }}
+  :root {
+    --font-body: {{ body_font.family }}, {{ body_font.fallback_families }};
+    --font-heading: {{ heading_font.family }}, {{ heading_font.fallback_families }};
+    --heading-weight: {{ heading_font.weight }};
+    --color-bg: {{ settings.color_background }};
+    --color-ink: {{ settings.color_ink }};
+    --color-plate: {{ settings.color_plate }};
+    --color-surface: {{ settings.color_surface }};
+    --color-accent-tint: {{ settings.color_accent | color_mix: settings.color_background, 14 }};
+    --color-rule: {{ settings.color_ink | color_mix: settings.color_background, 16 }};
+    --color-muted: {{ settings.color_ink | color_mix: settings.color_background, 62 }};
+    --color-border: {{ settings.color_ink | color_mix: settings.color_background, 11 }};
+    --color-border-strong: {{ settings.color_ink | color_mix: settings.color_background, 24 }};
+    --color-accent: {{ settings.color_accent }};
+    --color-on-accent: {{ settings.color_on_accent }};
+    --color-sale: {{ settings.color_sale }};
+    --container-max: {{ settings.container_width }}px;
+    --space-section: clamp({{ settings.section_spacing | times: 0.6 | round }}px, 4vw + 1rem, {{ settings.section_spacing }}px);
+    --radius-button: {% if settings.button_radius >= 32 %}9999px{% else %}{{ settings.button_radius }}px{% endif %};
+    --radius-card: {{ settings.card_radius }}px;
+    --radius-media: {{ settings.card_radius }}px;
+    --cols-desktop: {{ settings.grid_columns_desktop }};
+    --cols-mobile: {{ settings.grid_columns_mobile }};
+    --card-ratio: {{ settings.card_aspect_ratio }};
+    --card-fit: {{ card_fit }};
+    --card-inset: {{ card_inset }};
+    --card-blend: {% if settings.card_blend_white %}multiply{% else %}normal{% endif %};
+  }
+</style>

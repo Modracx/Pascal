@@ -1,0 +1,28 @@
+{{ 'section-extras.css' | asset_url | stylesheet_tag }}
+{{ 'component-button.css' | asset_url | stylesheet_tag }}
+<section class="section"><div class="container">
+  <div class="auth">
+    <h1>{{ 'customer.register.title' | t }}</h1>
+    {%- form 'create_customer' -%}
+      {%- render 'form-errors', form: form -%}
+      <div class="contact__row">
+        {%- assign label = 'customer.first_name' | t -%}
+        {%- render 'field', id: 'reg-first', name: 'customer[first_name]', label: label, value: form.first_name, autocomplete: 'given-name', errors: form.errors, field: 'first_name' -%}
+        {%- assign label = 'customer.last_name' | t -%}
+        {%- render 'field', id: 'reg-last', name: 'customer[last_name]', label: label, value: form.last_name, autocomplete: 'family-name', errors: form.errors, field: 'last_name' -%}
+      </div>
+      {%- assign label = 'customer.email' | t -%}
+      {%- render 'field', id: 'reg-email', name: 'customer[email]', label: label, type: 'email', value: form.email, autocomplete: 'email', required: true, errors: form.errors, field: 'email' -%}
+      {%- assign label = 'customer.password' | t -%}
+      {%- render 'field', id: 'reg-password', name: 'customer[password]', label: label, type: 'password', autocomplete: 'new-password', required: true, minlength: 5, errors: form.errors, field: 'password' -%}
+      <button type="submit" class="btn btn--full">{{ 'customer.register.submit' | t }}</button>
+      <p class="text-sm">{{ 'customer.register.have_account' | t }} <a href="{{ routes.account_login_url }}" style="text-decoration:underline">{{ 'customer.login.submit' | t }}</a></p>
+    {%- endform -%}
+  </div>
+</div></section>
+{% schema %}
+{
+  "name": "t:sections.main_register.name",
+  "settings": []
+}
+{% endschema %}

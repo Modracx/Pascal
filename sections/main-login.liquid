@@ -1,0 +1,40 @@
+{{ 'section-extras.css' | asset_url | stylesheet_tag }}
+{{ 'component-button.css' | asset_url | stylesheet_tag }}
+<section class="section"><div class="container">
+  <div class="auth">
+    {%- comment -%} Password recovery lives in a <details>, so no JS is needed to toggle it. {%- endcomment -%}
+    {%- form 'recover_customer_password' -%}
+      {%- assign success = 'customer.recover.success' | t -%}
+      {%- render 'form-errors', form: form, success: success -%}
+    {%- endform -%}
+    <h1>{{ 'customer.login.title' | t }}</h1>
+    {%- form 'customer_login' -%}
+      {%- render 'form-errors', form: form -%}
+      {%- assign label = 'customer.email' | t -%}
+      {%- render 'field', id: 'login-email', name: 'customer[email]', label: label, type: 'email', autocomplete: 'email', required: true, errors: form.errors, field: 'email' -%}
+      {%- assign label = 'customer.password' | t -%}
+      {%- render 'field', id: 'login-password', name: 'customer[password]', label: label, type: 'password', autocomplete: 'current-password', required: true, errors: form.errors, field: 'password' -%}
+      <button type="submit" class="btn btn--full">{{ 'customer.login.submit' | t }}</button>
+      <p class="text-sm">{{ 'customer.login.new' | t }} <a href="{{ routes.account_register_url }}" style="text-decoration:underline">{{ 'customer.login.create' | t }}</a></p>
+    {%- endform -%}
+    <details>
+      <summary class="text-sm" style="text-decoration:underline">{{ 'customer.login.forgot' | t }}</summary>
+      {%- form 'recover_customer_password', class: 'stack' -%}
+        <p class="text-sm text-muted" style="margin-top: var(--space-3)">{{ 'customer.recover.text' | t }}</p>
+        {%- assign label = 'customer.email' | t -%}
+        {%- render 'field', id: 'recover-email', name: 'email', label: label, type: 'email', autocomplete: 'email', required: true, errors: form.errors, field: 'email' -%}
+        <button type="submit" class="btn btn--secondary">{{ 'customer.recover.submit' | t }}</button>
+      {%- endform -%}
+    </details>
+    {%- if shop.checkout.guest_login -%}
+      <hr class="divider">
+      {%- form 'guest_login' -%}<button type="submit" class="btn btn--ghost">{{ 'customer.login.guest' | t }}</button>{%- endform -%}
+    {%- endif -%}
+  </div>
+</div></section>
+{% schema %}
+{
+  "name": "t:sections.main_login.name",
+  "settings": []
+}
+{% endschema %}

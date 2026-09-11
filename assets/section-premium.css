@@ -1,0 +1,101 @@
+/* Marquee: a slow line of large serif words. Pauses on hover, static under reduced motion. */
+.marquee { overflow: hidden; border-top: var(--rule) solid var(--color-rule); border-bottom: var(--rule) solid var(--color-rule); padding-block: var(--space-5); white-space: nowrap; mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent); -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent); }
+.marquee__track { display: inline-flex; gap: var(--space-12); padding-right: var(--space-12); width: max-content; font-family: var(--font-heading); font-weight: var(--heading-weight); font-size: var(--marquee-size, var(--text-xl)); letter-spacing: -0.01em; animation: marquee var(--marquee-speed, 40s) linear infinite; }
+.marquee__track em { font-style: italic; color: var(--color-accent); }
+.marquee:hover .marquee__track { animation-play-state: paused; }
+@keyframes marquee { to { transform: translateX(-50%); } }
+.marquee--sm { --marquee-size: var(--text-lg); padding-block: var(--space-4); }
+.marquee--lg { --marquee-size: var(--text-2xl); padding-block: var(--space-8); }
+@media (prefers-reduced-motion: reduce) { .marquee__track { animation: none; width: auto; white-space: normal; flex-wrap: wrap; } .marquee__repeat { display: none; } }
+
+/* Bento: an asymmetric image grid with optional captions and links */
+.bento { display: grid; gap: var(--grid-gap); grid-template-columns: repeat(2, 1fr); }
+.bento__item { position: relative; display: block; background: var(--color-plate); overflow: hidden; aspect-ratio: 1; border-radius: var(--radius-media); transform: translateZ(0); }
+.bento__item img { width: 100%; height: 100%; object-fit: cover; transition: transform var(--motion-slow) var(--ease-out); }
+@media (hover: hover) { .bento__item:hover img { transform: scale(1.03); } }
+.bento__item::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, rgb(0 0 0 / 0.45), transparent 50%); opacity: 0; transition: opacity var(--motion-normal); pointer-events: none; }
+.bento__item:has(.bento__caption)::after { opacity: 1; }
+.bento__caption { position: absolute; left: var(--space-6); bottom: var(--space-6); right: var(--space-6); color: #fff; display: grid; gap: 2px; z-index: 1; }
+.bento__caption strong { font-family: var(--font-heading); font-weight: var(--heading-weight); font-size: var(--text-xl); }
+.bento__caption span { font-size: var(--text-xs); letter-spacing: 0.06em; }
+@media (min-width: 48em) {
+  .bento { grid-template-columns: repeat(4, 1fr); grid-auto-rows: 1fr; }
+  .bento__item--wide { grid-column: span 2; aspect-ratio: 2 / 1; }
+  .bento__item--tall { grid-row: span 2; aspect-ratio: 1 / 2; }
+  .bento__item--large { grid-column: span 2; grid-row: span 2; aspect-ratio: 1; }
+}
+
+/* Shop the look: an image with numbered hotspots; each opens a small product card via <details> */
+.look { display: grid; gap: var(--space-8); }
+@media (min-width: 48em) { .look { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); align-items: start; } }
+.look__media { position: relative; aspect-ratio: 4 / 5; background: var(--color-plate); overflow: hidden; border-radius: var(--radius-media); }
+.look__media img { width: 100%; height: 100%; object-fit: cover; }
+.look__spot { position: absolute; left: var(--x); top: var(--y); transform: translate(-50%, -50%); }
+.look__spot summary { width: 2rem; height: 2rem; border-radius: var(--radius-full); background: var(--color-bg); color: var(--color-ink); display: grid; place-items: center; font-size: var(--text-xs); box-shadow: 0 0 0 5px rgb(255 255 255 / 0.35), var(--shadow-lift); transition: transform var(--motion-fast) var(--ease-spring); }
+.look__spot summary:hover, .look__spot[open] summary { transform: scale(1.1); background: var(--color-ink); color: var(--color-bg); }
+.look__card { position: absolute; top: calc(100% + var(--space-3)); left: 50%; transform: translateX(-50%); width: 14rem; background: var(--color-surface); padding: var(--space-3); border-radius: var(--radius-md); box-shadow: var(--shadow-hairline), var(--shadow-float); display: grid; grid-template-columns: 3.5rem 1fr; gap: var(--space-3); align-items: center; font-size: var(--text-sm); z-index: 2; }
+.look__card img { aspect-ratio: 1; object-fit: cover; background: var(--color-plate); border-radius: var(--radius-sm); }
+.look__spot--left .look__card { left: auto; right: 0; transform: none; }
+.look__spot--right .look__card { left: 0; transform: none; }
+.look__spot--up .look__card { top: auto; bottom: calc(100% + var(--space-3)); }
+.look__card .placeholder { aspect-ratio: 1; border-radius: var(--radius-sm); }
+.look__list-item .placeholder { aspect-ratio: 4 / 5; border-radius: var(--radius-sm); }
+.look__list { display: grid; gap: var(--space-4); align-content: start; }
+.look__list-item { display: grid; grid-template-columns: 5rem 1fr; gap: var(--space-4); align-items: center; padding-bottom: var(--space-4); border-bottom: var(--border-width) solid var(--color-border); }
+.look__list-item img { aspect-ratio: 4 / 5; object-fit: cover; background: var(--color-plate); border-radius: var(--radius-sm); }
+.look__num { font-size: var(--text-xs); color: var(--color-muted); margin-right: var(--space-2); }
+
+/* Icon list / features */
+.features { display: grid; gap: var(--space-8) var(--space-6); }
+@media (min-width: 40em) { .features { grid-template-columns: repeat(var(--columns, 4), minmax(0, 1fr)); } }
+.feature { display: grid; gap: var(--space-3); justify-items: var(--feature-align, start); text-align: var(--feature-text, left); }
+.feature svg { width: 1.5rem; height: 1.5rem; stroke-width: 1.25; box-sizing: content-box; padding: var(--space-3); border-radius: var(--radius-full); background: var(--color-accent-tint); color: var(--color-accent); }
+.feature h3 { font-family: var(--font-body); font-weight: 500; font-size: var(--text-sm); letter-spacing: 0.04em; }
+.feature p { font-size: var(--text-sm); color: var(--color-muted); }
+
+/* Category spotlight: one tall tile beside a stack of two that fills the same height.
+   The caption sits on a rounded tab of the page ground in the corner, the theme's one device. */
+.spotlight { display: grid; gap: var(--grid-gap); }
+.spotlight__stack { display: grid; gap: var(--grid-gap); }
+.spotlight__tile { position: relative; display: block; background: var(--color-plate); overflow: hidden; aspect-ratio: 4 / 5; border-radius: var(--radius-media); box-shadow: inset 0 0 0 1px rgb(27 26 23 / 0.04); transform: translateZ(0); }
+.spotlight__stack .spotlight__tile { aspect-ratio: 8 / 5; }
+.spotlight__tile img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform var(--motion-slow) var(--ease-out); }
+@media (hover: hover) { .spotlight__tile:hover img { transform: scale(1.03); } }
+.spotlight__body { position: absolute; left: 0; bottom: 0; max-width: calc(100% - var(--space-8)); padding: var(--space-4) var(--space-6) 0 0; background: var(--color-bg); color: var(--color-ink); border-top-right-radius: var(--radius-lg); display: grid; gap: var(--space-1); }
+.spotlight__body h3 { font-size: var(--text-xl); line-height: var(--leading-tight); }
+.spotlight__body span { font-size: var(--text-xs); letter-spacing: 0.04em; color: var(--color-muted); padding-bottom: var(--space-2); transition: color var(--motion-fast); }
+.spotlight__tile:hover .spotlight__body span { color: var(--color-accent); }
+@media (min-width: 48em) {
+  .spotlight { grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); align-items: stretch; }
+  /* The stack takes its height from the tall tile, never from its own images: zero content height, then stretch. */
+  .spotlight__stack { grid-template-rows: minmax(0, 1fr) minmax(0, 1fr); height: 0; min-height: 100%; }
+  .spotlight__stack .spotlight__tile { aspect-ratio: auto; min-height: 0; }
+  .spotlight__stack .spotlight__tile img { position: absolute; inset: 0; }
+}
+
+/* Timeline / story: a vertical rule with dated entries — order is information here */
+.timeline { display: grid; gap: var(--space-10); max-width: 52rem; }
+.timeline__item { display: grid; grid-template-columns: 6rem 1fr; gap: var(--space-6); padding-top: var(--space-5); border-top: var(--border-width) solid var(--color-border-strong); }
+.timeline__year { font-family: var(--font-heading); font-size: var(--text-xl); }
+.timeline__item h3 { font-family: var(--font-body); font-weight: 500; font-size: var(--text-md); margin-bottom: var(--space-2); }
+.timeline__item .rte { color: var(--color-muted); }
+.timeline__item img { margin-top: var(--space-4); aspect-ratio: 16 / 9; object-fit: cover; border-radius: var(--radius-media); }
+
+/* Comparison table (size guide, materials) */
+.table-wrap { overflow-x: auto; background: var(--color-surface); border-radius: var(--radius-md); box-shadow: var(--shadow-hairline); padding-inline: var(--space-2); }
+.table { width: 100%; border-collapse: collapse; font-size: var(--text-sm); font-variant-numeric: tabular-nums; }
+.table th, .table td { text-align: left; padding: var(--space-3) var(--space-3); border-bottom: var(--border-width) solid var(--color-border); vertical-align: top; }
+.table th { font-weight: 500; letter-spacing: 0.04em; font-size: var(--text-xs); color: var(--color-muted); }
+.table tr:first-child th { border-bottom-color: var(--color-border-strong); }
+.table tr:last-child td { border-bottom: 0; }
+
+/* Split banner: two half-width promos */
+.duo { display: grid; gap: var(--grid-gap); }
+@media (min-width: 48em) { .duo { grid-template-columns: 1fr 1fr; } }
+.duo__item { position: relative; display: grid; aspect-ratio: 4 / 3; background: var(--color-plate); overflow: hidden; color: #fff; border-radius: var(--radius-media); transform: translateZ(0); }
+.duo__item > * { grid-area: 1 / 1; }
+.duo__item img { width: 100%; height: 100%; object-fit: cover; transition: transform var(--motion-slow) var(--ease-out); }
+@media (hover: hover) { .duo__item:hover img { transform: scale(1.03); } }
+.duo__item::after { content: ""; grid-area: 1 / 1; background: linear-gradient(to top, rgb(0 0 0 / 0.5), transparent 60%); }
+.duo__body { position: relative; z-index: 1; align-self: end; padding: var(--space-8); display: grid; gap: var(--space-3); justify-items: start; }
+.duo__body h3 { font-size: var(--text-2xl); }

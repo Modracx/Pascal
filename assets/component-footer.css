@@ -1,0 +1,25 @@
+/* Footer: a hairline, columns, then the store name set as a signature. */
+.footer { border-top: var(--rule) solid var(--color-rule); padding-block: var(--space-16) var(--space-8); font-size: var(--text-sm); }
+.footer__grid { display: grid; gap: var(--space-10); padding-bottom: var(--space-16); }
+@media (min-width: 48em) { .footer__grid { grid-template-columns: minmax(0, 1.5fr) repeat(var(--footer-cols, 2), minmax(0, 1fr)); gap: var(--space-12); } }
+.footer__heading { font-size: var(--text-xs); letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-muted); margin-bottom: var(--space-4); }
+.footer__links li + li { margin-top: var(--space-2); }
+.footer__links a { color: var(--color-muted); transition: color var(--motion-fast); }
+.footer__links a:hover { color: var(--color-ink); }
+.footer__newsletter .rte { max-width: 30ch; color: var(--color-muted); }
+.footer__newsletter form { display: grid; gap: var(--space-3); max-width: 26rem; margin-top: var(--space-5); }
+.footer__pill { display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: start; }
+.footer__pill .field { display: contents; }
+.footer__pill .input { flex: 1 1 10rem; }
+.footer__pill .field__error { flex-basis: 100%; }
+.footer__newsletter .input { border-radius: var(--radius-full); padding-inline: var(--space-5); min-height: 2.75rem; }
+.footer__newsletter .btn { min-height: 2.75rem; padding-inline: var(--space-5); }
+.footer__wordmark { font-family: var(--font-heading); font-weight: var(--heading-weight); font-size: var(--text-3xl); letter-spacing: -0.03em; line-height: 0.85; color: var(--color-ink); border-top: var(--border-width) solid var(--color-border); padding-top: var(--space-8); overflow-wrap: anywhere; }
+.footer__wordmark img { max-height: 4rem; width: auto; }
+.footer__bottom { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: var(--space-6); margin-top: var(--space-8); font-size: var(--text-xs); color: var(--color-muted); }
+.footer__payment { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.footer__payment svg { height: 1.4rem; width: auto; opacity: 0.7; border-radius: 3px; }
+
+.footer__social { margin-top: var(--space-5); }
+.footer__follow { margin-top: var(--space-4); }
+.footer__follow .shopify-follow-button, .footer__follow [data-shopify-follow-on-shop] { font-family: inherit; }

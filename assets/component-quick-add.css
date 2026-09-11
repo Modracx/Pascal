@@ -1,0 +1,47 @@
+/* Quick add modal — a floating rounded card with the product form. Opened by quick-add.js. */
+.quick-add { width: min(100vw - 2rem, 52rem); max-width: none; max-height: min(100dvh - 2rem, 44rem); margin: auto; padding: 0; border: 0; border-radius: var(--radius-xl); background: var(--color-bg); color: var(--color-text); box-shadow: var(--shadow-float); overflow: hidden; }
+.quick-add::backdrop { background: rgb(26 26 24 / 0.35); backdrop-filter: blur(4px); }
+@media (prefers-reduced-motion: no-preference) {
+  .quick-add[open] { animation: quick-add-in var(--motion-normal) var(--ease-out); }
+  @keyframes quick-add-in { from { opacity: 0; transform: translateY(1rem) scale(0.98); } }
+}
+.quick-add[aria-busy="true"] { min-height: 20rem; }
+.quick-add__content { position: relative; display: grid; max-height: inherit; }
+.quick-add__close { position: absolute; top: var(--space-4); right: var(--space-4); z-index: 2; }
+.quick-add__media { background: var(--color-plate); aspect-ratio: 1; overflow: hidden; }
+.quick-add__media img { width: 100%; height: 100%; object-fit: var(--card-fit, cover); padding: var(--card-inset, 0); mix-blend-mode: var(--card-blend, multiply); }
+.quick-add__body { display: grid; gap: var(--space-5); align-content: start; padding: var(--space-8) var(--space-6) var(--space-6); overflow-y: auto; }
+.quick-add__title { font-size: var(--text-xl); }
+.quick-add__title a:hover { color: var(--color-accent); }
+.quick-add__details { font-size: var(--text-sm); justify-self: start; }
+.quick-add__content--error { display: grid; place-items: center; min-height: 14rem; padding: var(--space-8); text-align: center; }
+.quick-add__spinner { display: grid; place-items: center; min-height: 20rem; }
+.quick-add__spinner::after { content: ""; width: 1.5rem; height: 1.5rem; border: 1.5px solid var(--color-ink); border-right-color: transparent; border-radius: 50%; animation: btn-spin 0.7s linear infinite; }
+@media (min-width: 48em) {
+  .quick-add__content { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); }
+  .quick-add__media { aspect-ratio: auto; height: 100%; min-height: 28rem; }
+  .quick-add__body { padding: var(--space-10) var(--space-10) var(--space-8) var(--space-8); }
+}
+
+/* Quick view: the same card with a gallery on the plate. On desktop the title crosses the seam on a
+   rounded tab of the page ground, the way the split hero's headline does. */
+.quick-view__gallery { display: grid; grid-template-rows: 1fr auto; background: var(--color-plate); }
+.quick-view__track { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; scroll-behavior: smooth; }
+.quick-view__track::-webkit-scrollbar { display: none; }
+.quick-view__item { flex: 0 0 100%; scroll-snap-align: start; aspect-ratio: 1; }
+.quick-view__item img { width: 100%; height: 100%; object-fit: var(--card-fit, cover); padding: var(--card-inset, 0); mix-blend-mode: var(--card-blend, multiply); }
+.quick-view__thumbs { display: flex; gap: var(--space-2); padding: var(--space-3) var(--space-4) var(--space-4); overflow-x: auto; scrollbar-width: none; }
+.quick-view__thumbs::-webkit-scrollbar { display: none; }
+.quick-view__thumbs a { flex: 0 0 3rem; overflow: hidden; border-radius: var(--radius-sm); opacity: 0.7; box-shadow: 0 0 0 1.5px transparent; transition: opacity var(--motion-fast), box-shadow var(--motion-fast); }
+.quick-view__thumbs a:hover, .quick-view__thumbs a:focus-visible { opacity: 1; box-shadow: 0 0 0 1.5px var(--color-ink); outline: none; }
+.quick-view__thumbs img { display: block; width: 100%; height: 100%; object-fit: cover; mix-blend-mode: var(--card-blend, multiply); }
+.quick-view__heading { position: relative; z-index: 1; }
+.quick-view__heading .quick-add__title { line-height: var(--leading-tight); letter-spacing: var(--tracking-display); }
+.quick-view__excerpt { max-width: 38ch; }
+@media (min-width: 48em) {
+  .quick-view__item { aspect-ratio: 4 / 5; }
+  .quick-add__content--view .quick-view__gallery { height: 100%; min-height: 28rem; max-height: inherit; }
+  .quick-add__content--view .quick-add__body { padding-top: var(--space-12); }
+  .quick-view__heading { margin-left: calc(-1 * (var(--space-8) + 3rem)); padding: var(--space-3) var(--space-6) var(--space-3) var(--space-6); background: var(--color-bg); border-radius: var(--radius-lg) 0 0 var(--radius-lg); }
+}
+@media (prefers-reduced-motion: reduce) { .quick-view__track { scroll-behavior: auto; } }

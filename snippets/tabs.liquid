@@ -1,0 +1,20 @@
+{%- comment -%}
+  Tabs primitive. Pass `items` as an array of blocks with settings.heading and settings.content (richtext),
+  or render inline by passing `panels` as pre-rendered HTML separated by a delimiter. Used by the Tabs section
+  and by the product page. Param: style (line|pills), align (start|center), id
+{%- endcomment -%}
+{{ 'component-tabs.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'tabs.js' | asset_url }}" defer></script>
+<tab-group class="tabs">
+  <div class="tabs__list{% if style == 'pills' %} tabs__list--pills{% endif %}{% if align == 'center' %} tabs__list--center{% endif %}" role="tablist">
+    {%- for item in items -%}
+      <button type="button" class="tabs__tab" role="tab" id="tab-{{ id }}-{{ forloop.index }}" aria-controls="panel-{{ id }}-{{ forloop.index }}" aria-selected="{% if forloop.first %}true{% else %}false{% endif %}">{{ item.settings.heading }}</button>
+    {%- endfor -%}
+  </div>
+  {%- for item in items -%}
+    <div class="tabs__panel" role="tabpanel" id="panel-{{ id }}-{{ forloop.index }}" aria-labelledby="tab-{{ id }}-{{ forloop.index }}" tabindex="0" {{ item.shopify_attributes }}>
+      <h3 class="tabs__panel-title">{{ item.settings.heading }}</h3>
+      <div class="rte">{{ item.settings.content }}{{ item.settings.page.content }}</div>
+    </div>
+  {%- endfor -%}
+</tab-group>

@@ -1,0 +1,37 @@
+.collection__toolbar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: var(--space-4); margin-bottom: var(--space-8); font-size: var(--text-sm); }
+.collection__layout { display: grid; gap: var(--space-8); }
+@media (min-width: 64em) { .collection__layout--filters { grid-template-columns: 15rem minmax(0, 1fr); gap: var(--space-16); } }
+.filters { display: grid; gap: var(--space-2); align-content: start; font-size: var(--text-sm); }
+.filters__group { border-bottom: var(--border-width) solid var(--color-border); }
+.filters__group summary { display: flex; justify-content: space-between; align-items: center; padding-block: var(--space-3); font-weight: 500; transition: color var(--motion-fast); }
+.filters__group summary:hover { color: var(--color-accent); }
+.filters__group summary svg { color: var(--color-muted); transition: transform var(--motion-normal) var(--ease-out); }
+.filters__group[open] summary svg { transform: rotate(180deg); }
+.filters__list { display: grid; gap: var(--space-2); padding-bottom: var(--space-4); }
+.filters__list label { display: flex; gap: var(--space-2); align-items: center; cursor: pointer; }
+.filters__list input[type="checkbox"] { accent-color: var(--color-ink); width: 1rem; height: 1rem; border-radius: var(--radius-xs); }
+.filters__active { display: flex; flex-wrap: wrap; gap: var(--space-2); padding-bottom: var(--space-3); }
+.filters__active a { display: inline-flex; align-items: center; gap: var(--space-1); padding: var(--space-1) var(--space-3); background: var(--color-surface); border-radius: var(--radius-full); box-shadow: var(--shadow-hairline); font-size: var(--text-xs); transition: background var(--motion-fast), color var(--motion-fast); }
+.filters__active a:hover { background: var(--color-ink); color: var(--color-bg); }
+.filters__mobile-summary { display: inline-flex; }
+@media (min-width: 64em) { .filters__mobile > summary { display: none; } }
+/* Sort: a pill that opens a floating menu of links. Pure <details>, applies on click. */
+.sort { position: relative; }
+.sort__summary { display: inline-flex; align-items: center; gap: var(--space-2); min-height: 2.5rem; padding: var(--space-1) var(--space-3) var(--space-1) var(--space-4); border: var(--border-width) solid var(--color-border-strong); border-radius: var(--radius-full); background: var(--color-surface); cursor: pointer; list-style: none; transition: border-color var(--motion-fast), background var(--motion-fast); }
+.sort__summary::-webkit-details-marker { display: none; }
+.sort__summary:hover, .sort[open] .sort__summary { border-color: var(--color-ink); }
+.sort__label { color: var(--color-muted); }
+.sort__label::after { content: ":"; }
+.sort__summary svg { color: var(--color-muted); transition: transform var(--motion-fast) var(--ease-out); }
+.sort[open] .sort__summary svg { transform: rotate(180deg); }
+.sort__menu { position: absolute; right: 0; top: calc(100% + var(--space-2)); min-width: 15rem; padding: var(--space-2); background: var(--color-surface); border-radius: var(--radius-md); box-shadow: var(--shadow-hairline), var(--shadow-float); z-index: var(--z-dropdown); animation: sort-in var(--motion-normal) var(--ease-out) both; }
+.sort__menu a { display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); padding: var(--space-2) var(--space-3); border-radius: var(--radius-sm); font-size: var(--text-sm); white-space: nowrap; transition: background var(--motion-fast), color var(--motion-fast); }
+.sort__menu a:hover { background: var(--color-plate); }
+.sort__menu a[aria-current] { color: var(--color-ink); font-weight: 500; }
+.sort__menu a[aria-current] svg { color: var(--color-accent); }
+@keyframes sort-in { from { opacity: 0; transform: translateY(-4px); } }
+.pagination { display: flex; justify-content: center; gap: var(--space-1); margin-top: var(--space-16); font-size: var(--text-sm); }
+.pagination a, .pagination span { display: inline-flex; align-items: center; justify-content: center; min-width: 2.5rem; height: 2.5rem; padding-inline: var(--space-2); border-radius: var(--radius-full); transition: background var(--motion-fast), color var(--motion-fast); }
+.pagination a:hover { background: var(--color-plate); color: inherit; }
+.pagination [aria-current] { background: var(--color-ink); color: var(--color-bg); }
+.empty-state { text-align: center; padding-block: var(--space-16); color: var(--color-muted); }

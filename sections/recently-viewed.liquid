@@ -1,0 +1,30 @@
+{{ 'component-product-card.css' | asset_url | stylesheet_tag }}
+{{ 'component-price.css' | asset_url | stylesheet_tag }}
+{{ 'component-button.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'recently-viewed.js' | asset_url }}" defer></script>
+<section class="section" {{ section.shopify_attributes }}>
+  <div class="container">
+    <recently-viewed data-section-id="{{ section.id }}" data-limit="{{ section.settings.limit }}"{% if product %} data-current-handle="{{ product.handle }}"{% endif %}>
+      {%- if search.performed and search.results_count > 0 -%}
+        <div class="section__header"><h2>{{ section.settings.heading }}</h2></div>
+        <div class="grid" style="--cols-desktop: {{ section.settings.limit | at_most: 5 }}">
+          {%- for product in search.results limit: section.settings.limit -%}
+            {%- render 'product-card', product: product, show_hover_image: settings.card_hover_image, quick_add: settings.card_quick_add, quick_view: settings.card_quick_view, show_swatches: settings.card_swatches -%}
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </recently-viewed>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "t:sections.recently_viewed.name",
+  "settings": [
+    {"type": "text", "id": "heading", "label": "t:sections.all.heading", "default": "Recently viewed"},
+    {"type": "range", "id": "limit", "label": "t:sections.all.products", "min": 2, "max": 8, "step": 1, "default": 4}
+  ],
+  "presets": [
+    {"name": "t:sections.recently_viewed.presets.name"}
+  ]
+}
+{% endschema %}

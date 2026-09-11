@@ -1,0 +1,9 @@
+{
+  "type": "header",
+  "name": "Header group",
+  "sections": {
+    "announcement": { "type": "announcement-bar", "blocks": { "a": { "type": "announcement", "settings": { "text": "Free shipping on orders over $75" } }, "b": { "type": "announcement", "settings": { "text": "30-day returns, no questions" } }, "c": { "type": "announcement", "settings": { "text": "Made in small batches" } } }, "block_order": ["a", "b", "c"], "settings": { "speed": 30 } },
+    "header": { "type": "header", "settings": {} }
+  },
+  "order": ["announcement", "header"]
+}

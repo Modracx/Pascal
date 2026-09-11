@@ -1,0 +1,21 @@
+{{ 'section-content.css' | asset_url | stylesheet_tag }}
+<section class="section"><div class="container">
+  <div class="section__header"><h1>{{ 'collections.all' | t }}</h1></div>
+  {%- paginate collections by 24 -%}
+    <div class="grid">
+      {%- for c in collections -%}
+        <a class="collection-list__item" href="{{ c.url }}">
+          <div class="collection-list__media">{%- render 'media', image: c.featured_image, sizes: '(min-width: 48em) 25vw, 50vw', widths: '360, 540, 720, 900' -%}</div>
+          <h3>{{ c.title }}</h3>
+        </a>
+      {%- endfor -%}
+    </div>
+    {%- render 'pagination', paginate: paginate -%}
+  {%- endpaginate -%}
+</div></section>
+{% schema %}
+{
+  "name": "t:sections.main_list_collections.name",
+  "settings": []
+}
+{% endschema %}

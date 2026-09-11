@@ -1,0 +1,47 @@
+{{ 'section-premium.css' | asset_url | stylesheet_tag }}
+{{ 'component-button.css' | asset_url | stylesheet_tag }}
+<section class="section section--tight" {{ section.shopify_attributes }}>
+  <div class="container duo">
+    {%- for block in section.blocks limit: 2 -%}
+      {%- assign b = block.settings -%}
+      <div class="duo__item" {{ block.shopify_attributes }}>
+        {%- if b.image != blank -%}{%- render 'media', image: b.image, sizes: '(min-width: 48em) 50vw, 100vw', widths: '600, 900, 1200, 1600' -%}{%- else -%}{% render 'placeholder', kind: 'square', index: forloop.index, sizes: '(min-width: 48em) 50vw, 100vw' %}{%- endif -%}
+        <div class="duo__body">
+          <h3>{{ b.heading }}</h3>
+          {%- if b.button_label != blank -%}<a href="{{ b.link }}" class="btn btn--sm btn--light">{{ b.button_label }}</a>{%- endif -%}
+        </div>
+      </div>
+    {%- endfor -%}
+  </div>
+</section>
+{% schema %}
+{
+  "name": "t:sections.duo_banner.name",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "banner",
+      "name": "t:sections.duo_banner.blocks.banner.name",
+      "limit": 2,
+      "settings": [
+        {"type": "image_picker", "id": "image", "label": "t:sections.all.image"},
+        {"type": "text", "id": "heading", "label": "t:sections.all.heading", "default": "For the table"},
+        {"type": "text", "id": "button_label", "label": "t:sections.all.button_label", "default": "Shop"},
+        {"type": "url", "id": "link", "label": "t:sections.all.link"}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.duo_banner.presets.name",
+      "blocks": [
+        {"type": "banner"},
+        {
+          "type": "banner",
+          "settings": {"heading": "For the desk"}
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

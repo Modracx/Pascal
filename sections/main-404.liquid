@@ -1,0 +1,12 @@
+{{ 'component-button.css' | asset_url | stylesheet_tag }}
+<section class="section"><div class="container container--narrow stack" style="text-align:center">
+  <h1>{{ 'general.not_found.title' | t }}</h1>
+  <p class="text-muted">{{ 'general.not_found.text' | t }}</p>
+  <a href="{{ routes.all_products_collection_url }}" class="btn">{{ 'general.not_found.cta' | t }}</a>
+</div></section>
+{% schema %}
+{
+  "name": "t:sections.main_404.name",
+  "settings": []
+}
+{% endschema %}

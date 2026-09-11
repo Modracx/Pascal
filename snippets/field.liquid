@@ -1,0 +1,44 @@
+{%- comment -%}
+  Form field — one pattern for every form: label, control, message slot.
+  Params: id, name, label, type (text, email, password, tel, textarea, select), value, required, autocomplete,
+          placeholder, rows, minlength, options (HTML for a select), hint, label_hidden, class, attrs (extra attributes)
+          errors (form.errors), field (this field's key in form.errors, e.g. 'email')
+  Client side: the message appears once the customer has left the field invalid (:user-invalid), no JS.
+  Server side: when form.errors names this field, Shopify's message shows and the control is marked aria-invalid.
+{%- endcomment -%}
+{%- liquid
+  assign type = type | default: 'text'
+  assign invalid = false
+  assign message = ''
+  if errors and field != blank and errors contains field
+    assign invalid = true
+    assign message = errors.translated_fields[field] | append: ' ' | append: errors.messages[field]
+  endif
+  if message == blank
+    case type
+      when 'email'
+        assign message = 'general.form.invalid_email' | t
+      when 'password'
+        if minlength
+          assign message = 'general.form.password_short' | t: count: minlength
+        else
+          assign message = 'general.form.required' | t
+        endif
+      else
+        assign message = 'general.form.required' | t
+    endcase
+  endif
+  assign describe = id | append: '-error'
+-%}
+<div class="field{% if invalid %} field--invalid{% endif %}{% if class %} {{ class }}{% endif %}">
+  <label class="field__label{% if label_hidden %} visually-hidden{% endif %}" for="{{ id }}">{{ label }}{% if required and label_hidden != true %} <span class="field__required" aria-hidden="true">*</span>{% endif %}</label>
+  {%- if type == 'textarea' -%}
+    <textarea class="textarea" id="{{ id }}" name="{{ name }}" rows="{{ rows | default: 5 }}"{% if placeholder %} placeholder="{{ placeholder | escape }}"{% endif %}{% if required %} required{% endif %}{% if autocomplete %} autocomplete="{{ autocomplete }}"{% endif %} aria-describedby="{{ describe }}"{% if invalid %} aria-invalid="true"{% endif %} {{ attrs }}>{{ value }}</textarea>
+  {%- elsif type == 'select' -%}
+    <select class="select" id="{{ id }}" name="{{ name }}"{% if required %} required{% endif %}{% if autocomplete %} autocomplete="{{ autocomplete }}"{% endif %} aria-describedby="{{ describe }}"{% if invalid %} aria-invalid="true"{% endif %} {{ attrs }}>{{ options }}</select>
+  {%- else -%}
+    <input class="input" type="{{ type }}" id="{{ id }}" name="{{ name }}"{% if value != blank %} value="{{ value | escape }}"{% endif %}{% if placeholder %} placeholder="{{ placeholder | escape }}"{% endif %}{% if required %} required{% endif %}{% if minlength %} minlength="{{ minlength }}"{% endif %}{% if autocomplete %} autocomplete="{{ autocomplete }}"{% endif %} aria-describedby="{{ describe }}"{% if invalid %} aria-invalid="true"{% endif %} {{ attrs }}>
+  {%- endif -%}
+  {%- if hint != blank -%}<p class="field__hint">{{ hint }}</p>{%- endif -%}
+  <p class="field__error" id="{{ describe }}">{{ message }}</p>
+</div>

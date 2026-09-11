@@ -1,0 +1,22 @@
+{%- comment -%}
+  Swatch — one colour or image chip for a product option value. HTML + CSS only.
+  Params: value (product_option_value, required), size ('sm' on cards)
+  Source order: native swatch image, native swatch colour, the value's variant image, the value name as a CSS colour.
+  An unrecognised name falls back to the plate colour, so nothing renders blank.
+{%- endcomment -%}
+{%- liquid
+  assign image = blank
+  assign color = blank
+  if value.swatch.image
+    assign image = value.swatch.image
+  elsif value.swatch.color
+    assign color = value.swatch.color
+  elsif value.variant.image
+    assign image = value.variant.image
+  else
+    assign color = value.name | handle
+  endif
+-%}
+<span class="swatch{% if size %} swatch--{{ size }}{% endif %}{% if image != blank %} swatch--image{% endif %}"{% if color != blank %} style="--swatch: {{ color }}"{% endif %} title="{{ value.name | escape }}">
+  {%- if image != blank -%}{{ image | image_url: width: 96 | image_tag: width: 48, height: 48, alt: '', loading: 'lazy' }}{%- endif -%}
+</span>

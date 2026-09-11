@@ -1,0 +1,50 @@
+{%- comment -%}
+  Quick view — rendered through the Section Rendering API (/products/handle?section_id=quick-view)
+  and injected into <quick-add-modal> by quick-add.js. Gallery, description excerpt and the purchase form.
+  Not available in the editor.
+{%- endcomment -%}
+{{ 'component-product.css' | asset_url | stylesheet_tag }}
+{{ 'component-price.css' | asset_url | stylesheet_tag }}
+{{ 'component-button.css' | asset_url | stylesheet_tag }}
+{{ 'component-quick-add.css' | asset_url | stylesheet_tag }}
+{%- liquid
+  assign section_id = 'quick-view-' | append: product.id
+  assign excerpt = product.description | strip_html | truncatewords: 40
+-%}
+<div class="quick-add__content quick-add__content--view" data-section="{{ section_id }}">
+  <button type="button" class="ctrl quick-add__close" data-quick-add-close aria-label="{{ 'accessibility.close' | t }}">{% render 'icon', name: 'close', size: 18 %}</button>
+  <div class="quick-view__gallery" aria-label="{{ 'products.gallery_label' | t }}">
+    <div class="quick-view__track">
+      {%- for media in product.media -%}
+        <div class="quick-view__item" id="qv-media-{{ media.id }}" data-media-id="{{ media.id }}">
+          {%- render 'media', image: media.preview_image, sizes: '(min-width: 48em) 24rem, 100vw', widths: '400, 600, 800', priority: forloop.first -%}
+        </div>
+      {%- else -%}
+        <div class="quick-view__item">{% assign ph = product.id | divided_by: 20 | modulo: 6 | plus: 1 %}{% render 'placeholder', kind: 'product', index: ph, sizes: '(min-width: 48em) 24rem, 100vw' %}</div>
+      {%- endfor -%}
+    </div>
+    {%- if product.media.size > 1 -%}
+      <div class="quick-view__thumbs">
+        {%- for media in product.media -%}
+          <a href="#qv-media-{{ media.id }}" aria-label="{{ 'products.thumbnail' | t: index: forloop.index }}">{{ media.preview_image | image_url: width: 120 | image_tag: loading: 'lazy', width: 48, height: 48, alt: '' }}</a>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
+  <div class="quick-add__body">
+    <div class="quick-view__heading">
+      {%- if settings.card_show_vendor and product.vendor != blank -%}<p class="product__vendor">{{ product.vendor }}</p>{%- endif -%}
+      <h2 class="quick-add__title"><a href="{{ product.url }}">{{ product.title }}</a></h2>
+    </div>
+    {%- render 'price', product: product, class: 'product__price' -%}
+    {%- if excerpt != blank -%}<p class="quick-view__excerpt text-sm text-muted">{{ excerpt }}</p>{%- endif -%}
+    {%- render 'product-form', product: product, section_id: section_id, show_quantity: settings.product_show_quantity, show_dynamic_checkout: false -%}
+    <a href="{{ product.url }}" class="link quick-add__details">{{ 'products.view_details' | t }}</a>
+  </div>
+</div>
+{% schema %}
+{
+  "name": "t:sections.quick_view.name",
+  "settings": []
+}
+{% endschema %}

@@ -1,0 +1,31 @@
+{{ 'section-content.css' | asset_url | stylesheet_tag }}
+<section class="section" {{ section.shopify_attributes }}>
+  <div class="container">
+    <div class="rich-text{% if section.settings.align == 'center' %} rich-text--center{% endif %}">
+      {% content_for 'blocks' %}
+    </div>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "t:sections.rich_text.name",
+  "blocks": [
+    {"type": "@theme"}
+  ],
+  "settings": [
+    {"type": "select", "id": "align", "label": "t:sections.all.alignment", "options": [{"value": "left", "label": "t:sections.rich_text.settings.align.options__1.label"}, {"value": "center", "label": "t:sections.rich_text.settings.align.options__2.label"}], "default": "left"}
+  ],
+  "presets": [
+    {
+      "name": "t:sections.rich_text.presets.name",
+      "blocks": [
+        {
+          "type": "heading",
+          "settings": {"text": "Talk about your brand"}
+        },
+        {"type": "text"}
+      ]
+    }
+  ]
+}
+{% endschema %}

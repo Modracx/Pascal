@@ -1,0 +1,144 @@
+{{ 'section-hero.css' | asset_url | stylesheet_tag }}
+{{ 'component-button.css' | asset_url | stylesheet_tag }}
+{%- liquid
+  assign s = section.settings
+  assign layout = s.layout
+  assign classes = 'hero hero--' | append: layout
+  if s.flip
+    assign classes = classes | append: ' hero--flip'
+  endif
+  if s.center
+    assign classes = classes | append: ' hero--center'
+  endif
+  assign sizes = '100vw'
+  if layout == 'split'
+    assign sizes = '(min-width: 48em) 58vw, 100vw'
+  endif
+-%}
+<section class="{{ classes }}" style="--hero-height: {{ s.height }}vh; --hero-overlay: {{ s.overlay | divided_by: 100.0 }};{% if s.text_light == false %} --hero-color: var(--color-ink);{% endif %}" {{ section.shopify_attributes }}>
+
+  <div class="hero__inner{% if layout == 'collage' %} container hero__grid{% elsif layout == 'statement' %} container{% endif %}">
+    {%- if layout != 'statement' -%}
+      <div class="hero__media reveal reveal--media">
+        {%- if s.image != blank -%}{%- render 'media', image: s.image, sizes: sizes, priority: true, widths: '800, 1200, 1600, 2000, 2400, 2800' -%}{%- else -%}{% render 'placeholder', kind: 'hero', index: 1, priority: true %}{%- endif -%}
+        {%- if layout == 'cover' -%}<div class="hero__overlay"></div>{%- endif -%}
+        {%- if layout == 'editorial' and s.caption != blank -%}<p class="hero__caption">{{ s.caption }}</p>{%- endif -%}
+      </div>
+    {%- endif -%}
+    {%- if layout == 'collage' -%}
+      <div class="hero__media reveal reveal--media reveal--2">{%- if s.image_2 != blank -%}{%- render 'media', image: s.image_2, sizes: '(min-width: 48em) 42vw, 100vw', widths: '500, 800, 1100' -%}{%- else -%}{% render 'placeholder', kind: 'portrait', index: 1, sizes: '(min-width: 48em) 42vw, 100vw' %}{%- endif -%}</div>
+      <div class="hero__media reveal reveal--media reveal--3">{%- if s.image_3 != blank -%}{%- render 'media', image: s.image_3, sizes: '(min-width: 48em) 33vw, 100vw', widths: '400, 700, 1000' -%}{%- else -%}{% render 'placeholder', kind: 'portrait', index: 3, sizes: '(min-width: 48em) 33vw, 100vw' %}{%- endif -%}</div>
+    {%- endif -%}
+    <div class="hero__body">
+      <div class="hero__text reveal reveal--2">{% content_for 'blocks' %}</div>
+      {%- if layout == 'statement' -%}
+        <div class="hero__foot reveal reveal--3"><span>{{ s.foot_left }}</span><span>{{ s.foot_right }}</span></div>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "t:sections.hero.name",
+  "blocks": [
+    {"type": "@theme"}
+  ],
+  "settings": [
+    {"type": "select", "id": "layout", "label": "t:sections.all.layout", "options": [{"value": "editorial", "label": "t:sections.hero.settings.layout.options__1.label"}, {"value": "split", "label": "t:sections.hero.settings.layout.options__2.label"}, {"value": "cover", "label": "t:sections.hero.settings.layout.options__3.label"}, {"value": "statement", "label": "t:sections.hero.settings.layout.options__4.label"}, {"value": "collage", "label": "t:sections.hero.settings.layout.options__5.label"}], "default": "editorial"},
+    {"type": "image_picker", "id": "image", "label": "t:sections.all.image"},
+    {"type": "image_picker", "id": "image_2", "label": "t:sections.hero.settings.image_2.label"},
+    {"type": "image_picker", "id": "image_3", "label": "t:sections.hero.settings.image_3.label"},
+    {"type": "text", "id": "caption", "label": "t:sections.hero.settings.caption.label", "info": "t:sections.hero.settings.caption.info"},
+    {"type": "range", "id": "height", "label": "t:sections.all.height", "min": 40, "max": 100, "step": 5, "unit": "vh", "default": 80},
+    {"type": "checkbox", "id": "flip", "label": "t:sections.hero.settings.flip.label", "default": false},
+    {"type": "checkbox", "id": "center", "label": "t:sections.hero.settings.center.label", "default": false},
+    {"type": "range", "id": "overlay", "label": "t:sections.hero.settings.overlay.label", "min": 0, "max": 80, "step": 5, "unit": "%", "default": 35},
+    {"type": "checkbox", "id": "text_light", "label": "t:sections.hero.settings.text_light.label", "default": true},
+    {"type": "text", "id": "foot_left", "label": "t:sections.hero.settings.foot_left.label", "default": "Autumn 2026"},
+    {"type": "text", "id": "foot_right", "label": "t:sections.hero.settings.foot_right.label", "default": "Made in small batches"}
+  ],
+  "presets": [
+    {
+      "name": "t:sections.hero.presets.preset__1.name",
+      "settings": {"layout": "editorial"},
+      "blocks": [
+        {
+          "type": "heading",
+          "settings": {"text": "Objects that earn their place.", "size": "lg", "tag": "h1"}
+        },
+        {
+          "type": "group",
+          "settings": {"align": "start"},
+          "blocks": [
+            {
+              "type": "button",
+              "settings": {"label": "Shop the collection", "link": "shopify://collections/all"}
+            },
+            {
+              "type": "button",
+              "settings": {"label": "Our story", "style": "ghost"}
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "t:sections.hero.presets.preset__2.name",
+      "settings": {"layout": "split"},
+      "blocks": [
+        {
+          "type": "heading",
+          "settings": {"text": "Made slowly, for every day.", "size": "lg", "tag": "h1"}
+        },
+        {
+          "type": "text",
+          "settings": {"text": "<p>Small-batch essentials for the desk and the kitchen, chosen because they last.</p>", "size": "lg"}
+        },
+        {
+          "type": "button",
+          "settings": {"label": "Shop all", "link": "shopify://collections/all"}
+        }
+      ]
+    },
+    {
+      "name": "t:sections.hero.presets.preset__3.name",
+      "settings": {"layout": "cover"},
+      "blocks": [
+        {
+          "type": "heading",
+          "settings": {"text": "The winter edit", "size": "lg", "tag": "h1"}
+        },
+        {
+          "type": "button",
+          "settings": {"label": "Explore", "style": "outline-light"}
+        }
+      ]
+    },
+    {
+      "name": "t:sections.hero.presets.preset__4.name",
+      "settings": {"layout": "statement"},
+      "blocks": [
+        {
+          "type": "heading",
+          "settings": {"text": "Fewer things, chosen well.", "size": "lg", "tag": "h1"}
+        }
+      ]
+    },
+    {
+      "name": "t:sections.hero.presets.preset__5.name",
+      "settings": {"layout": "collage"},
+      "blocks": [
+        {
+          "type": "heading",
+          "settings": {"text": "New this season", "size": "lg", "tag": "h1"}
+        },
+        {
+          "type": "button",
+          "settings": {"label": "Shop new arrivals", "style": "ghost"}
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,307 @@
+{
+  "sections": {
+    "hero": {
+      "type": "hero",
+      "settings": {
+        "layout": "cover",
+        "height": 90,
+        "overlay": 30,
+        "center": false
+      },
+      "blocks": {
+        "h": {
+          "type": "heading",
+          "settings": {
+            "text": "Objects that earn their place.",
+            "size": "lg",
+            "tag": "h1"
+          }
+        },
+        "g": {
+          "type": "group",
+          "settings": {
+            "align": "start"
+          },
+          "blocks": {
+            "b1": {
+              "type": "button",
+              "settings": {
+                "label": "Shop the collection",
+                "link": "shopify://collections/all",
+                "style": "light"
+              }
+            },
+            "b2": {
+              "type": "button",
+              "settings": {
+                "label": "Our story",
+                "link": "shopify://pages/about",
+                "style": "outline-light"
+              }
+            }
+          },
+          "block_order": [
+            "b1",
+            "b2"
+          ]
+        }
+      },
+      "block_order": [
+        "h",
+        "g"
+      ]
+    },
+    "features": {
+      "type": "features",
+      "blocks": {
+        "a": {
+          "type": "feature"
+        },
+        "b": {
+          "type": "feature",
+          "settings": {
+            "icon": "return",
+            "heading": "30-day returns",
+            "text": "Use it first. Send it back if it is not right."
+          }
+        },
+        "c": {
+          "type": "feature",
+          "settings": {
+            "icon": "shield",
+            "heading": "Repaired for life",
+            "text": "If it wears out, we mend it."
+          }
+        },
+        "d": {
+          "type": "feature",
+          "settings": {
+            "icon": "pin",
+            "heading": "Made in Lisbon",
+            "text": "In our own workshop."
+          }
+        }
+      },
+      "block_order": [
+        "a",
+        "b",
+        "c",
+        "d"
+      ]
+    },
+    "new": {
+      "type": "featured-collection",
+      "settings": {
+        "heading": "New this season",
+        "subheading": "Twelve pieces, each one checked by hand before it ships.",
+        "collection": "all",
+        "limit": 8,
+        "layout": "carousel",
+        "columns": 4
+      }
+    },
+    "spotlight": {
+      "type": "category-spotlight",
+      "settings": {
+        "heading": "Shop by room"
+      },
+      "blocks": {
+        "a": {
+          "type": "tile"
+        },
+        "b": {
+          "type": "tile"
+        },
+        "c": {
+          "type": "tile"
+        }
+      },
+      "block_order": [
+        "a",
+        "b",
+        "c"
+      ]
+    },
+    "story": {
+      "type": "image-with-text",
+      "settings": {
+        "style": "overlap"
+      },
+      "blocks": {
+        "h": {
+          "type": "heading",
+          "settings": {
+            "text": "Made by people who use what they make",
+            "size": "md"
+          }
+        },
+        "t": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Everything here is tested at our own tables first. If it does not earn a place in our homes, it does not earn a place in the shop.</p>"
+          }
+        },
+        "b": {
+          "type": "button",
+          "settings": {
+            "label": "Our story",
+            "style": "ghost",
+            "link": "shopify://pages/about"
+          }
+        }
+      },
+      "block_order": [
+        "h",
+        "t",
+        "b"
+      ]
+    },
+    "marquee": {
+      "type": "marquee",
+      "blocks": {
+        "a": {
+          "type": "word",
+          "settings": {
+            "text": "Made to last"
+          }
+        },
+        "b": {
+          "type": "word",
+          "settings": {
+            "text": "Small batches",
+            "italic": true
+          }
+        },
+        "c": {
+          "type": "word",
+          "settings": {
+            "text": "Repaired for life"
+          }
+        },
+        "d": {
+          "type": "word",
+          "settings": {
+            "text": "Free shipping over $75",
+            "italic": true
+          }
+        }
+      },
+      "block_order": [
+        "a",
+        "b",
+        "c",
+        "d"
+      ]
+    },
+    "tabs": {
+      "type": "collection-tabs",
+      "settings": {
+        "heading": "Shop",
+        "limit": 4
+      },
+      "blocks": {
+        "a": {
+          "type": "collection",
+          "settings": {
+            "title": "New"
+          }
+        },
+        "b": {
+          "type": "collection",
+          "settings": {
+            "title": "Bestsellers"
+          }
+        },
+        "c": {
+          "type": "collection",
+          "settings": {
+            "title": "Gifts"
+          }
+        }
+      },
+      "block_order": [
+        "a",
+        "b",
+        "c"
+      ]
+    },
+    "look": {
+      "type": "shop-the-look",
+      "blocks": {
+        "a": {
+          "type": "spot",
+          "settings": {
+            "x": 30,
+            "y": 66
+          }
+        },
+        "b": {
+          "type": "spot",
+          "settings": {
+            "x": 74,
+            "y": 66
+          }
+        }
+      },
+      "block_order": [
+        "a",
+        "b"
+      ]
+    },
+    "reviews": {
+      "type": "testimonials",
+      "settings": {
+        "heading": "What customers say",
+        "layout": "grid"
+      },
+      "blocks": {
+        "a": {
+          "type": "testimonial"
+        },
+        "b": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "I bought one as a gift and kept it. Then I bought another one for the gift.",
+            "author": "Priya M."
+          }
+        },
+        "c": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "Heavier than I expected, in a good way. The finish is beautiful.",
+            "author": "Tom H."
+          }
+        }
+      },
+      "block_order": [
+        "a",
+        "b",
+        "c"
+      ]
+    },
+    "journal": {
+      "type": "blog-posts",
+      "settings": {
+        "heading": "From the journal",
+        "limit": 3
+      }
+    },
+    "newsletter": {
+      "type": "newsletter",
+      "settings": {}
+    }
+  },
+  "order": [
+    "hero",
+    "features",
+    "new",
+    "spotlight",
+    "story",
+    "marquee",
+    "tabs",
+    "look",
+    "reviews",
+    "journal",
+    "newsletter"
+  ]
+}

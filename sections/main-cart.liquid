@@ -1,0 +1,63 @@
+{{ 'component-cart.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'quantity-input.js' | asset_url }}" defer></script>
+<script src="{{ 'cart-items.js' | asset_url }}" defer></script>
+{{ 'component-button.css' | asset_url | stylesheet_tag }}
+<section class="section">
+  <div class="container">
+    <h1 style="margin-bottom: var(--space-8)">{{ 'cart.title' | t }}</h1>
+    {%- if cart.item_count == 0 -%}
+      <div class="empty-state stack">
+        <p>{{ 'cart.empty' | t }}</p>
+        <a href="{{ routes.all_products_collection_url }}" class="btn">{{ 'general.continue_shopping' | t }}</a>
+      </div>
+    {%- else -%}
+      {%- comment -%} Plain HTML form. Quantity updates and removal work with zero JavaScript; cart-items.js enhances them in place. {%- endcomment -%}
+      <form action="{{ routes.cart_url }}" method="post" class="cart" id="cart" data-cart-root>
+        <div>
+          {%- render 'cart-line-items', section_id: section.id -%}
+          {%- if settings.cart_show_note -%}
+            <div class="cart__note" style="margin-top: var(--space-6)">
+              <label for="cart-note">{{ 'cart.note' | t }}</label>
+              <textarea class="textarea" id="cart-note" name="note" rows="2">{{ cart.note }}</textarea>
+            </div>
+          {%- endif -%}
+        </div>
+
+        <aside class="cart__summary" data-cart-summary="summary">
+          {%- render 'shipping-bar' -%}
+          {%- if settings.cart_enable_gift_wrap -%}
+            {%- render 'cart-gift-wrap' -%}
+          {%- endif -%}
+          {%- for d in cart.cart_level_discount_applications -%}
+            <div class="cart__row text-sm"><span>{{ d.title }}</span><span>-{{ d.total_allocated_amount | money }}</span></div>
+          {%- endfor -%}
+          <div class="cart__row cart__subtotal"><span>{{ 'cart.subtotal' | t }}</span><span>{{ cart.total_price | money }}</span></div>
+          <p class="text-sm text-muted">{{ 'cart.taxes_note' | t }}</p>
+          <button type="submit" name="checkout" class="btn btn--full">{{ 'cart.checkout' | t }}</button>
+          <div style="display: flex; gap: var(--space-2); align-items: center; justify-content: space-between;">
+            <button type="submit" class="btn btn--secondary" style="flex: 1;">{{ 'cart.update' | t }}</button>
+            {%- if settings.cart_enable_share -%}
+              {%- render 'share-cart' -%}
+            {%- endif -%}
+          </div>
+          {%- if section.settings.show_dynamic_checkout -%}
+            <div class="additional-checkout-buttons">{{ content_for_additional_checkout_buttons }}</div>
+          {%- endif -%}
+        </aside>
+      </form>
+      {%- if settings.cart_upsell_collection != blank -%}
+        {{ 'component-cart-drawer.css' | asset_url | stylesheet_tag }}
+        <script src="{{ 'product-form.js' | asset_url }}" defer></script>
+        <div style="max-width: 36rem; margin-top: var(--space-8)">{%- render 'cart-upsell', limit: 4 -%}</div>
+      {%- endif -%}
+    {%- endif -%}
+  </div>
+</section>
+{% schema %}
+{
+  "name": "t:sections.main_cart.name",
+  "settings": [
+    {"type": "checkbox", "id": "show_dynamic_checkout", "label": "t:sections.main_cart.settings.show_dynamic_checkout.label", "default": true}
+  ]
+}
+{% endschema %}

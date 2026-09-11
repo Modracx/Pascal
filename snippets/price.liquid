@@ -1,0 +1,39 @@
+{%- comment -%}
+  Price component. Accepts `product` or `variant`. Renders current price, compare-at price
+  and unit price. Markup is stable so variant-picker.js can update it in place.
+{%- endcomment -%}
+{%- liquid
+  if variant == blank and product != blank
+    assign variant = product.selected_or_first_available_variant
+  endif
+  assign price = variant.price
+  assign compare = variant.compare_at_price
+  assign on_sale = false
+  if compare > price
+    assign on_sale = true
+  endif
+  if product != blank and product.price_varies and show_from
+    assign price = product.price_min
+  endif
+-%}
+{%- liquid
+  if settings.currency_code_enabled
+    assign price_out = price | money_with_currency
+    assign compare_out = compare | money_with_currency
+  else
+    assign price_out = price | money
+    assign compare_out = compare | money
+  endif
+-%}
+<div class="price{% if on_sale %} price--sale{% endif %}{% if class %} {{ class }}{% endif %}" data-price>
+  <span class="visually-hidden">{{ 'products.price.regular' | t }}</span>
+  <span class="price__current">{% if product.price_varies and show_from %}{{ 'products.price.from' | t }} {% endif %}{{ price_out }}</span>
+  <span class="price__compare"{% unless on_sale %} hidden{% endunless %}>{% if on_sale %}<span class="visually-hidden">{{ 'products.price.compare' | t }}</span>{{ compare_out }}{% endif %}</span>
+  {%- if variant.unit_price_measurement -%}
+    <span class="price__unit">
+      {{ variant.unit_price | money }} /
+      {%- if variant.unit_price_measurement.reference_value != 1 %} {{ variant.unit_price_measurement.reference_value }}{% endif %}
+      {{ variant.unit_price_measurement.reference_unit }}
+    </span>
+  {%- endif -%}
+</div>

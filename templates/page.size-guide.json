@@ -1,0 +1,75 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "settings": {}
+    },
+    "table": {
+      "type": "comparison-table",
+      "settings": {
+        "heading": "Measurements",
+        "text": "<p>Measured flat, in centimetres. If you are between sizes, choose the larger.</p>"
+      },
+      "blocks": {
+        "a": {
+          "type": "row"
+        },
+        "b": {
+          "type": "row",
+          "settings": {
+            "row": "S | 88\u201392 cm | 74\u201378 cm"
+          }
+        },
+        "c": {
+          "type": "row",
+          "settings": {
+            "row": "M | 96\u2013100 cm | 82\u201386 cm"
+          }
+        },
+        "d": {
+          "type": "row",
+          "settings": {
+            "row": "L | 104\u2013108 cm | 90\u201394 cm"
+          }
+        }
+      },
+      "block_order": [
+        "a",
+        "b",
+        "c",
+        "d"
+      ]
+    },
+    "tabs": {
+      "type": "tabs",
+      "settings": {
+        "heading": "How to measure"
+      },
+      "blocks": {
+        "a": {
+          "type": "tab",
+          "settings": {
+            "heading": "Chest",
+            "content": "<p>Around the fullest part, tape level under the arms.</p>"
+          }
+        },
+        "b": {
+          "type": "tab",
+          "settings": {
+            "heading": "Waist",
+            "content": "<p>Around the narrowest point, tape relaxed.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "a",
+        "b"
+      ]
+    }
+  },
+  "order": [
+    "main",
+    "table",
+    "tabs"
+  ]
+}

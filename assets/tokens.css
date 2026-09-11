@@ -1,0 +1,95 @@
+/* Pascal — design tokens. Merchant-editable values are overridden in snippets/css-vars.liquid. */
+:root {
+  /* Color — warm near-black ink, bone ground, derived hairlines */
+  --color-bg: #f3f0e9;
+  --color-surface: #fbf9f5;
+  --color-plate: #e8e2d6;
+  --color-ink: #1c1b19;
+  --color-text: var(--color-ink);
+  --color-muted: #6f6a62;
+  --color-border: rgb(27 26 23 / 0.1);
+  --color-border-strong: rgb(27 26 23 / 0.22);
+  --color-rule: rgb(27 26 23 / 0.16);
+  --color-accent: #8a6a3e;
+  --color-accent-tint: #ece3d4;
+  --color-on-accent: #ffffff;
+  --color-sale: #a33d2b;
+  --color-success: #2f6b4a;
+
+  /* Typography */
+  --font-body: "Jost", system-ui, sans-serif;
+  --font-heading: "Fraunces", Georgia, serif;
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-md: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.75rem;
+  --text-2xl: clamp(2.25rem, 1.4rem + 2.8vw, 3.5rem);
+  --text-3xl: clamp(3rem, 1.6rem + 6.5vw, 7.5rem);
+  --leading-tight: 1.02;
+  --leading-normal: 1.65;
+  --tracking-display: -0.02em;
+  --tracking-body: 0.005em;
+  --heading-weight: 300;
+
+  /* Spacing (4px base) */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+  --space-section: clamp(4rem, 5vw + 2rem, 9rem);
+
+  /* Shape — soft corners. Buttons and cards are merchant-editable; the rest follow this scale. */
+  --border-width: 1px;
+  --rule: 1px;
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-xl: 28px;
+  --radius-full: 9999px;
+  --radius-button: 9999px;
+  --radius-card: 14px;
+  --radius-media: var(--radius-card);
+
+  /* Elevation — layered, low-contrast shadows. Float for menus and drawers, lift for hover. */
+  --shadow-hairline: 0 0 0 1px var(--color-border);
+  --shadow-soft: 0 1px 2px rgb(27 26 23 / 0.04), 0 4px 14px -4px rgb(27 26 23 / 0.08);
+  --shadow-lift: 0 2px 6px -2px rgb(27 26 23 / 0.1), 0 12px 28px -12px rgb(27 26 23 / 0.18);
+  --shadow-float: 0 8px 24px -10px rgb(27 26 23 / 0.16), 0 28px 64px -20px rgb(27 26 23 / 0.24);
+
+  /* Glass — translucent surfaces for the header, sticky bars and floating controls */
+  --glass-bg: color-mix(in srgb, var(--color-bg) 92%, transparent);
+  --glass-blur: saturate(140%) blur(20px);
+
+  /* Motion — used for state changes and one reveal */
+  --motion-fast: 160ms;
+  --motion-normal: 280ms;
+  --motion-slow: 700ms;
+  --motion-reveal: 1200ms;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.4, 0.64, 1);
+
+  /* Layout */
+  --container-max: 1520px;
+  --container-pad: clamp(1.25rem, 4vw, 4rem);
+  --grid-gap: clamp(0.875rem, 1.6vw, 1.5rem);
+  --header-height: 4.75rem;
+
+  /* Z-index scale */
+  --z-header: 100;
+  --z-dropdown: 200;
+  --z-drawer: 300;
+  --z-modal: 400;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root { --motion-fast: 0ms; --motion-normal: 0ms; --motion-slow: 0ms; --motion-reveal: 0ms; }
+}

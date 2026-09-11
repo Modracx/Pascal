@@ -1,0 +1,56 @@
+{%- render 'form-errors', form: form -%}
+<div class="contact__row">
+  {%- assign label = 'customer.first_name' | t -%}
+  {%- assign field_id = 'a-first-' | append: id -%}
+  {%- render 'field', id: field_id, name: 'address[first_name]', label: label, value: form.first_name, autocomplete: 'given-name', required: true, errors: form.errors, field: 'first_name' -%}
+  {%- assign label = 'customer.last_name' | t -%}
+  {%- assign field_id = 'a-last-' | append: id -%}
+  {%- render 'field', id: field_id, name: 'address[last_name]', label: label, value: form.last_name, autocomplete: 'family-name', required: true, errors: form.errors, field: 'last_name' -%}
+</div>
+{%- assign label = 'customer.address.company' | t -%}
+{%- assign field_id = 'a-company-' | append: id -%}
+{%- render 'field', id: field_id, name: 'address[company]', label: label, value: form.company, autocomplete: 'organization', errors: form.errors, field: 'company' -%}
+{%- assign label = 'customer.address.address1' | t -%}
+{%- assign field_id = 'a-address1-' | append: id -%}
+{%- render 'field', id: field_id, name: 'address[address1]', label: label, value: form.address1, autocomplete: 'address-line1', required: true, errors: form.errors, field: 'address1' -%}
+{%- assign label = 'customer.address.address2' | t -%}
+{%- assign field_id = 'a-address2-' | append: id -%}
+{%- render 'field', id: field_id, name: 'address[address2]', label: label, value: form.address2, autocomplete: 'address-line2', errors: form.errors, field: 'address2' -%}
+<div class="contact__row">
+  {%- assign label = 'customer.address.city' | t -%}
+  {%- assign field_id = 'a-city-' | append: id -%}
+  {%- render 'field', id: field_id, name: 'address[city]', label: label, value: form.city, autocomplete: 'address-level2', required: true, errors: form.errors, field: 'city' -%}
+  {%- assign label = 'customer.address.zip' | t -%}
+  {%- assign field_id = 'a-zip-' | append: id -%}
+  {%- render 'field', id: field_id, name: 'address[zip]', label: label, value: form.zip, autocomplete: 'postal-code', required: true, errors: form.errors, field: 'zip' -%}
+</div>
+<div class="contact__row">
+  {%- assign label = 'customer.address.country' | t -%}
+  {%- assign country_attrs = 'data-default="' | append: form.country | append: '"' -%}
+  {%- assign field_id = 'a-country-' | append: id -%}
+  {%- render 'field', id: field_id, name: 'address[country]', label: label, type: 'select', options: all_country_option_tags, autocomplete: 'country', required: true, attrs: country_attrs, errors: form.errors, field: 'country' -%}
+  {%- assign label = 'customer.address.province' | t -%}
+  {%- assign province_attrs = 'data-default="' | append: form.province | append: '"' -%}
+  {%- assign field_id = 'a-province-' | append: id -%}
+  {%- render 'field', id: field_id, name: 'address[province]', label: label, type: 'select', autocomplete: 'address-level1', attrs: province_attrs, errors: form.errors, field: 'province' -%}
+</div>
+{%- assign label = 'customer.address.phone' | t -%}
+{%- assign field_id = 'a-phone-' | append: id -%}
+{%- render 'field', id: field_id, name: 'address[phone]', label: label, type: 'tel', value: form.phone, autocomplete: 'tel', errors: form.errors, field: 'phone' -%}
+<label class="text-sm" style="display:flex;gap:var(--space-2);align-items:center">{{ form.set_as_default_checkbox }} {{ 'customer.address.default' | t }}</label>
+<div style="display:flex;gap:var(--space-2)"><button type="submit" class="btn">{{ 'customer.address.save' | t }}</button></div>
+<script>
+  (function () {
+    var country = document.getElementById('a-country-{{ id }}'), province = document.getElementById('a-province-{{ id }}');
+    if (!country || !province) return;
+    function sync() {
+      var opt = country.options[country.selectedIndex];
+      var provinces = JSON.parse(opt.getAttribute('data-provinces') || '[]');
+      province.innerHTML = '';
+      province.closest('.field').hidden = provinces.length === 0;
+      provinces.forEach(function (p) { var o = document.createElement('option'); o.value = p[0]; o.textContent = p[1]; if (p[0] === province.dataset.default) o.selected = true; province.appendChild(o); });
+    }
+    if (country.dataset.default) country.value = country.dataset.default;
+    country.addEventListener('change', sync); sync();
+  })();
+</script>

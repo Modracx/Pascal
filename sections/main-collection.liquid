@@ -1,0 +1,141 @@
+{{ 'component-collection.css' | asset_url | stylesheet_tag }}
+{{ 'component-product-card.css' | asset_url | stylesheet_tag }}
+{{ 'component-price.css' | asset_url | stylesheet_tag }}
+{{ 'component-button.css' | asset_url | stylesheet_tag }}
+{{ 'section-extras.css' | asset_url | stylesheet_tag }}
+{%- liquid
+  assign s = section.settings
+  assign sort_by = collection.sort_by | default: collection.default_sort_by
+-%}
+<section class="section">
+  <div class="container">
+    {%- if s.show_breadcrumbs -%}{%- render 'breadcrumbs' -%}{%- endif -%}
+    <div class="collection-banner{% if s.banner_style == 'overlap' and s.show_image and collection.image != blank %} collection-banner--overlap{% endif %}">
+      {%- if s.show_image and collection.image != blank -%}
+        <div class="collection-banner__media">{%- render 'media', image: collection.image, sizes: '100vw', priority: true, widths: '800, 1200, 1600, 2000' -%}</div>
+      {%- endif -%}
+      <h1>{{ collection.title }}</h1>
+      {%- if s.show_description and collection.description != blank -%}<div class="rte">{{ collection.description }}</div>{%- endif -%}
+    </div>
+
+    {%- paginate collection.products by s.per_page -%}
+      {%- comment -%} One GET form drives both filters and sorting. Works with JS disabled. {%- endcomment -%}
+      <form method="get" action="{{ collection.url }}" id="collection-filters">
+        <div class="collection__toolbar">
+          <p class="text-muted">{{ 'collections.product_count' | t: count: collection.products_count }}</p>
+          {%- if s.enable_sort -%}
+            {%- comment -%}
+              Sort is a <details> menu of links that apply on click and keep the active filters.
+              The hidden input keeps the chosen sort when the filter form's Apply is used.
+            {%- endcomment -%}
+            {%- liquid
+              assign filter_query = ''
+              for filter in collection.filters
+                case filter.type
+                  when 'price_range'
+                    if filter.min_value.value != blank
+                      assign filter_query = filter_query | append: '&' | append: filter.min_value.param_name | append: '=' | append: filter.min_value.value
+                    endif
+                    if filter.max_value.value != blank
+                      assign filter_query = filter_query | append: '&' | append: filter.max_value.param_name | append: '=' | append: filter.max_value.value
+                    endif
+                  else
+                    for value in filter.active_values
+                      assign escaped = value.value | url_param_escape
+                      assign filter_query = filter_query | append: '&' | append: value.param_name | append: '=' | append: escaped
+                    endfor
+                endcase
+              endfor
+              assign current_sort = collection.sort_options | where: 'value', sort_by | first
+            -%}
+            <input type="hidden" name="sort_by" value="{{ sort_by }}">
+            <details class="sort">
+              <summary class="sort__summary" aria-label="{{ 'collections.sort_by' | t }}">
+                <span class="sort__label">{{ 'collections.sort_by' | t }}</span>
+                <span class="sort__current">{{ current_sort.name | default: sort_by }}</span>
+                {% render 'icon', name: 'chevron', size: 14 %}
+              </summary>
+              <ul class="sort__menu" role="list">
+                {%- for option in collection.sort_options -%}
+                  <li><a href="{{ collection.url }}?sort_by={{ option.value }}{{ filter_query }}"{% if option.value == sort_by %} aria-current="true"{% endif %}>{{ option.name }}{% if option.value == sort_by %}{% render 'icon', name: 'check', size: 14 %}{% endif %}</a></li>
+                {%- endfor -%}
+              </ul>
+            </details>
+          {%- endif -%}
+        </div>
+
+        <div class="collection__layout{% if s.enable_filters and collection.filters.size > 0 %} collection__layout--filters{% endif %}">
+          {%- if s.enable_filters and collection.filters.size > 0 -%}
+            <details class="filters__mobile" open>
+              <summary class="btn btn--sm btn--secondary filters__mobile-summary">{{ 'collections.filters' | t }}</summary>
+              <aside class="filters">
+                {%- assign active = 0 -%}
+                {%- for filter in collection.filters -%}{%- assign active = active | plus: filter.active_values.size -%}{%- endfor -%}
+                {%- if active > 0 -%}
+                  <div class="filters__active">
+                    {%- for filter in collection.filters -%}
+                      {%- for v in filter.active_values -%}<a href="{{ v.url_to_remove }}">{{ v.label }} ✕</a>{%- endfor -%}
+                    {%- endfor -%}
+                    <a href="{{ collection.url }}?sort_by={{ sort_by }}">{{ 'collections.clear_all' | t }}</a>
+                  </div>
+                {%- endif -%}
+                {%- for filter in collection.filters -%}
+                  <details class="filters__group" open>
+                    <summary>{{ filter.label }}{% render 'icon', name: 'chevron', size: 14 %}</summary>
+                    <div class="filters__list">
+                      {%- case filter.type -%}
+                        {%- when 'boolean', 'list' -%}
+                          {%- for value in filter.values -%}
+                            <label>
+                              <input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}"{% if value.active %} checked{% endif %}{% if value.count == 0 and value.active == false %} disabled{% endif %}>
+                              {{ value.label }} <span class="text-muted">({{ value.count }})</span>
+                            </label>
+                          {%- endfor -%}
+                        {%- when 'price_range' -%}
+                          <div style="display:flex;gap:var(--space-2)">
+                            <input class="input" type="number" name="{{ filter.min_value.param_name }}" placeholder="{{ 'products.price.from' | t }}" min="0" max="{{ filter.range_max | money_without_currency | replace: ',', '' }}" value="{{ filter.min_value.value | money_without_currency | replace: ',', '' }}" inputmode="decimal">
+                            <input class="input" type="number" name="{{ filter.max_value.param_name }}" placeholder="{{ filter.range_max | money_without_currency }}" min="0" max="{{ filter.range_max | money_without_currency | replace: ',', '' }}" value="{{ filter.max_value.value | money_without_currency | replace: ',', '' }}" inputmode="decimal">
+                          </div>
+                      {%- endcase -%}
+                    </div>
+                  </details>
+                {%- endfor -%}
+                <button type="submit" class="btn btn--full">{{ 'collections.apply' | t }}</button>
+              </aside>
+            </details>
+          {%- endif -%}
+
+          <div>
+            {%- if collection.products.size == 0 -%}
+              <p class="empty-state">{{ 'collections.empty' | t }}</p>
+            {%- else -%}
+              <div class="grid">
+                {%- for product in collection.products -%}
+                  {%- assign priority = false -%}
+                  {%- if forloop.index <= 4 and paginate.current_page == 1 -%}{%- assign priority = true -%}{%- endif -%}
+                  {%- render 'product-card', product: product, show_vendor: settings.card_show_vendor, show_hover_image: settings.card_hover_image, quick_add: settings.card_quick_add, quick_view: settings.card_quick_view, show_swatches: settings.card_swatches, priority: priority -%}
+                {%- endfor -%}
+              </div>
+            {%- endif -%}
+            {%- render 'pagination', paginate: paginate -%}
+          </div>
+        </div>
+      </form>
+    {%- endpaginate -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "t:sections.main_collection.name",
+  "settings": [
+    {"type": "range", "id": "per_page", "label": "t:sections.main_collection.settings.per_page.label", "min": 8, "max": 48, "step": 4, "default": 24},
+    {"type": "checkbox", "id": "show_breadcrumbs", "label": "t:sections.main_collection.settings.show_breadcrumbs.label", "default": true},
+    {"type": "checkbox", "id": "show_image", "label": "t:sections.main_collection.settings.show_image.label", "default": true},
+    {"type": "select", "id": "banner_style", "label": "t:sections.main_collection.settings.banner_style.label", "options": [{"value": "stacked", "label": "t:sections.main_collection.settings.banner_style.options__1.label"}, {"value": "overlap", "label": "t:sections.main_collection.settings.banner_style.options__2.label"}], "default": "overlap"},
+    {"type": "checkbox", "id": "show_description", "label": "t:sections.main_collection.settings.show_description.label", "default": true},
+    {"type": "checkbox", "id": "enable_filters", "label": "t:sections.main_collection.settings.enable_filters.label", "default": true, "info": "t:sections.main_collection.settings.enable_filters.info"},
+    {"type": "checkbox", "id": "enable_sort", "label": "t:sections.main_collection.settings.enable_sort.label", "default": true}
+  ]
+}
+{% endschema %}

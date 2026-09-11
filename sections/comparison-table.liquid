@@ -1,0 +1,59 @@
+{{ 'section-premium.css' | asset_url | stylesheet_tag }}
+<section class="section" {{ section.shopify_attributes }}>
+  <div class="container{% if section.settings.narrow %} container--narrow{% endif %}">
+    {%- if section.settings.heading != blank -%}<div class="section__header"><h2>{{ section.settings.heading }}</h2></div>{%- endif -%}
+    {%- if section.settings.text != blank -%}<div class="rte text-muted" style="margin-bottom: var(--space-6)">{{ section.settings.text }}</div>{%- endif -%}
+    <div class="table-wrap">
+      <table class="table">
+        {%- for block in section.blocks -%}
+          {%- assign cells = block.settings.row | split: '|' -%}
+          {%- if forloop.first -%}
+            <thead><tr>{%- for cell in cells -%}<th>{{ cell | strip }}</th>{%- endfor -%}</tr></thead><tbody>
+          {%- else -%}
+            <tr {{ block.shopify_attributes }}>{%- for cell in cells -%}{%- if forloop.first -%}<th scope="row">{{ cell | strip }}</th>{%- else -%}<td>{{ cell | strip }}</td>{%- endif -%}{%- endfor -%}</tr>
+          {%- endif -%}
+          {%- if forloop.last -%}</tbody>{%- endif -%}
+        {%- endfor -%}
+      </table>
+    </div>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "t:sections.comparison_table.name",
+  "settings": [
+    {"type": "text", "id": "heading", "label": "t:sections.all.heading", "default": "Size guide"},
+    {"type": "richtext", "id": "text", "label": "t:sections.all.text"},
+    {"type": "checkbox", "id": "narrow", "label": "t:sections.comparison_table.settings.narrow.label", "default": true}
+  ],
+  "blocks": [
+    {
+      "type": "row",
+      "name": "t:sections.comparison_table.blocks.row.name",
+      "settings": [
+        {"type": "text", "id": "row", "label": "t:sections.comparison_table.blocks.row.settings.row.label", "default": "Size | Chest | Waist", "info": "t:sections.comparison_table.blocks.row.settings.row.info"}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.comparison_table.presets.name",
+      "blocks": [
+        {"type": "row"},
+        {
+          "type": "row",
+          "settings": {"row": "S | 88–92 cm | 74–78 cm"}
+        },
+        {
+          "type": "row",
+          "settings": {"row": "M | 96–100 cm | 82–86 cm"}
+        },
+        {
+          "type": "row",
+          "settings": {"row": "L | 104–108 cm | 90–94 cm"}
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,156 @@
+{
+  "sections": {
+    "hero": {
+      "type": "hero",
+      "settings": {
+        "layout": "statement",
+        "foot_left": "Lisbon, since 2019",
+        "foot_right": "Four people, one workshop"
+      },
+      "blocks": {
+        "h": {
+          "type": "heading",
+          "settings": {
+            "text": "Fewer things, chosen well.",
+            "size": "lg",
+            "tag": "h1"
+          }
+        }
+      },
+      "block_order": [
+        "h"
+      ]
+    },
+    "img": {
+      "type": "bento-grid",
+      "blocks": {
+        "a": {
+          "type": "tile",
+          "settings": {
+            "size": "large",
+            "title": "The studio",
+            "caption": "Lisbon"
+          }
+        },
+        "b": {
+          "type": "tile",
+          "settings": {
+            "size": "wide"
+          }
+        },
+        "c": {
+          "type": "tile"
+        },
+        "d": {
+          "type": "tile"
+        }
+      },
+      "block_order": [
+        "a",
+        "b",
+        "c",
+        "d"
+      ]
+    },
+    "story": {
+      "type": "image-with-text",
+      "settings": {
+        "flip": true
+      },
+      "blocks": {
+        "h": {
+          "type": "heading",
+          "settings": {
+            "text": "Why we started",
+            "size": "md"
+          }
+        },
+        "t": {
+          "type": "text",
+          "settings": {
+            "text": "<p>We kept buying things that broke. So we made the ones we wished existed, and tested them at our own tables until they earned a place in the shop.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "h",
+        "t"
+      ]
+    },
+    "timeline": {
+      "type": "timeline",
+      "blocks": {
+        "a": {
+          "type": "entry"
+        },
+        "b": {
+          "type": "entry",
+          "settings": {
+            "year": "2022",
+            "heading": "The workshop",
+            "text": "<p>Four people, a proper kiln, and the first products we were proud to put our name on.</p>"
+          }
+        },
+        "c": {
+          "type": "entry",
+          "settings": {
+            "year": "2026",
+            "heading": "Today",
+            "text": "<p>Still small. Still checking every piece by hand before it ships.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "a",
+        "b",
+        "c"
+      ]
+    },
+    "values": {
+      "type": "multicolumn",
+      "settings": {
+        "heading": "What we will not compromise on"
+      },
+      "blocks": {
+        "a": {
+          "type": "column",
+          "settings": {
+            "heading": "Materials",
+            "text": "<p>Solid wood, full-grain leather, stoneware. Nothing that pretends.</p>"
+          }
+        },
+        "b": {
+          "type": "column",
+          "settings": {
+            "heading": "Repair",
+            "text": "<p>Every product is designed to be taken apart and fixed.</p>"
+          }
+        },
+        "c": {
+          "type": "column",
+          "settings": {
+            "heading": "Pace",
+            "text": "<p>We release a few pieces a year, when they are ready.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "a",
+        "b",
+        "c"
+      ]
+    },
+    "newsletter": {
+      "type": "newsletter",
+      "settings": {}
+    }
+  },
+  "order": [
+    "hero",
+    "img",
+    "story",
+    "timeline",
+    "values",
+    "newsletter"
+  ]
+}

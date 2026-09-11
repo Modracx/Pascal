@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="{{ request.locale.iso_code }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>{{ page_title }}{% if current_tags %} &ndash; {{ 'general.tagged' | t: tags: current_tags | join: ', ' }}{% endif %}{% if current_page != 1 %} &ndash; {{ 'general.pagination.page' | t: page: current_page }}{% endif %}{% unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless %}</title>
+  {%- if page_description -%}<meta name="description" content="{{ page_description | escape }}">{%- endif -%}
+  <link rel="canonical" href="{{ canonical_url }}">
+  <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
+  {%- if settings.favicon != blank -%}
+    <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}">
+  {%- endif -%}
+  {%- render 'meta-tags' -%}
+
+  {%- comment -%} Tokens + base are the only global CSS. Everything else is loaded by the section that needs it. {%- endcomment -%}
+  {{ 'tokens.css' | asset_url | stylesheet_tag: preload: true }}
+  {%- render 'css-vars' -%}
+  {{ 'base.css' | asset_url | stylesheet_tag }}
+
+  {{ content_for_header }}
+</head>
+<body class="template-{{ request.page_type | handle }}">
+  <a class="skip-link" href="#main">{{ 'accessibility.skip_to_content' | t }}</a>
+  {% sections 'header-group' %}
+  <main id="main" tabindex="-1">
+    {{ content_for_layout }}
+  </main>
+  {% sections 'footer-group' %}
+  {%- if settings.cart_type == 'drawer' and request.page_type != 'cart' -%}{% section 'cart-drawer' %}{%- endif -%}
+  {%- if settings.card_quick_add or settings.card_quick_view -%}
+    {{ 'component-quick-add.css' | asset_url | stylesheet_tag }}
+    <script src="{{ 'quick-add.js' | asset_url }}" defer></script>
+    <quick-add-modal data-error-text="{{ 'products.quick_add_error' | t }}" data-error-link="{{ 'products.view_details' | t }}"><dialog class="quick-add" aria-label="{{ 'products.quick_add' | t }}"></dialog></quick-add-modal>
+  {%- endif -%}
+  {%- if settings.country_switcher_pill -%}{%- render 'country-switcher-pill' -%}{%- endif -%}
+</body>
+</html>

@@ -1,0 +1,33 @@
+{%- comment -%}
+  Shared line item markup for the cart page and drawer. Params: compact (boolean), section_id.
+  cart-items.js enhances the list: quantity and remove post to the cart and the list is morphed with motion.
+{%- endcomment -%}
+<cart-items class="cart__items" data-section-id="{{ section_id }}" data-item-count="{{ cart.item_count }}">
+{%- for item in cart.items -%}
+  <div class="cart-item" data-key="{{ item.key }}" data-quantity="{{ item.quantity }}">
+    <a class="cart-item__media" href="{{ item.url }}">
+      {%- if item.image -%}{{ item.image | image_url: width: 240 | image_tag: loading: 'lazy', width: 96, height: 96, alt: item.image.alt | escape }}{%- endif -%}
+    </a>
+    <div>
+      <a class="cart-item__title" href="{{ item.url }}">{{ item.product.title | escape }}</a>
+      {%- unless item.product.has_only_default_variant -%}<p class="cart-item__meta">{{ item.variant.title }}</p>{%- endunless -%}
+      {%- for p in item.properties -%}{%- unless p.last == blank or p.first contains '_' -%}<p class="cart-item__meta">{{ p.first }}: {{ p.last }}</p>{%- endunless -%}{%- endfor -%}
+      {%- if item.selling_plan_allocation -%}<p class="cart-item__meta">{{ item.selling_plan_allocation.selling_plan.name }}</p>{%- endif -%}
+      {%- for d in item.line_level_discount_allocations -%}<p class="cart-item__meta">{{ d.discount_application.title }} (-{{ d.amount | money }})</p>{%- endfor -%}
+      <div class="cart-item__actions">
+        <label class="visually-hidden" for="qty-{{ item.key }}{% if compact %}-drawer{% endif %}">{{ 'cart.quantity' | t }}</label>
+        <quantity-input class="quantity quantity--sm">
+          <button type="button" class="quantity__btn" data-step="down" aria-label="{{ 'products.quantity_decrease' | t }}">{% render 'icon', name: 'minus', size: 14 %}</button>
+          <input class="quantity__input" type="number" id="qty-{{ item.key }}{% if compact %}-drawer{% endif %}" name="updates[]" value="{{ item.quantity }}" min="0"{% if item.variant.quantity_rule.max %} max="{{ item.variant.quantity_rule.max }}"{% endif %} step="{{ item.variant.quantity_rule.increment | default: 1 }}" inputmode="numeric" data-line-qty data-line="{{ forloop.index }}">
+          <button type="button" class="quantity__btn" data-step="up" aria-label="{{ 'products.quantity_increase' | t }}">{% render 'icon', name: 'plus', size: 14 %}</button>
+        </quantity-input>
+        <a href="{{ item.url_to_remove }}" data-line-remove data-line="{{ forloop.index }}">{{ 'cart.remove' | t }}</a>
+      </div>
+    </div>
+    <div class="cart-item__total">
+      {{ item.final_line_price | money }}
+      {%- if item.original_line_price > item.final_line_price -%}<p class="text-sm text-muted" style="text-decoration:line-through">{{ item.original_line_price | money }}</p>{%- endif -%}
+    </div>
+  </div>
+{%- endfor -%}
+</cart-items>

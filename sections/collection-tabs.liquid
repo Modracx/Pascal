@@ -1,0 +1,71 @@
+{{ 'component-product-card.css' | asset_url | stylesheet_tag }}
+{{ 'component-price.css' | asset_url | stylesheet_tag }}
+{{ 'component-button.css' | asset_url | stylesheet_tag }}
+{{ 'component-tabs.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'tabs.js' | asset_url }}" defer></script>
+<section class="section" {{ section.shopify_attributes }}>
+  <div class="container">
+    {%- if section.settings.heading != blank -%}<div class="section__header"><h2>{{ section.settings.heading }}</h2></div>{%- endif -%}
+    <tab-group class="tabs">
+      <div class="tabs__list{% if section.settings.style == 'pills' %} tabs__list--pills{% endif %}" role="tablist">
+        {%- for block in section.blocks -%}
+          <button type="button" class="tabs__tab" role="tab" id="ctab-{{ section.id }}-{{ forloop.index }}" aria-controls="cpanel-{{ section.id }}-{{ forloop.index }}" aria-selected="{% if forloop.first %}true{% else %}false{% endif %}">{{ block.settings.title | default: block.settings.collection.title | default: 'Collection' }}</button>
+        {%- endfor -%}
+      </div>
+      {%- for block in section.blocks -%}
+        {%- assign c = block.settings.collection -%}
+        <div class="tabs__panel" role="tabpanel" id="cpanel-{{ section.id }}-{{ forloop.index }}" aria-labelledby="ctab-{{ section.id }}-{{ forloop.index }}" tabindex="0" {{ block.shopify_attributes }}>
+          <h3 class="tabs__panel-title">{{ block.settings.title | default: c.title }}</h3>
+          <div class="grid" style="--cols-desktop: {{ section.settings.columns }}">
+            {%- for product in c.products limit: section.settings.limit -%}
+              {%- render 'product-card', product: product, show_vendor: settings.card_show_vendor, show_hover_image: settings.card_hover_image, quick_add: settings.card_quick_add, quick_view: settings.card_quick_view, show_swatches: settings.card_swatches -%}
+            {%- else -%}
+              {%- for i in (1..section.settings.limit) -%}<article class="product-card"><div class="product-card__media">{% render 'placeholder', kind: 'product', index: i, sizes: '(min-width: 64em) 25vw, (min-width: 48em) 33vw, 50vw' %}</div><div class="product-card__body"><h3 class="product-card__title">Product title</h3><span class="price"><span class="price__current">$29.00</span></span></div></article>{%- endfor -%}
+            {%- endfor -%}
+          </div>
+          {%- if c != blank -%}<p style="margin-top: var(--space-8)"><a href="{{ c.url }}" class="btn btn--ghost">{{ 'collections.view_all' | t: count: c.all_products_count }}</a></p>{%- endif -%}
+        </div>
+      {%- endfor -%}
+    </tab-group>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "t:sections.collection_tabs.name",
+  "settings": [
+    {"type": "text", "id": "heading", "label": "t:sections.all.heading", "default": "Shop"},
+    {"type": "select", "id": "style", "label": "t:sections.collection_tabs.settings.style.label", "options": [{"value": "line", "label": "t:sections.collection_tabs.settings.style.options__1.label"}, {"value": "pills", "label": "t:sections.collection_tabs.settings.style.options__2.label"}], "default": "line"},
+    {"type": "range", "id": "limit", "label": "t:sections.collection_tabs.settings.limit.label", "min": 2, "max": 12, "step": 1, "default": 4},
+    {"type": "range", "id": "columns", "label": "t:sections.collection_tabs.settings.columns.label", "min": 2, "max": 5, "step": 1, "default": 4}
+  ],
+  "blocks": [
+    {
+      "type": "collection",
+      "name": "t:sections.collection_tabs.blocks.collection.name",
+      "settings": [
+        {"type": "collection", "id": "collection", "label": "t:sections.all.collection"},
+        {"type": "text", "id": "title", "label": "t:sections.collection_tabs.blocks.collection.settings.title.label"}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.collection_tabs.presets.name",
+      "blocks": [
+        {
+          "type": "collection",
+          "settings": {"title": "New"}
+        },
+        {
+          "type": "collection",
+          "settings": {"title": "Bestsellers"}
+        },
+        {
+          "type": "collection",
+          "settings": {"title": "Gifts"}
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

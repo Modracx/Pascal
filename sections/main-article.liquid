@@ -1,0 +1,44 @@
+{{ 'section-content.css' | asset_url | stylesheet_tag }}
+<article class="section"><div class="container">
+  <header class="article__hero">
+    <p class="text-sm text-muted">{{ article.published_at | date: '%b %d, %Y' }}{% if section.settings.show_author %} · {{ 'blog.by' | t: author: article.author }}{% endif %}</p>
+    <h1>{{ article.title | escape }}</h1>
+    {%- if article.image -%}{%- render 'media', image: article.image, sizes: '(min-width: 48em) 48rem, 100vw', priority: true, widths: '600, 900, 1200, 1600', class: 'article__image' -%}{%- endif -%}
+  </header>
+  <div class="article__body rte">{{ article.content }}</div>
+  {%- if blog.comments_enabled? -%}
+    {{ 'component-button.css' | asset_url | stylesheet_tag }}
+    <div class="article__body" style="margin-top: var(--space-12)">
+      <h2 style="margin-bottom: var(--space-6)">{{ 'blog.comments.title' | t: count: article.comments_count }}</h2>
+      {%- paginate article.comments by 10 -%}
+        {%- for comment in article.comments -%}
+          <div class="stack" style="--stack-gap: var(--space-2); padding-block: var(--space-4); border-top: var(--border-width) solid var(--color-border)">
+            <p class="text-sm text-muted">{{ comment.author }} · {{ comment.created_at | date: '%b %d, %Y' }}</p>
+            <div class="rte text-sm">{{ comment.content }}</div>
+          </div>
+        {%- endfor -%}
+        {%- render 'pagination', paginate: paginate -%}
+      {%- endpaginate -%}
+      {%- form 'new_comment', article, class: 'stack' -%}
+        <h3 style="margin-top: var(--space-8)">{{ 'blog.comments.leave' | t }}</h3>
+        {%- if blog.moderated? -%}{%- assign success = 'blog.comments.moderated' | t -%}{%- else -%}{%- assign success = 'blog.comments.posted' | t -%}{%- endif -%}
+        {%- render 'form-errors', form: form, success: success -%}
+        {%- assign label = 'contact.name' | t -%}
+        {%- render 'field', id: 'c-author', name: 'comment[author]', label: label, value: form.author, autocomplete: 'name', required: true, errors: form.errors, field: 'author' -%}
+        {%- assign label = 'contact.email' | t -%}
+        {%- render 'field', id: 'c-email', name: 'comment[email]', label: label, type: 'email', value: form.email, autocomplete: 'email', required: true, errors: form.errors, field: 'email' -%}
+        {%- assign label = 'blog.comments.comment' | t -%}
+        {%- render 'field', id: 'c-body', name: 'comment[body]', label: label, type: 'textarea', rows: 5, value: form.body, required: true, errors: form.errors, field: 'body' -%}
+        <div><button type="submit" class="btn">{{ 'blog.comments.submit' | t }}</button></div>
+      {%- endform -%}
+    </div>
+  {%- endif -%}
+</div></article>
+{% schema %}
+{
+  "name": "t:sections.main_article.name",
+  "settings": [
+    {"type": "checkbox", "id": "show_author", "label": "t:sections.main_article.settings.show_author.label", "default": true}
+  ]
+}
+{% endschema %}

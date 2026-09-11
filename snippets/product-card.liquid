@@ -1,0 +1,89 @@
+{%- comment -%}
+  Product card — the hero component of the system. Base version is HTML + CSS only.
+  Params: product (required), show_vendor, show_hover_image, quick_add, quick_view, show_swatches, priority, sizes
+  Quick add: one button in the same place for every product. quick-add.js opens a modal; without JS it links to the PDP.
+  Quick view: an eye control in the corner that opens the gallery, description and form. Same fallback.
+  Swatches: the first option named in settings.swatch_options, as links to the variant. Up to five, then "+N".
+{%- endcomment -%}
+{%- liquid
+  assign sizes = sizes | default: '(min-width: 64em) 25vw, (min-width: 48em) 33vw, 50vw'
+  assign swatch_option = blank
+  if show_swatches and product.has_only_default_variant == false
+    assign swatch_names = settings.swatch_options | default: 'Color, Colour' | downcase | split: ','
+    for option in product.options_with_values
+      assign option_key = option.name | downcase | strip
+      for swatch_name in swatch_names
+        assign swatch_key = swatch_name | strip
+        if swatch_key == option_key and swatch_option == blank
+          assign swatch_option = option
+        endif
+      endfor
+    endfor
+  endif
+  assign hover_image = blank
+  if show_hover_image and product.media.size > 1
+    assign hover_image = product.media[1].preview_image
+  endif
+  assign variant = product.selected_or_first_available_variant
+  assign on_sale = false
+  if variant.compare_at_price > variant.price
+    assign on_sale = true
+  endif
+-%}
+<article class="product-card{% unless product.available %} product-card--soldout{% endunless %}">
+  <div class="product-card__media">
+    {%- assign ph = product.id | divided_by: 20 | modulo: 6 | plus: 1 -%}
+    {%- render 'media', image: product.featured_image, sizes: sizes, priority: priority, widths: '240, 360, 480, 640, 800, 1000', placeholder_index: ph -%}
+    {%- if hover_image != blank -%}
+      {%- render 'media', image: hover_image, sizes: sizes, class: 'product-card__img--hover', widths: '240, 360, 480, 640, 800, 1000' -%}
+    {%- endif -%}
+    {%- if on_sale or product.available == false -%}
+      <div class="product-card__badges">
+        {%- unless product.available -%}<span class="badge badge--soldout">{{ 'products.badge.sold_out' | t }}</span>
+        {%- elsif on_sale -%}
+          {%- if settings.sale_badge_style == 'percent' -%}
+            {%- assign pct = variant.compare_at_price | minus: variant.price | times: 100 | divided_by: variant.compare_at_price -%}
+            <span class="badge badge--sale">{{ 'products.badge.percent_off' | t: percent: pct }}</span>
+          {%- else -%}
+            <span class="badge badge--sale">{{ 'products.badge.sale' | t }}</span>
+          {%- endif -%}
+        {%- endunless -%}
+      </div>
+    {%- endif -%}
+    {%- if quick_view or settings.wishlist_enable -%}
+      <div class="product-card__actions">
+        {%- if settings.wishlist_enable -%}
+          {%- render 'wishlist-button', product: product -%}
+        {%- endif -%}
+        {%- if quick_view -%}
+          <a href="{{ product.url }}" class="ctrl product-card__quick-view" data-quick-view aria-label="{{ 'products.quick_view' | t }}">{% render 'icon', name: 'eye', size: 16 %}</a>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+    {%- if quick_add and product.available -%}
+      <div class="product-card__quick-add product-card__quick-add--hover">
+        <a href="{{ product.url }}" class="btn btn--sm btn--full" data-quick-add>{% if product.variants.size == 1 %}{{ 'products.quick_add' | t }}{% else %}{{ 'products.choose_options' | t }}{% endif %}</a>
+      </div>
+    {%- endif -%}
+  </div>
+  <div class="product-card__body">
+    {%- if show_vendor -%}<p class="product-card__vendor">{{ product.vendor }}</p>{%- endif -%}
+    <div class="product-card__row">
+      <h3 class="product-card__title"><a href="{{ product.url }}">{{ product.title }}</a></h3>
+      {%- render 'price', product: product, show_from: true -%}
+    </div>
+    {%- if swatch_option != blank -%}
+      <ul class="product-card__swatches" role="list" aria-label="{{ swatch_option.name | escape }}">
+        {%- for value in swatch_option.values limit: 5 -%}
+          {%- if value.variant -%}
+            <li><a href="{{ product.url }}?variant={{ value.variant.id }}" class="product-card__swatch{% unless value.available %} is-unavailable{% endunless %}" aria-label="{{ value.name | escape }}">{% render 'swatch', value: value, size: 'sm' %}</a></li>
+          {%- endif -%}
+        {%- endfor -%}
+        {%- if swatch_option.values.size > 5 -%}
+          {%- assign more = swatch_option.values.size | minus: 5 -%}
+          <li><a href="{{ product.url }}" class="product-card__swatch-more">{{ 'products.swatch_more' | t: count: more }}</a></li>
+        {%- endif -%}
+      </ul>
+    {%- endif -%}
+  </div>
+</article>

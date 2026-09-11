@@ -1,0 +1,119 @@
+{%- comment -%}
+  Product purchase form: variant picker + purchase options + quantity (with B2B rules) + gift card recipient + add to cart + dynamic checkout.
+  Params: product, section_id, show_quantity, show_dynamic_checkout
+{%- endcomment -%}
+{%- liquid
+  assign variant = product.selected_or_first_available_variant
+  assign has_options = true
+  if product.has_only_default_variant
+    assign has_options = false
+  endif
+  assign form_id = 'product-form-' | append: section_id
+  assign swatch_names = settings.swatch_options | default: 'Color, Colour' | downcase | split: ','
+-%}
+{%- if has_options -%}
+  <script src="{{ 'variant-picker.js' | asset_url }}" defer></script>
+{%- endif -%}
+<script src="{{ 'product-form.js' | asset_url }}" defer></script>
+{%- if show_quantity or variant.quantity_rule.min > 1 or variant.quantity_rule.increment > 1 -%}<script src="{{ 'quantity-input.js' | asset_url }}" defer></script>{%- endif -%}
+
+<product-form data-added-text="{{ 'products.added' | t }}">
+  {%- form 'product', product, id: form_id, class: 'product__form' -%}
+    <input type="hidden" name="id" value="{{ variant.id }}">
+
+    {%- if has_options -%}
+      <variant-picker class="variant-picker"
+        data-add-text="{{ 'products.add_to_cart' | t }}"
+        data-sold-out-text="{{ 'products.sold_out' | t }}"
+        data-unavailable-text="{{ 'products.unavailable' | t }}"
+        data-money-format="{{ shop.money_format | escape }}">
+        {%- for option in product.options_with_values -%}
+          {%- liquid
+            comment
+              Options named in settings.swatch_options ("Color, Colour") render as swatches.
+              Everything else is a pill radio up to six values, then a select.
+            endcomment
+            assign option_key = option.name | downcase | strip
+            assign input_style = 'radio'
+            for swatch_name in swatch_names
+              assign swatch_key = swatch_name | strip
+              if swatch_key == option_key
+                assign input_style = 'swatch'
+              endif
+            endfor
+            if input_style == 'radio' and option.values.size > 6
+              assign input_style = 'select'
+            endif
+          -%}
+          <fieldset class="field">
+            <legend class="field__label">{{ option.name }}{% if input_style == 'swatch' %}: <span class="variant-picker__selected" data-option-value>{{ option.selected_value }}</span>{% endif %}</legend>
+            {%- if input_style == 'swatch' -%}
+              <div class="variant-picker__values variant-picker__values--swatches">
+                {%- for value in option.values -%}
+                  {%- assign id = section_id | append: '-' | append: option.position | append: '-' | append: forloop.index -%}
+                  <input type="radio" id="{{ id }}" name="options[{{ option.name | escape }}]" value="{{ value | escape }}"{% if option.selected_value == value %} checked{% endif %}>
+                  <label for="{{ id }}" class="variant-picker__swatch">{% render 'swatch', value: value %}<span class="visually-hidden">{{ value }}</span></label>
+                {%- endfor -%}
+              </div>
+            {%- elsif input_style == 'select' -%}
+              <select class="select" name="options[{{ option.name | escape }}]">
+                {%- for value in option.values -%}
+                  <option value="{{ value | escape }}"{% if option.selected_value == value %} selected{% endif %}>{{ value }}</option>
+                {%- endfor -%}
+              </select>
+            {%- else -%}
+              <div class="variant-picker__values">
+                {%- for value in option.values -%}
+                  {%- assign id = section_id | append: '-' | append: option.position | append: '-' | append: forloop.index -%}
+                  <input type="radio" id="{{ id }}" name="options[{{ option.name | escape }}]" value="{{ value | escape }}"{% if option.selected_value == value %} checked{% endif %}>
+                  <label for="{{ id }}">{{ value }}</label>
+                {%- endfor -%}
+              </div>
+            {%- endif -%}
+          </fieldset>
+        {%- endfor -%}
+        <script type="application/json">{{ product.variants | json }}</script>
+      </variant-picker>
+    {%- endif -%}
+
+    {%- render 'purchase-options', product: product, variant: variant, section_id: section_id -%}
+
+    {%- if show_quantity or variant.quantity_rule.min > 1 or variant.quantity_rule.increment > 1 -%}
+      {%- assign rule = variant.quantity_rule -%}
+      <div class="field">
+        <label class="field__label" for="quantity-{{ section_id }}">{{ 'products.quantity' | t }}</label>
+        <quantity-input class="quantity">
+          <button type="button" class="quantity__btn" data-step="down" aria-label="{{ 'products.quantity_decrease' | t }}">{% render 'icon', name: 'minus', size: 16 %}</button>
+          <input class="quantity__input" type="number" id="quantity-{{ section_id }}" name="quantity" value="{{ rule.min | default: 1 }}" min="{{ rule.min | default: 1 }}"{% if rule.max %} max="{{ rule.max }}"{% endif %} step="{{ rule.increment | default: 1 }}" inputmode="numeric" data-quantity>
+          <button type="button" class="quantity__btn" data-step="up" aria-label="{{ 'products.quantity_increase' | t }}">{% render 'icon', name: 'plus', size: 16 %}</button>
+        </quantity-input>
+        {%- render 'quantity-rules', product: product, variant: variant -%}
+      </div>
+    {%- endif -%}
+
+    {%- if product.gift_card? -%}
+      {%- render 'gift-card-recipient', form: form, section_id: section_id -%}
+    {%- endif -%}
+
+    {%- liquid
+      assign is_preorder = false
+      if variant.available and variant.inventory_quantity <= 0 and variant.inventory_policy == 'continue'
+        assign is_preorder = true
+      elsif product.tags contains 'pre-order' or product.tags contains 'preorder'
+        assign is_preorder = true
+      endif
+    -%}
+    <div class="product__buttons">
+      <button type="submit" class="btn btn--full" data-add-to-cart{% unless variant.available %} disabled aria-disabled="true"{% endunless %}>
+        <span data-add-to-cart-text>{% if variant.available %}{% if is_preorder %}{{ 'products.preorder' | t | default: 'Pre-order' }}{% else %}{{ 'products.add_to_cart' | t }}{% endif %}{% else %}{{ 'products.sold_out' | t }}{% endif %}</span>
+      </button>
+      {%- if show_dynamic_checkout -%}{{ form | payment_button }}{%- endif -%}
+    </div>
+    {%- if is_preorder -%}
+      <div class="product__preorder-notice text-sm text-muted" style="margin-top: var(--space-2); display: flex; align-items: center; gap: var(--space-2);">
+        {% render 'icon', name: 'truck', size: 16 %} <span>{{ 'products.preorder_notice' | t | default: 'Pre-order item. Dispatches when back in stock.' }}</span>
+      </div>
+    {%- endif -%}
+    <p class="form-status text-sm" data-form-status role="status" aria-live="polite" hidden></p>
+  {%- endform -%}
+</product-form>

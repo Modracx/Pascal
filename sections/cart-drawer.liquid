@@ -1,0 +1,51 @@
+{{ 'component-cart.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'quantity-input.js' | asset_url }}" defer></script>
+{{ 'component-cart-drawer.css' | asset_url | stylesheet_tag }}
+{{ 'component-button.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'cart-items.js' | asset_url }}" defer></script>
+<script src="{{ 'cart-drawer.js' | asset_url }}" defer></script>
+<script src="{{ 'product-form.js' | asset_url }}" defer></script>
+<cart-drawer data-section-id="{{ section.id }}">
+  <dialog class="cart-drawer" aria-label="{{ 'cart.title' | t }}" data-cart-root>
+    <div class="cart-drawer__head">
+      <h2>{{ 'cart.title' | t }} <span class="text-muted" data-drawer-count="{{ cart.item_count }}" data-cart-summary="count">({{ cart.item_count }})</span></h2>
+      <button type="button" class="header__icon" data-cart-close aria-label="{{ 'accessibility.close' | t }}">{% render 'icon', name: 'close', size: 22 %}</button>
+    </div>
+    <div class="cart-drawer__body">
+      {%- if cart.item_count == 0 -%}
+        <div class="cart-drawer__empty">
+          <p>{{ 'cart.empty' | t }}</p>
+          <a href="{{ routes.all_products_collection_url }}" class="btn btn--secondary">{{ 'general.continue_shopping' | t }}</a>
+        </div>
+      {%- else -%}
+        {%- render 'cart-line-items', compact: true, section_id: section.id -%}
+        {%- render 'cart-upsell', limit: 2 -%}
+      {%- endif -%}
+    </div>
+    {%- if cart.item_count > 0 -%}
+      <div class="cart-drawer__foot" data-cart-summary="foot">
+        {%- render 'shipping-bar' -%}
+        {%- if settings.cart_enable_gift_wrap -%}
+          {%- render 'cart-gift-wrap' -%}
+        {%- endif -%}
+        <div class="cart__row cart__subtotal"><span>{{ 'cart.subtotal' | t }}</span><span>{{ cart.total_price | money }}</span></div>
+        <p class="text-sm text-muted">{{ 'cart.taxes_note' | t }}</p>
+        <form action="{{ routes.cart_url }}" method="post"><button type="submit" name="checkout" class="btn btn--full">{{ 'cart.checkout' | t }}</button></form>
+        <div class="cart-drawer__links" style="display: flex; gap: var(--space-2); align-items: center; justify-content: space-between;">
+          <a href="{{ routes.cart_url }}" class="btn btn--ghost text-sm" style="flex: 1;">{{ 'cart.view_cart' | t }}</a>
+          {%- if settings.cart_enable_share -%}
+            {%- render 'share-cart' -%}
+          {%- endif -%}
+        </div>
+      </div>
+    {%- endif -%}
+  </dialog>
+</cart-drawer>
+{% schema %}
+{
+  "name": "t:sections.cart_drawer.name",
+  "settings": [
+    {"type": "paragraph", "content": "t:sections.cart_drawer.settings.paragraph__1.content"}
+  ]
+}
+{% endschema %}

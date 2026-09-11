@@ -1,0 +1,23 @@
+{{ 'section-content.css' | asset_url | stylesheet_tag }}
+<section class="section"><div class="container">
+  <div class="section__header"><h1>{{ blog.title | escape }}</h1></div>
+  {%- paginate blog.articles by 12 -%}
+    <div class="article-list">
+      {%- for article in blog.articles -%}
+        <a class="article-card" href="{{ article.url }}">
+          {%- if article.image -%}<div class="article-card__media">{%- render 'media', image: article.image, sizes: '(min-width: 48em) 33vw, 100vw', widths: '400, 600, 800, 1000' -%}</div>{%- endif -%}
+          <p class="text-sm text-muted">{{ article.published_at | date: '%b %d, %Y' }}</p>
+          <h2 style="font-size: var(--text-lg)">{{ article.title | escape }}</h2>
+          <p class="text-sm text-muted">{{ article.excerpt_or_content | strip_html | truncatewords: 24 }}</p>
+        </a>
+      {%- endfor -%}
+    </div>
+    {%- render 'pagination', paginate: paginate -%}
+  {%- endpaginate -%}
+</div></section>
+{% schema %}
+{
+  "name": "t:sections.main_blog.name",
+  "settings": []
+}
+{% endschema %}

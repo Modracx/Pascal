@@ -1,0 +1,5 @@
+<nav class="account__nav" aria-label="{{ 'customer.account.title' | t }}">
+  <a href="{{ routes.account_url }}"{% if request.page_type == 'customers/account' %} aria-current="page"{% endif %}>{{ 'customer.account.orders' | t }}</a>
+  <a href="{{ routes.account_addresses_url }}"{% if request.page_type == 'customers/addresses' %} aria-current="page"{% endif %}>{{ 'customer.account.addresses' | t }}</a>
+  <a href="{{ routes.account_logout_url }}">{{ 'customer.account.logout' | t }}</a>
+</nav>

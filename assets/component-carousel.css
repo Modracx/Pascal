@@ -1,0 +1,8 @@
+/* Carousel: scroll-snap track. Works with no JS; carousel.js adds the arrow buttons. */
+.carousel { position: relative; }
+.carousel__track { display: flex; gap: var(--grid-gap); overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; padding-bottom: var(--space-1); scroll-padding-inline: var(--container-pad); }
+.carousel__track::-webkit-scrollbar { display: none; }
+.carousel__track > * { flex: 0 0 var(--slide-w, 70%); scroll-snap-align: start; }
+@media (min-width: 48em) { .carousel__track > * { flex-basis: var(--slide-w-desktop, calc((100% - var(--grid-gap) * (var(--per-view, 4) - 1)) / var(--per-view, 4))); } }
+.carousel__nav { display: flex; gap: var(--space-2); }
+.carousel--bleed .carousel__track { margin-inline: calc(-1 * var(--container-pad)); padding-inline: var(--container-pad); }

@@ -1,0 +1,25 @@
+{%- comment -%}
+  Metaobject page — the main section for templates/metaobject/<definition>.json.
+  Blocks are theme blocks; connect their settings to the metaobject's fields with dynamic sources
+  in the editor (Heading → title, Text → body, and so on). Nothing here is hardcoded to one definition.
+{%- endcomment -%}
+{{ 'section-content.css' | asset_url | stylesheet_tag }}
+<section class="section" {{ section.shopify_attributes }}>
+  <div class="container">
+    <div class="rich-text{% if section.settings.align == 'center' %} rich-text--center{% endif %}">
+      {% content_for 'blocks' %}
+    </div>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "t:sections.main_metaobject.name",
+  "blocks": [
+    {"type": "@theme"}
+  ],
+  "settings": [
+    {"type": "paragraph", "content": "t:sections.main_metaobject.settings.paragraph__1.content"},
+    {"type": "select", "id": "align", "label": "t:sections.all.alignment", "options": [{"value": "left", "label": "t:sections.main_metaobject.settings.align.options__1.label"}, {"value": "center", "label": "t:sections.main_metaobject.settings.align.options__2.label"}], "default": "left"}
+  ]
+}
+{% endschema %}

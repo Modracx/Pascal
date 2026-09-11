@@ -1,0 +1,56 @@
+{{ 'section-content.css' | asset_url | stylesheet_tag }}
+<section class="section" {{ section.shopify_attributes }}>
+  <div class="container">
+    {%- if section.settings.heading != blank -%}<div class="section__header"><h2>{{ section.settings.heading }}</h2></div>{%- endif -%}
+    <div class="columns" style="--columns: {{ section.blocks.size | at_least: 2 | at_most: 4 }}">
+      {%- for block in section.blocks -%}
+        <div class="columns__item" {{ block.shopify_attributes }}>
+          <div class="plate" style="aspect-ratio: 4 / 3; overflow: hidden">
+            {%- if block.settings.image != blank -%}{%- render 'media', image: block.settings.image, sizes: '(min-width: 48em) 33vw, 100vw', widths: '360, 540, 720, 900' -%}
+            {%- else -%}{%- render 'placeholder', kind: 'article', index: forloop.index, sizes: '(min-width: 48em) 33vw, 100vw' -%}{%- endif -%}
+          </div>
+          <h3>{{ block.settings.heading }}</h3>
+          <div class="rte text-muted">{{ block.settings.text }}</div>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "t:sections.multicolumn.name",
+  "settings": [
+    {"type": "text", "id": "heading", "label": "t:sections.all.heading"}
+  ],
+  "blocks": [
+    {
+      "type": "column",
+      "name": "t:sections.multicolumn.blocks.column.name",
+      "settings": [
+        {"type": "image_picker", "id": "image", "label": "t:sections.all.image"},
+        {"type": "text", "id": "heading", "label": "t:sections.all.heading", "default": "Heading"},
+        {"type": "richtext", "id": "text", "label": "t:sections.all.text", "default": "<p>A short statement. One idea per column.</p>"}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.multicolumn.presets.name",
+      "blocks": [
+        {
+          "type": "column",
+          "settings": {"heading": "Shipped within a day", "text": "<p>Orders placed before 2pm leave the same day. Tracking arrives by email.</p>"}
+        },
+        {
+          "type": "column",
+          "settings": {"heading": "Returns for 30 days", "text": "<p>Use it. If it is not right, send it back. We cover the label.</p>"}
+        },
+        {
+          "type": "column",
+          "settings": {"heading": "Repairs, not replacements", "text": "<p>If something wears out, send it back and we will mend it.</p>"}
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

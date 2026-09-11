@@ -1,0 +1,84 @@
+{{ 'section-premium.css' | asset_url | stylesheet_tag }}
+{{ 'component-button.css' | asset_url | stylesheet_tag }}
+<section class="section" {{ section.shopify_attributes }}>
+  <div class="container">
+    <div class="section__header"><h2>{{ section.settings.heading }}</h2></div>
+    <div class="look">
+      <div class="look__media">
+        {%- if section.settings.image != blank -%}{%- render 'media', image: section.settings.image, sizes: '(min-width: 48em) 58vw, 100vw', widths: '600, 900, 1200, 1600' -%}{%- else -%}{% render 'placeholder', kind: 'look', index: 1, sizes: '(min-width: 48em) 58vw, 100vw' %}{%- endif -%}
+        {%- for block in section.blocks -%}
+          {%- assign p = block.settings.product -%}
+          {%- comment -%} One open at a time via the details name attribute; the card flips above the dot in the lower half so the frame never clips it. {%- endcomment -%}
+          <details class="look__spot{% if block.settings.x > 65 %} look__spot--left{% elsif block.settings.x < 35 %} look__spot--right{% endif %}{% if block.settings.y > 55 %} look__spot--up{% endif %}" name="look-{{ section.id }}" style="--x: {{ block.settings.x }}%; --y: {{ block.settings.y }}%" {{ block.shopify_attributes }}>
+            <summary aria-label="{{ p.title | default: 'Product' }}">{{ forloop.index }}</summary>
+            {%- if p != blank -%}
+              <a class="look__card" href="{{ p.url }}">
+                {{ p.featured_image | image_url: width: 120 | image_tag: loading: 'lazy', alt: '' }}
+                <span>{{ p.title }}<br><span class="text-muted">{{ p.price | money }}</span></span>
+              </a>
+            {%- else -%}
+              <div class="look__card">
+                {%- render 'placeholder', kind: 'product', index: forloop.index, sizes: '3.5rem' -%}
+                <span>Product title<br><span class="text-muted">$29.00</span></span>
+              </div>
+            {%- endif -%}
+          </details>
+        {%- endfor -%}
+      </div>
+      <div class="look__list">
+        {%- if section.settings.text != blank -%}<p class="text-muted" style="margin-bottom: var(--space-4)">{{ section.settings.text }}</p>{%- endif -%}
+        {%- for block in section.blocks -%}
+          {%- assign p = block.settings.product -%}
+          {%- if p != blank -%}
+            <a class="look__list-item" href="{{ p.url }}">
+              {{ p.featured_image | image_url: width: 200 | image_tag: loading: 'lazy', alt: '' }}
+              <span><span class="look__num">{{ forloop.index }}</span>{{ p.title }}<br><span class="text-muted text-sm">{{ p.price | money }}</span></span>
+            </a>
+          {%- else -%}
+            <div class="look__list-item">
+              {%- render 'placeholder', kind: 'product', index: forloop.index, sizes: '5rem' -%}
+              <span><span class="look__num">{{ forloop.index }}</span>Product title<br><span class="text-muted text-sm">$29.00</span></span>
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "t:sections.shop_the_look.name",
+  "settings": [
+    {"type": "text", "id": "heading", "label": "t:sections.all.heading", "default": "The look"},
+    {"type": "text", "id": "text", "label": "t:sections.all.text", "default": "Everything in this photo, numbered."},
+    {"type": "image_picker", "id": "image", "label": "t:sections.all.image"}
+  ],
+  "blocks": [
+    {
+      "type": "spot",
+      "name": "t:sections.shop_the_look.blocks.spot.name",
+      "limit": 6,
+      "settings": [
+        {"type": "product", "id": "product", "label": "t:sections.shop_the_look.blocks.spot.settings.product.label"},
+        {"type": "range", "id": "x", "label": "t:sections.shop_the_look.blocks.spot.settings.x.label", "min": 5, "max": 95, "step": 1, "unit": "%", "default": 50},
+        {"type": "range", "id": "y", "label": "t:sections.shop_the_look.blocks.spot.settings.y.label", "min": 5, "max": 95, "step": 1, "unit": "%", "default": 50}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.shop_the_look.presets.name",
+      "blocks": [
+        {
+          "type": "spot",
+          "settings": {"x": 30, "y": 66}
+        },
+        {
+          "type": "spot",
+          "settings": {"x": 74, "y": 66}
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

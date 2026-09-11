@@ -1,0 +1,15 @@
+{%- comment -%}
+  Gift wrap selection & gift note for cart drawer and cart page.
+{%- endcomment -%}
+<details class="cart__gift-wrap">
+  <summary class="cart__gift-wrap-summary">
+    <span>{% render 'icon', name: 'gift', size: 16 %} {{ 'cart.gift_wrap_title' | t | default: 'Add gift options or note' }}</span>
+    {% render 'icon', name: 'chevron', size: 14 %}
+  </summary>
+  <div class="cart__gift-wrap-body stack" style="gap: var(--space-3); margin-top: var(--space-3)">
+    <div class="field">
+      <label for="cart-gift-message" class="field__label">{{ 'cart.gift_message_label' | t | default: 'Gift message' }}</label>
+      <textarea id="cart-gift-message" class="textarea text-sm" name="attributes[Gift Message]" rows="2" placeholder="{{ 'cart.gift_message_placeholder' | t | default: 'Write a personal note...' }}">{{ cart.attributes['Gift Message'] }}</textarea>
+    </div>
+  </div>
+</details>

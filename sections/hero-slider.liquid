@@ -1,0 +1,80 @@
+{{ 'section-hero.css' | asset_url | stylesheet_tag }}
+{{ 'component-button.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'carousel.js' | asset_url }}" defer></script>
+<section class="hero hero--slider" style="--hero-height: {{ section.settings.height }}vh" {{ section.shopify_attributes }}>
+  <scroll-carousel{% if section.settings.autoplay > 0 %} data-autoplay="{{ section.settings.autoplay }}"{% endif %}>
+    <div class="hero__track" data-track>
+      {%- for block in section.blocks -%}
+        {%- assign b = block.settings -%}
+        <div class="hero__slide" id="slide-{{ section.id }}-{{ forloop.index }}" style="--hero-overlay: {{ b.overlay | divided_by: 100.0 }};{% unless b.text_light %} --slide-color: var(--color-ink);{% endunless %}" {{ block.shopify_attributes }}>
+          <div class="hero__media{% if forloop.first %} reveal reveal--media{% endif %}">
+            {%- if b.image != blank -%}
+              {%- assign priority = forloop.first -%}
+              {%- render 'media', image: b.image, sizes: '100vw', priority: priority, widths: '800, 1200, 1600, 2000, 2400' -%}
+            {%- else -%}{% render 'placeholder', kind: 'hero', index: forloop.index, priority: forloop.first %}{%- endif -%}
+            <div class="hero__overlay"></div>
+          </div>
+          <div class="hero__body">
+            <div class="hero__text{% if forloop.first %} reveal reveal--2{% endif %}">
+              {%- if b.eyebrow != blank -%}<p class="caption" style="color:inherit">{{ b.eyebrow }}</p>{%- endif -%}
+              <h2 class="block-heading--lg" style="font-size: var(--text-3xl)">{{ b.heading }}</h2>
+              {%- if b.text != blank -%}<p class="block-text block-text--lg">{{ b.text }}</p>{%- endif -%}
+              {%- if b.button_label != blank -%}<div class="hero__actions"><a href="{{ b.link }}" class="btn {% if b.text_light %}btn--light{% endif %}">{{ b.button_label }}</a></div>{%- endif -%}
+            </div>
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+    {%- if section.blocks.size > 1 -%}
+      <div class="hero__dots">{%- for block in section.blocks -%}<a href="#slide-{{ section.id }}-{{ forloop.index }}" data-dot aria-label="{{ 'general.slide' | t: index: forloop.index }}"></a>{%- endfor -%}</div>
+      <div class="hero__nav">
+        <button type="button" class="ctrl" data-prev aria-label="{{ 'general.previous' | t }}">{% render 'icon', name: 'arrow', size: 18 %}</button>
+        <button type="button" class="ctrl" data-next aria-label="{{ 'general.next' | t }}">{% render 'icon', name: 'arrow', size: 18 %}</button>
+      </div>
+    {%- endif -%}
+  </scroll-carousel>
+</section>
+{% stylesheet %}
+  .hero--slider [data-prev] svg { transform: rotate(180deg); }
+{% endstylesheet %}
+{% schema %}
+{
+  "name": "t:sections.hero_slider.name",
+  "settings": [
+    {"type": "range", "id": "height", "label": "t:sections.all.height", "min": 50, "max": 100, "step": 5, "unit": "vh", "default": 85},
+    {"type": "range", "id": "autoplay", "label": "t:sections.hero_slider.settings.autoplay.label", "min": 0, "max": 12, "step": 1, "unit": "s", "default": 0, "info": "t:sections.hero_slider.settings.autoplay.info"}
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "t:sections.hero_slider.blocks.slide.name",
+      "settings": [
+        {"type": "image_picker", "id": "image", "label": "t:sections.all.image"},
+        {"type": "text", "id": "eyebrow", "label": "t:sections.hero_slider.blocks.slide.settings.eyebrow.label", "info": "t:sections.hero_slider.blocks.slide.settings.eyebrow.info"},
+        {"type": "text", "id": "heading", "label": "t:sections.all.heading", "default": "The winter edit"},
+        {"type": "text", "id": "text", "label": "t:sections.all.text"},
+        {"type": "text", "id": "button_label", "label": "t:sections.all.button_label", "default": "Explore"},
+        {"type": "url", "id": "link", "label": "t:sections.all.link"},
+        {"type": "range", "id": "overlay", "label": "t:sections.all.overlay", "min": 0, "max": 80, "step": 5, "unit": "%", "default": 30},
+        {"type": "checkbox", "id": "text_light", "label": "t:sections.hero_slider.blocks.slide.settings.text_light.label", "default": true}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.hero_slider.presets.name",
+      "blocks": [
+        {"type": "slide"},
+        {
+          "type": "slide",
+          "settings": {"heading": "Table and kitchen", "button_label": "Shop kitchen"}
+        },
+        {
+          "type": "slide",
+          "settings": {"heading": "Gifts that last", "button_label": "Shop gifts"}
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

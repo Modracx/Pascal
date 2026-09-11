@@ -1,0 +1,276 @@
+{{ 'component-product.css' | asset_url | stylesheet_tag }}
+{{ 'component-price.css' | asset_url | stylesheet_tag }}
+{{ 'component-button.css' | asset_url | stylesheet_tag }}
+{{ 'section-extras.css' | asset_url | stylesheet_tag }}
+{%- if settings.product_sticky_atc -%}<script src="{{ 'sticky-atc.js' | asset_url }}" defer></script>{%- endif -%}
+{%- assign current_variant = product.selected_or_first_available_variant -%}
+<section class="section" data-section="{{ section.id }}">
+  <div class="container">
+  {%- if section.settings.show_breadcrumbs -%}{%- render 'breadcrumbs' -%}{%- endif -%}
+  <div class="product">
+    {%- comment -%} Gallery: scroll-snap + anchor thumbnails. No JS required. {%- endcomment -%}
+    <div class="gallery gallery--{{ section.settings.gallery_layout }}" aria-label="{{ 'products.gallery_label' | t }}">
+      <div class="gallery__track">
+        {%- for media in product.media -%}
+          <div class="gallery__item" id="media-{{ media.id }}" data-media-id="{{ media.id }}">
+            {%- if media.media_type == 'image' -%}
+              {%- assign priority = false -%}
+              {%- if forloop.first -%}{%- assign priority = true -%}{%- endif -%}
+              {%- render 'media', image: media, sizes: '(min-width: 48em) 55vw, 100vw', priority: priority -%}
+            {%- elsif media.media_type == 'video' -%}
+              {{ media | video_tag: controls: true, preload: 'none', image_size: '1000x' }}
+            {%- elsif media.media_type == 'external_video' -%}
+              {{ media | external_video_tag: loading: 'lazy' }}
+            {%- else -%}
+              {{ media | media_tag }}
+            {%- endif -%}
+          </div>
+        {%- else -%}
+          <div class="gallery__item">{% assign ph = product.id | divided_by: 20 | modulo: 6 | plus: 1 %}{% render 'placeholder', kind: 'product', index: ph, sizes: '(min-width: 48em) 55vw, 100vw', priority: true %}</div>
+        {%- endfor -%}
+      </div>
+      {%- if product.media.size > 1 -%}
+        <div class="gallery__thumbs">
+          {%- for media in product.media -%}
+            <a href="#media-{{ media.id }}" aria-label="{{ 'products.thumbnail' | t: index: forloop.index }}">
+              {{ media.preview_image | image_url: width: 160 | image_tag: loading: 'lazy', width: 64, height: 64, alt: '' }}
+            </a>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
+
+    <div class="product__info">
+      {%- for block in section.blocks -%}
+        {%- case block.type -%}
+          {%- when 'title' -%}
+            <div {{ block.shopify_attributes }}>
+              {%- if block.settings.show_vendor -%}<p class="product__vendor">{{ product.vendor }}</p>{%- endif -%}
+              <h1 class="product__title">{{ product.title | escape }}</h1>
+            </div>
+          {%- when 'price' -%}
+            <div {{ block.shopify_attributes }}>
+              {%- render 'price', product: product, class: 'product__price' -%}
+              {%- if block.settings.show_tax_note -%}<p class="text-sm text-muted">{{ 'cart.taxes_note' | t }}</p>{%- endif -%}
+              {%- if block.settings.show_sku and current_variant.sku != blank -%}<p class="text-sm text-muted">{{ 'products.sku' | t }}: {{ current_variant.sku }}</p>{%- endif -%}
+            </div>
+          {%- when 'rating' -%}
+            <div {{ block.shopify_attributes }}>{%- render 'rating', product: product -%}</div>
+          {%- when 'inventory' -%}
+            {%- liquid
+              assign qty = current_variant.inventory_quantity
+              assign tracked = false
+              if current_variant.inventory_management == 'shopify' and current_variant.inventory_policy == 'deny'
+                assign tracked = true
+              endif
+            -%}
+            <div {{ block.shopify_attributes }}>
+              {%- if current_variant.available == false -%}
+                <p class="inventory inventory--out">{{ 'products.inventory.out' | t }}</p>
+              {%- elsif tracked and qty <= settings.inventory_threshold -%}
+                <p class="inventory inventory--low">{% if block.settings.show_count %}{{ 'products.inventory.low_count' | t: count: qty }}{% else %}{{ 'products.inventory.low' | t }}{% endif %}</p>
+              {%- elsif block.settings.show_in_stock -%}
+                <p class="inventory">{{ 'products.inventory.in_stock' | t }}</p>
+              {%- endif -%}
+            </div>
+          {%- when 'pickup' -%}
+            <script src="{{ 'pickup-availability.js' | asset_url }}" defer></script>
+            <pickup-availability data-url="{{ product.url }}" {{ block.shopify_attributes }}>{%- render 'pickup-availability', product: product -%}</pickup-availability>
+          {%- when 'share' -%}
+            {%- assign share_url = shop.url | append: product.url -%}
+            <div class="share" {{ block.shopify_attributes }}>
+              <a href="https://www.facebook.com/sharer/sharer.php?u={{ share_url | url_encode }}" target="_blank" rel="noopener">{% render 'icon', name: 'facebook', size: 14 %} Facebook</a>
+              {%- if product.featured_image -%}<a href="https://pinterest.com/pin/create/button/?url={{ share_url | url_encode }}&media={{ product.featured_image | image_url: width: 1000 | url_encode }}&description={{ product.title | url_encode }}" target="_blank" rel="noopener">{% render 'icon', name: 'pinterest', size: 14 %} Pinterest</a>{%- endif -%}
+              <a href="https://x.com/intent/tweet?url={{ share_url | url_encode }}&text={{ product.title | url_encode }}" target="_blank" rel="noopener">{% render 'icon', name: 'x', size: 14 %} X</a>
+            </div>
+          {%- when 'size_guide' -%}
+            <div {{ block.shopify_attributes }}>
+              {%- render 'size-guide-modal', guide_page: block.settings.guide_page -%}
+            </div>
+          {%- when 'shipping_cutoff' -%}
+            <div {{ block.shopify_attributes }}>
+              {%- render 'shipping-cutoff', cutoff_hour: block.settings.cutoff_hour -%}
+            </div>
+          {%- when 'buy_buttons' -%}
+            <div {{ block.shopify_attributes }}>
+              {%- render 'product-form', product: product, section_id: section.id, show_quantity: settings.product_show_quantity, show_dynamic_checkout: settings.product_dynamic_checkout -%}
+            </div>
+          {%- when 'trust' -%}
+            <ul class="trust" role="list" {{ block.shopify_attributes }}>
+              {%- if block.settings.line_1 != blank -%}<li class="trust__item">{% render 'icon', name: 'truck' %}<span>{{ block.settings.line_1 }}</span></li>{%- endif -%}
+              {%- if block.settings.line_2 != blank -%}<li class="trust__item">{% render 'icon', name: 'return' %}<span>{{ block.settings.line_2 }}</span></li>{%- endif -%}
+              {%- if block.settings.line_3 != blank -%}<li class="trust__item">{% render 'icon', name: 'shield' %}<span>{{ block.settings.line_3 }}</span></li>{%- endif -%}
+            </ul>
+          {%- when 'description' -%}
+            {%- if section.settings.info_style == 'tabs' -%}{%- continue -%}{%- endif -%}
+            {%- if product.description != blank -%}
+              <details class="collapsible"{% if block.settings.open %} open{% endif %} {{ block.shopify_attributes }}>
+                <summary>{{ 'products.description' | t }}{% render 'icon', name: 'plus', size: 16 %}</summary>
+                <div class="collapsible__body rte">{{ product.description }}</div>
+              </details>
+            {%- endif -%}
+          {%- when 'collapsible' -%}
+            {%- if section.settings.info_style == 'tabs' -%}{%- continue -%}{%- endif -%}
+            <details class="collapsible" {{ block.shopify_attributes }}>
+              <summary>{{ block.settings.heading }}{% render 'icon', name: 'plus', size: 16 %}</summary>
+              <div class="collapsible__body rte">{{ block.settings.content }}{{ block.settings.page.content }}</div>
+            </details>
+          {%- when 'text' -%}
+            <div class="rte text-sm" {{ block.shopify_attributes }}>{{ block.settings.text }}</div>
+          {%- when '@app' -%}
+            {%- render block -%}
+        {%- endcase -%}
+      {%- endfor -%}
+      {%- if section.settings.info_style == 'tabs' -%}
+        {{ 'component-tabs.css' | asset_url | stylesheet_tag }}
+        <script src="{{ 'tabs.js' | asset_url }}" defer></script>
+        <tab-group class="tabs">
+          <div class="tabs__list" role="tablist">
+            {%- for block in section.blocks -%}
+              {%- if block.type == 'description' and product.description != blank -%}
+                <button type="button" class="tabs__tab" role="tab" id="ptab-{{ block.id }}" aria-controls="ppanel-{{ block.id }}" aria-selected="false">{{ 'products.description' | t }}</button>
+              {%- elsif block.type == 'collapsible' -%}
+                <button type="button" class="tabs__tab" role="tab" id="ptab-{{ block.id }}" aria-controls="ppanel-{{ block.id }}" aria-selected="false">{{ block.settings.heading }}</button>
+              {%- endif -%}
+            {%- endfor -%}
+          </div>
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'description' and product.description != blank -%}
+              <div class="tabs__panel" role="tabpanel" id="ppanel-{{ block.id }}" aria-labelledby="ptab-{{ block.id }}" tabindex="0" {{ block.shopify_attributes }}><h3 class="tabs__panel-title">{{ 'products.description' | t }}</h3><div class="rte text-muted">{{ product.description }}</div></div>
+            {%- elsif block.type == 'collapsible' -%}
+              <div class="tabs__panel" role="tabpanel" id="ppanel-{{ block.id }}" aria-labelledby="ptab-{{ block.id }}" tabindex="0" {{ block.shopify_attributes }}><h3 class="tabs__panel-title">{{ block.settings.heading }}</h3><div class="rte text-muted">{{ block.settings.content }}{{ block.settings.page.content }}</div></div>
+            {%- endif -%}
+          {%- endfor -%}
+        </tab-group>
+      {%- endif -%}
+    </div>
+  </div>
+  </div>
+  {%- if settings.product_sticky_atc and product.available -%}
+    <sticky-atc data-watch="#product-form-{{ section.id }} [data-add-to-cart]" hidden>
+      <div class="sticky-atc__info">
+        <span class="sticky-atc__title">{{ product.title | escape }}</span>
+        <span class="text-sm text-muted">{{ current_variant.price | money }}</span>
+      </div>
+      <button type="submit" form="product-form-{{ section.id }}" class="btn btn--sm">{{ 'products.add_to_cart' | t }}</button>
+    </sticky-atc>
+  {%- endif -%}
+</section>
+
+{% schema %}
+{
+  "name": "t:sections.main_product.name",
+  "settings": [
+    {"type": "checkbox", "id": "show_breadcrumbs", "label": "t:sections.main_product.settings.show_breadcrumbs.label", "default": true},
+    {"type": "select", "id": "gallery_layout", "label": "t:sections.main_product.settings.gallery_layout.label", "options": [{"value": "stacked", "label": "t:sections.main_product.settings.gallery_layout.options__1.label"}, {"value": "grid", "label": "t:sections.main_product.settings.gallery_layout.options__2.label"}, {"value": "carousel", "label": "t:sections.main_product.settings.gallery_layout.options__3.label"}], "default": "grid"},
+    {"type": "select", "id": "info_style", "label": "t:sections.main_product.settings.info_style.label", "options": [{"value": "accordion", "label": "t:sections.main_product.settings.info_style.options__1.label"}, {"value": "tabs", "label": "t:sections.main_product.settings.info_style.options__2.label"}], "default": "accordion"}
+  ],
+  "blocks": [
+    {
+      "type": "title",
+      "name": "t:sections.main_product.blocks.title.name",
+      "limit": 1,
+      "settings": [
+        {"type": "checkbox", "id": "show_vendor", "label": "t:sections.main_product.blocks.title.settings.show_vendor.label", "default": false}
+      ]
+    },
+    {
+      "type": "price",
+      "name": "t:sections.main_product.blocks.price.name",
+      "limit": 1,
+      "settings": [
+        {"type": "checkbox", "id": "show_tax_note", "label": "t:sections.main_product.blocks.price.settings.show_tax_note.label", "default": false},
+        {"type": "checkbox", "id": "show_sku", "label": "t:sections.main_product.blocks.price.settings.show_sku.label", "default": false}
+      ]
+    },
+    {
+      "type": "rating",
+      "name": "t:sections.main_product.blocks.rating.name",
+      "limit": 1,
+      "settings": [
+        {"type": "paragraph", "content": "t:sections.main_product.blocks.rating.settings.paragraph__1.content"}
+      ]
+    },
+    {
+      "type": "inventory",
+      "name": "t:sections.main_product.blocks.inventory.name",
+      "limit": 1,
+      "settings": [
+        {"type": "checkbox", "id": "show_count", "label": "t:sections.main_product.blocks.inventory.settings.show_count.label", "default": true},
+        {"type": "checkbox", "id": "show_in_stock", "label": "t:sections.main_product.blocks.inventory.settings.show_in_stock.label", "default": true}
+      ]
+    },
+    {
+      "type": "pickup",
+      "name": "t:sections.main_product.blocks.pickup.name",
+      "limit": 1,
+      "settings": [
+        {"type": "paragraph", "content": "t:sections.main_product.blocks.pickup.settings.paragraph__1.content"}
+      ]
+    },
+    {
+      "type": "share",
+      "name": "t:sections.main_product.blocks.share.name",
+      "limit": 1,
+      "settings": []
+    },
+    {
+      "type": "buy_buttons",
+      "name": "t:sections.main_product.blocks.buy_buttons.name",
+      "limit": 1,
+      "settings": []
+    },
+    {
+      "type": "size_guide",
+      "name": "Size guide modal",
+      "limit": 1,
+      "settings": [
+        {"type": "page", "id": "guide_page", "label": "Custom Size Guide Page"}
+      ]
+    },
+    {
+      "type": "shipping_cutoff",
+      "name": "Dispatch countdown",
+      "limit": 1,
+      "settings": [
+        {"type": "range", "id": "cutoff_hour", "label": "Cutoff Hour (24h)", "min": 8, "max": 22, "step": 1, "default": 14}
+      ]
+    },
+    {
+      "type": "trust",
+      "name": "t:sections.main_product.blocks.trust.name",
+      "limit": 1,
+      "settings": [
+        {"type": "text", "id": "line_1", "label": "t:sections.main_product.blocks.trust.settings.line_1.label", "default": "Free shipping over $75"},
+        {"type": "text", "id": "line_2", "label": "t:sections.main_product.blocks.trust.settings.line_2.label", "default": "30-day returns"},
+        {"type": "text", "id": "line_3", "label": "t:sections.main_product.blocks.trust.settings.line_3.label", "default": "Secure checkout"}
+      ]
+    },
+    {
+      "type": "description",
+      "name": "t:sections.main_product.blocks.description.name",
+      "limit": 1,
+      "settings": [
+        {"type": "checkbox", "id": "open", "label": "t:sections.main_product.blocks.description.settings.open.label", "default": true}
+      ]
+    },
+    {
+      "type": "collapsible",
+      "name": "t:sections.main_product.blocks.collapsible.name",
+      "settings": [
+        {"type": "text", "id": "heading", "label": "t:sections.all.heading", "default": "Shipping & returns"},
+        {"type": "richtext", "id": "content", "label": "t:sections.main_product.blocks.collapsible.settings.content.label"},
+        {"type": "page", "id": "page", "label": "t:sections.main_product.blocks.collapsible.settings.page.label"}
+      ]
+    },
+    {
+      "type": "text",
+      "name": "t:sections.main_product.blocks.text.name",
+      "settings": [
+        {"type": "richtext", "id": "text", "label": "t:sections.all.text"}
+      ]
+    },
+    {"type": "@app"}
+  ]
+}
+{% endschema %}

@@ -1,0 +1,21 @@
+{{ 'section-extras.css' | asset_url | stylesheet_tag }}
+{{ 'component-button.css' | asset_url | stylesheet_tag }}
+<section class="section"><div class="container"><div class="auth">
+  <h1>{{ 'customer.activate.title' | t }}</h1>
+  <p class="text-muted">{{ 'customer.activate.text' | t }}</p>
+  {%- form 'activate_customer_password' -%}
+    {%- render 'form-errors', form: form -%}
+    {%- assign label = 'customer.password' | t -%}
+    {%- render 'field', id: 'act-password', name: 'customer[password]', label: label, type: 'password', autocomplete: 'new-password', required: true, minlength: 5, errors: form.errors, field: 'password' -%}
+    {%- assign label = 'customer.password_confirm' | t -%}
+    {%- render 'field', id: 'act-confirm', name: 'customer[password_confirmation]', label: label, type: 'password', autocomplete: 'new-password', required: true, minlength: 5, errors: form.errors, field: 'password_confirmation' -%}
+    <button type="submit" class="btn btn--full">{{ 'customer.activate.submit' | t }}</button>
+    <button type="submit" name="decline" class="btn btn--full btn--ghost">{{ 'customer.activate.decline' | t }}</button>
+  {%- endform -%}
+</div></div></section>
+{% schema %}
+{
+  "name": "t:sections.main_activate_account.name",
+  "settings": []
+}
+{% endschema %}

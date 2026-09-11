@@ -1,0 +1,19 @@
+/* Tabs: rendered stacked with headings until tabs.js upgrades them. */
+.tabs__list { display: flex; gap: var(--space-8); overflow-x: auto; scrollbar-width: none; border-bottom: var(--border-width) solid var(--color-border); margin-bottom: var(--space-8); }
+.tabs__list::-webkit-scrollbar { display: none; }
+.tabs__tab { position: relative; padding: var(--space-3) 0; font-size: var(--text-sm); letter-spacing: 0.03em; color: var(--color-muted); white-space: nowrap; transition: color var(--motion-fast); }
+.tabs__tab:hover { color: var(--color-ink); }
+.tabs__tab::after { content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; border-radius: 2px; background: var(--color-ink); transform: scaleX(0); transition: transform var(--motion-normal) var(--ease-out); }
+.tabs__tab[aria-selected="true"] { color: var(--color-ink); }
+.tabs__tab[aria-selected="true"]::after { transform: scaleX(1); }
+.tabs__list--center { justify-content: center; }
+/* Pills: a segmented control on a soft track */
+.tabs__list--pills { border: 0; gap: var(--space-1); padding: var(--space-1); background: var(--color-plate); border-radius: var(--radius-full); width: max-content; max-width: 100%; }
+.tabs__list--center.tabs__list--pills { margin-inline: auto; }
+.tabs__list--pills .tabs__tab { padding: var(--space-2) var(--space-5); border-radius: var(--radius-full); transition: background var(--motion-fast), color var(--motion-fast), box-shadow var(--motion-fast); }
+.tabs__list--pills .tabs__tab::after { display: none; }
+.tabs__list--pills .tabs__tab[aria-selected="true"] { background: var(--color-surface); color: var(--color-ink); box-shadow: var(--shadow-soft); }
+.tabs__panel[hidden] { display: none; }
+.tabs:not([data-ready]) .tabs__list { display: none; }
+.tabs:not([data-ready]) .tabs__panel-title { display: block; font-family: var(--font-heading); font-size: var(--text-lg); margin: var(--space-8) 0 var(--space-4); }
+.tabs[data-ready] .tabs__panel-title { display: none; }

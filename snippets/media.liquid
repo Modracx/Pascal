@@ -1,0 +1,20 @@
+{%- comment -%}
+  Responsive image. Always sets width/height (no CLS), uses native lazy loading unless
+  `priority` is true (above the fold: LCP candidates get eager + fetchpriority high).
+  Params: image, sizes, priority, class, widths, alt, placeholder_index (which demo still life to show when image is blank)
+{%- endcomment -%}
+{%- liquid
+  assign sizes = sizes | default: '(min-width: 48em) 50vw, 100vw'
+  assign widths = widths | default: '360, 540, 720, 900, 1080, 1296, 1512, 1728, 2048'
+  assign alt = alt | default: image.alt | escape
+  assign max_width = image.width | at_most: 2048
+-%}
+{%- if image != blank -%}
+  {%- if priority -%}
+    {{ image | image_url: width: max_width | image_tag: widths: widths, sizes: sizes, loading: 'eager', fetchpriority: 'high', class: class, alt: alt }}
+  {%- else -%}
+    {{ image | image_url: width: max_width | image_tag: widths: widths, sizes: sizes, loading: 'lazy', class: class, alt: alt }}
+  {%- endif -%}
+{%- else -%}
+  {% render 'placeholder', kind: 'product', index: placeholder_index, sizes: sizes, class: class, priority: priority %}
+{%- endif -%}

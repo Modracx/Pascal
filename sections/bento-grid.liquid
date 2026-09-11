@@ -1,0 +1,54 @@
+{{ 'section-premium.css' | asset_url | stylesheet_tag }}
+<section class="section" {{ section.shopify_attributes }}>
+  <div class="container">
+    {%- if section.settings.heading != blank -%}<div class="section__header"><h2>{{ section.settings.heading }}</h2></div>{%- endif -%}
+    <div class="bento">
+      {%- for block in section.blocks -%}
+        {%- assign b = block.settings -%}
+        {%- assign tag = 'div' -%}{%- if b.link != blank -%}{%- assign tag = 'a' -%}{%- endif -%}
+        <{{ tag }} class="bento__item bento__item--{{ b.size }}"{% if b.link != blank %} href="{{ b.link }}"{% endif %} {{ block.shopify_attributes }}>
+          {%- if b.image != blank -%}{%- render 'media', image: b.image, sizes: '(min-width: 48em) 50vw, 100vw', widths: '500, 800, 1200, 1600' -%}{%- else -%}{% render 'placeholder', kind: 'square', index: forloop.index, sizes: '(min-width: 48em) 50vw, 100vw' %}{%- endif -%}
+          {%- if b.title != blank or b.caption != blank -%}<div class="bento__caption"><strong>{{ b.title }}</strong><span>{{ b.caption }}</span></div>{%- endif -%}
+        </{{ tag }}>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "t:sections.bento_grid.name",
+  "settings": [
+    {"type": "text", "id": "heading", "label": "t:sections.all.heading"}
+  ],
+  "blocks": [
+    {
+      "type": "tile",
+      "name": "t:sections.bento_grid.blocks.tile.name",
+      "settings": [
+        {"type": "image_picker", "id": "image", "label": "t:sections.all.image"},
+        {"type": "select", "id": "size", "label": "t:sections.all.size", "options": [{"value": "square", "label": "t:sections.bento_grid.blocks.tile.settings.size.options__1.label"}, {"value": "wide", "label": "t:sections.bento_grid.blocks.tile.settings.size.options__2.label"}, {"value": "tall", "label": "t:sections.bento_grid.blocks.tile.settings.size.options__3.label"}, {"value": "large", "label": "t:sections.bento_grid.blocks.tile.settings.size.options__4.label"}], "default": "square"},
+        {"type": "text", "id": "title", "label": "t:sections.bento_grid.blocks.tile.settings.title.label"},
+        {"type": "text", "id": "caption", "label": "t:sections.bento_grid.blocks.tile.settings.caption.label"},
+        {"type": "url", "id": "link", "label": "t:sections.all.link"}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.bento_grid.presets.name",
+      "blocks": [
+        {
+          "type": "tile",
+          "settings": {"size": "large", "title": "The studio", "caption": "Lisbon"}
+        },
+        {
+          "type": "tile",
+          "settings": {"size": "wide"}
+        },
+        {"type": "tile"},
+        {"type": "tile"}
+      ]
+    }
+  ]
+}
+{% endschema %}

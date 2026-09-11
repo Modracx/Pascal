@@ -1,0 +1,45 @@
+{%- comment -%}
+  Quantity rules and volume pricing for the selected variant (B2B and wholesale). HTML only.
+  Params: product, variant. Rules render as a caption; price breaks as a hairline table per variant,
+  so the picker can show the right one without a refetch.
+{%- endcomment -%}
+{%- liquid
+  assign rule = variant.quantity_rule
+  assign has_rule = false
+  if rule.min > 1 or rule.max != nil or rule.increment > 1
+    assign has_rule = true
+  endif
+  assign has_breaks = false
+  for v in product.variants
+    if v.quantity_price_breaks.size > 0
+      assign has_breaks = true
+    endif
+  endfor
+-%}
+{%- if has_rule -%}
+  <p class="quantity-rules text-xs text-muted" data-quantity-rules>
+    {%- if rule.min > 1 %}<span>{{ 'products.quantity_rules.min' | t: quantity: rule.min }}</span>{% endif -%}
+    {%- if rule.max != nil %}<span>{{ 'products.quantity_rules.max' | t: quantity: rule.max }}</span>{% endif -%}
+    {%- if rule.increment > 1 %}<span>{{ 'products.quantity_rules.increment' | t: quantity: rule.increment }}</span>{% endif -%}
+  </p>
+{%- endif -%}
+{%- if has_breaks -%}
+  <details class="collapsible volume-pricing">
+    <summary>{{ 'products.quantity_rules.volume_pricing' | t }}{% render 'icon', name: 'plus', size: 16 %}</summary>
+    <div class="collapsible__body">
+      {%- for v in product.variants -%}
+        {%- if v.quantity_price_breaks.size > 0 -%}
+          <table class="volume-pricing__table" data-volume-pricing="{{ v.id }}"{% unless v.id == variant.id %} hidden{% endunless %}>
+            <thead><tr><th scope="col">{{ 'products.quantity_rules.quantity' | t }}</th><th scope="col">{{ 'products.quantity_rules.price_each' | t }}</th></tr></thead>
+            <tbody>
+              <tr><td>{{ v.quantity_rule.min | default: 1 }}+</td><td>{{ v.price | money }}</td></tr>
+              {%- for break in v.quantity_price_breaks -%}
+                <tr><td>{{ break.minimum_quantity }}+</td><td>{{ break.price | money }}</td></tr>
+              {%- endfor -%}
+            </tbody>
+          </table>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </details>
+{%- endif -%}

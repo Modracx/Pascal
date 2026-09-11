@@ -1,0 +1,35 @@
+{%- comment -%}
+  Gift card recipient form. Shopify reads these line item properties to email the gift card.
+  Params: form (the product form), section_id. HTML + CSS reveal; gift-card-recipient.js disables
+  the fields when unchecked so no empty properties are sent, and records the timezone offset.
+{%- endcomment -%}
+{%- liquid
+  assign id = 'recipient-' | append: section_id
+-%}
+<script src="{{ 'gift-card-recipient.js' | asset_url }}" defer></script>
+<gift-card-recipient class="recipient">
+  <label class="choice recipient__toggle">
+    <input type="checkbox" id="{{ id }}-toggle" name="properties[__shopify_send_as_a_gift]" value="on" data-recipient-toggle{% if form.errors %} checked{% endif %}>
+    <span>{{ 'products.recipient.send_as_gift' | t }}</span>
+  </label>
+  <div class="recipient__fields" data-recipient-fields>
+    {%- assign label = 'products.recipient.email' | t -%}
+    {%- assign field_id = id | append: '-email' -%}
+    {%- render 'field', id: field_id, name: 'properties[Recipient email]', label: label, type: 'email', value: form.email, autocomplete: 'email', attrs: 'data-recipient-field', errors: form.errors, field: 'email' -%}
+    <div class="field">
+      <label class="field__label" for="{{ id }}-name">{{ 'products.recipient.name' | t }}</label>
+      <input class="input" type="text" id="{{ id }}-name" name="properties[Recipient name]" value="{{ form.name }}" autocomplete="name" data-recipient-field>
+    </div>
+    <div class="field">
+      <label class="field__label" for="{{ id }}-message">{{ 'products.recipient.message' | t }}</label>
+      <textarea class="textarea" id="{{ id }}-message" name="properties[Message]" rows="3" maxlength="200" data-recipient-field>{{ form.message }}</textarea>
+      <p class="text-xs text-muted">{{ 'products.recipient.max_chars' | t: max: 200 }}</p>
+    </div>
+    <div class="field">
+      <label class="field__label" for="{{ id }}-send-on">{{ 'products.recipient.send_on' | t }}</label>
+      <input class="input" type="date" id="{{ id }}-send-on" name="properties[Send on]" value="{{ form.send_on }}" data-recipient-field data-recipient-date>
+    </div>
+    <input type="hidden" name="properties[__shopify_offset]" value="" data-recipient-field data-recipient-offset>
+  </div>
+  {%- render 'form-errors', form: form -%}
+</gift-card-recipient>

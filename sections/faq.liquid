@@ -1,0 +1,64 @@
+{{ 'section-extras.css' | asset_url | stylesheet_tag }}
+{{ 'component-product.css' | asset_url | stylesheet_tag }}
+<section class="section" {{ section.shopify_attributes }}>
+  <div class="container">
+    {%- if section.settings.heading != blank -%}<div class="section__header"><h2>{{ section.settings.heading }}</h2></div>{%- endif -%}
+    <div class="faq">
+      {%- for block in section.blocks -%}
+        <details class="collapsible"{% if forloop.first and section.settings.open_first %} open{% endif %} {{ block.shopify_attributes }}>
+          <summary>{{ block.settings.question }}{% render 'icon', name: 'plus', size: 16 %}</summary>
+          <div class="collapsible__body rte">{{ block.settings.answer }}</div>
+        </details>
+      {%- endfor -%}
+    </div>
+  </div>
+  {%- if section.settings.structured_data and section.blocks.size > 0 -%}
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {%- for block in section.blocks -%}
+          { "@type": "Question", "name": {{ block.settings.question | json }}, "acceptedAnswer": { "@type": "Answer", "text": {{ block.settings.answer | strip_html | json }} } }{% unless forloop.last %},{% endunless %}
+        {%- endfor -%}
+      ]
+    }
+    </script>
+  {%- endif -%}
+</section>
+{% schema %}
+{
+  "name": "t:sections.faq.name",
+  "settings": [
+    {"type": "text", "id": "heading", "label": "t:sections.all.heading", "default": "Questions, answered"},
+    {"type": "checkbox", "id": "open_first", "label": "t:sections.faq.settings.open_first.label", "default": true},
+    {"type": "checkbox", "id": "structured_data", "label": "t:sections.faq.settings.structured_data.label", "default": true}
+  ],
+  "blocks": [
+    {
+      "type": "question",
+      "name": "t:sections.faq.blocks.question.name",
+      "settings": [
+        {"type": "text", "id": "question", "label": "t:sections.faq.blocks.question.settings.question.label", "default": "How long does shipping take?"},
+        {"type": "richtext", "id": "answer", "label": "t:sections.faq.blocks.question.settings.answer.label", "default": "<p>Orders ship within one business day. Domestic delivery takes 2 to 5 days.</p>"}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.faq.presets.name",
+      "blocks": [
+        {"type": "question"},
+        {
+          "type": "question",
+          "settings": {"question": "Can I return something?", "answer": "<p>Yes. You have 30 days from delivery. Start a return from your account page.</p>"}
+        },
+        {
+          "type": "question",
+          "settings": {"question": "Do you ship internationally?", "answer": "<p>We ship to most countries. Duties are shown at checkout so there are no surprises.</p>"}
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

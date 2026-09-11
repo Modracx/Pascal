@@ -1,0 +1,21 @@
+{% layout none %}
+<!doctype html>
+<html lang="{{ request.locale.iso_code }}">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  {%- assign gift_value = gift_card.initial_value | money -%}
+  <title>{{ 'gift_cards.issued.title' | t: value: gift_value, shop: shop.name }}</title>
+  {{ 'tokens.css' | asset_url | stylesheet_tag }}{% render 'css-vars' %}{{ 'base.css' | asset_url | stylesheet_tag }}{{ 'component-button.css' | asset_url | stylesheet_tag }}
+  {{ content_for_header }}
+</head>
+<body>
+  <main class="container container--narrow section stack" style="text-align:center">
+    <h1>{{ shop.name }}</h1>
+    <p class="text-muted">{{ 'gift_cards.issued.subtext' | t }}</p>
+    <p style="font-size: var(--text-3xl); font-weight: 600">{{ gift_card.balance | money }}</p>
+    {%- if gift_card.enabled == false or gift_card.expired -%}<p class="badge badge--soldout">{{ 'gift_cards.issued.expired' | t }}</p>{%- endif -%}
+    <p><code style="font-size: var(--text-xl); letter-spacing: 0.1em">{{ gift_card.code | format_code }}</code></p>
+    <a href="{{ shop.url }}" class="btn">{{ 'gift_cards.issued.shop_link' | t }}</a>
+  </main>
+</body>
+</html>

@@ -1,0 +1,87 @@
+{%- comment -%}
+  Interactive Size Guide Modal with cm/inches unit switch.
+  Params: guide_page (optional page object or content)
+{%- endcomment -%}
+<script src="{{ 'size-guide.js' | asset_url }}" defer></script>
+<size-guide-modal class="size-guide-wrap" data-unit="cm">
+  <button type="button" class="btn-link text-sm size-guide-trigger" data-size-guide-trigger style="display: inline-flex; align-items: center; gap: var(--space-2); margin-block: var(--space-2);">
+    {% render 'icon', name: 'ruler', size: 16 %}
+    <span>{{ 'products.size_guide.title' | t | default: 'Size & Fit Guide' }}</span>
+  </button>
+
+  <dialog class="quick-add size-guide-dialog" aria-label="{{ 'products.size_guide.title' | t | default: 'Size & Fit Guide' }}">
+    <div class="quick-add__inner stack" style="gap: var(--space-6);">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h3 style="margin: 0;">{{ 'products.size_guide.title' | t | default: 'Size & Fit Guide' }}</h3>
+        <button type="button" class="ctrl" data-size-guide-close aria-label="{{ 'accessibility.close' | t }}">{% render 'icon', name: 'close', size: 20 %}</button>
+      </div>
+
+      <div class="size-guide-unit-switcher" style="display: flex; gap: var(--space-2); align-items: center; font-size: var(--text-sm);">
+        <span>{{ 'products.size_guide.unit' | t | default: 'Units:' }}</span>
+        <label class="btn btn--small btn--ghost size-unit-opt"><input type="radio" name="size-guide-unit" value="cm" checked class="visually-hidden"> <span>CM</span></label>
+        <label class="btn btn--small btn--ghost size-unit-opt"><input type="radio" name="size-guide-unit" value="in" class="visually-hidden"> <span>INCHES</span></label>
+      </div>
+
+      {%- if guide_page != blank -%}
+        <div class="rte">{{ guide_page.content }}</div>
+      {%- else -%}
+        <div class="size-guide-table-wrap" style="overflow-x: auto;">
+          <table class="table" style="width: 100%; border-collapse: collapse; text-align: left; font-size: var(--text-sm);">
+            <thead>
+              <tr style="border-bottom: 2px solid var(--color-ink);">
+                <th style="padding: var(--space-2) var(--space-3);">Size</th>
+                <th style="padding: var(--space-2) var(--space-3);">Chest (<span class="unit-label">CM</span>)</th>
+                <th style="padding: var(--space-2) var(--space-3);">Waist (<span class="unit-label">CM</span>)</th>
+                <th style="padding: var(--space-2) var(--space-3);">Hips (<span class="unit-label">CM</span>)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom: 1px solid var(--color-border);">
+                <td style="padding: var(--space-2) var(--space-3); font-weight: 500;">XS</td>
+                <td style="padding: var(--space-2) var(--space-3);"><span class="val-cm">82-86</span><span class="val-in">32-34</span></td>
+                <td style="padding: var(--space-2) var(--space-3);"><span class="val-cm">64-68</span><span class="val-in">25-27</span></td>
+                <td style="padding: var(--space-2) var(--space-3);"><span class="val-cm">88-92</span><span class="val-in">34-36</span></td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--color-border);">
+                <td style="padding: var(--space-2) var(--space-3); font-weight: 500;">S</td>
+                <td style="padding: var(--space-2) var(--space-3);"><span class="val-cm">86-92</span><span class="val-in">34-36</span></td>
+                <td style="padding: var(--space-2) var(--space-3);"><span class="val-cm">68-74</span><span class="val-in">27-29</span></td>
+                <td style="padding: var(--space-2) var(--space-3);"><span class="val-cm">92-98</span><span class="val-in">36-38</span></td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--color-border);">
+                <td style="padding: var(--space-2) var(--space-3); font-weight: 500;">M</td>
+                <td style="padding: var(--space-2) var(--space-3);"><span class="val-cm">92-98</span><span class="val-in">36-38</span></td>
+                <td style="padding: var(--space-2) var(--space-3);"><span class="val-cm">74-80</span><span class="val-in">29-31</span></td>
+                <td style="padding: var(--space-2) var(--space-3);"><span class="val-cm">98-104</span><span class="val-in">38-41</span></td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--color-border);">
+                <td style="padding: var(--space-2) var(--space-3); font-weight: 500;">L</td>
+                <td style="padding: var(--space-2) var(--space-3);"><span class="val-cm">98-106</span><span class="val-in">38-42</span></td>
+                <td style="padding: var(--space-2) var(--space-3);"><span class="val-cm">80-88</span><span class="val-in">31-35</span></td>
+                <td style="padding: var(--space-2) var(--space-3);"><span class="val-cm">104-112</span><span class="val-in">41-44</span></td>
+              </tr>
+              <tr>
+                <td style="padding: var(--space-2) var(--space-3); font-weight: 500;">XL</td>
+                <td style="padding: var(--space-2) var(--space-3);"><span class="val-cm">106-114</span><span class="val-in">42-45</span></td>
+                <td style="padding: var(--space-2) var(--space-3);"><span class="val-cm">88-96</span><span class="val-in">35-38</span></td>
+                <td style="padding: var(--space-2) var(--space-3);"><span class="val-cm">112-120</span><span class="val-in">44-47</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      {%- endif -%}
+    </div>
+  </dialog>
+</size-guide-modal>
+
+<style>
+  size-guide-modal[data-unit="cm"] .val-in { display: none; }
+  size-guide-modal[data-unit="cm"] .unit-label::after { content: "CM"; }
+  size-guide-modal[data-unit="in"] .val-cm { display: none; }
+  size-guide-modal[data-unit="in"] .unit-label::after { content: "IN"; }
+  size-guide-modal[data-unit="cm"] .size-unit-opt:has(input[value="cm"]),
+  size-guide-modal[data-unit="in"] .size-unit-opt:has(input[value="in"]) {
+    background: var(--color-ink);
+    color: var(--color-bg);
+  }
+</style>

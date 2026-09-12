@@ -101,15 +101,15 @@
     "quick_view": "Schnellansicht",
     "swatch_more": "+{{ count }}",
     "pickup": {
-      "available": "Abholung möglich bei {{ location }}",
-      "unavailable": "Abholung derzeit nicht möglich bei {{ location }}",
-      "check_other": "Verfügbarkeit in {{ count }} Filialen prüfen",
+      "available": "Abholung verfügbar in {{ location }}",
+      "unavailable": "Abholung derzeit nicht verfügbar in {{ location }}",
+      "check_other": "Verfügbarkeit in {{ count }} Geschäften prüfen",
       "in_stock": "Zur Abholung verfügbar",
       "out_of_stock": "Nicht zur Abholung verfügbar"
     },
     "placeholder_title": "Vorgestelltes Produkt",
     "placeholder_text": "Wählen Sie ein Produkt in den Abschnittseinstellungen.",
-    "rating_label": "Bewertet mit {{ rating }} von 5 aus {{ count }} Bewertungen",
+    "rating_label": "Mit {{ rating }} von 5 Sternen bewertet bei {{ count }} Bewertungen",
     "rating_stars": "{{ count }} von 5 Sternen",
     "inventory": {
       "in_stock": "Auf Lager",
@@ -123,19 +123,40 @@
       "name": "Name des Empfängers (optional)",
       "message": "Nachricht (optional)",
       "send_on": "Senden am (optional)",
-      "max_chars": "Max. {{ max }} Zeichen"
+      "max_chars": "Maximal {{ max }} Zeichen"
     },
     "purchase_options": {
       "label": "Kaufoptionen",
       "one_time": "Einmaliger Kauf"
     },
+    "preorder": "Vorbestellen",
+    "preorder_notice": "Vorbestellungsartikel. Wird versendet, sobald wieder auf Lager.",
+    "wishlist": {
+      "title": "Wunschliste",
+      "add": "Speichern",
+      "saved": "Gespeichert",
+      "toggle": "Wunschliste umschalten",
+      "empty": "Ihre Wunschliste ist derzeit leer."
+    },
+    "size_guide": {
+      "title": "Größenberater & Maßtabelle",
+      "unit": "Einheit:"
+    },
     "quantity_rules": {
       "min": "Mindestens {{ quantity }}",
-      "max": "Höchstens {{ quantity }}",
-      "increment": "In Schritten von {{ quantity }}",
-      "volume_pricing": "Mengenrabatt",
+      "max": "Maximal {{ quantity }}",
+      "increment": "Schritte von {{ quantity }}",
+      "volume_pricing": "Staffelpreise",
       "quantity": "Menge",
-      "price_each": "Preis pro Stück"
+      "price_each": "Stückpreis"
+    }
+  },
+  "order": {
+    "tracking": {
+      "title": "Bestellung verfolgen",
+      "subtitle": "Geben Sie Ihre Bestellnummer und E-Mail-Adresse ein, um den aktuellen Status Ihrer Lieferung zu prüfen.",
+      "order_number": "Bestellnummer (z. B. #1001)",
+      "submit": "Bestellstatus abfragen"
     }
   },
   "collections": {
@@ -157,13 +178,19 @@
     "update": "Warenkorb aktualisieren",
     "remove": "Entfernen",
     "checkout": "Zur Kasse",
-    "note": "Bestellhinweis",
+    "note": "Bestellanmerkung",
     "quantity": "Menge",
     "free_shipping_remaining": "Noch {{ amount }} bis zum kostenlosen Versand",
-    "free_shipping_unlocked": "Kostenloser Versand freigeschaltet",
+    "free_shipping_unlocked": "Sie haben sich für den kostenlosen Versand qualifiziert",
     "view_cart": "Warenkorb anzeigen",
-    "upsell_heading": "Passt gut zu Ihrer Bestellung",
-    "add": "Hinzufügen"
+    "upsell_heading": "Passt perfekt zu Ihrer Bestellung",
+    "add": "Hinzufügen",
+    "share_cart": "Warenkorb teilen",
+    "share_message": "Schau dir meinen Warenkorb an:",
+    "share_copied": "Link kopiert!",
+    "gift_wrap_title": "Geschenkoptionen oder Grußkarte hinzufügen",
+    "gift_message_label": "Geschenknachricht",
+    "gift_message_placeholder": "Persönliche Nachricht schreiben..."
   },
   "blog": {
     "by": "Von {{ author }}",
@@ -173,9 +200,9 @@
       "title": "{{ count }} Kommentare",
       "leave": "Kommentar hinterlassen",
       "comment": "Kommentar",
-      "submit": "Kommentar veröffentlichen",
+      "submit": "Kommentar absenden",
       "posted": "Ihr Kommentar wurde veröffentlicht.",
-      "moderated": "Ihr Kommentar wurde gesendet. Er erscheint nach der Freigabe."
+      "moderated": "Ihr Kommentar wurde übermittelt und wird nach Prüfung freigeschaltet."
     }
   },
   "gift_cards": {
@@ -191,7 +218,7 @@
     "email": "E-Mail",
     "message": "Nachricht",
     "send": "Nachricht senden",
-    "success": "Danke. Wir antworten innerhalb eines Werktags."
+    "success": "Vielen Dank. Wir antworten innerhalb eines Werktags."
   },
   "customer": {
     "email": "E-Mail",
@@ -208,29 +235,29 @@
       "guest": "Als Gast fortfahren"
     },
     "recover": {
-      "text": "Geben Sie Ihre E-Mail ein und wir senden Ihnen einen Link zum Zurücksetzen Ihres Passworts.",
-      "submit": "Link senden",
-      "success": "Falls diese E-Mail existiert, ist ein Link zum Zurücksetzen unterwegs."
+      "text": "Geben Sie Ihre E-Mail-Adresse ein und wir senden Ihnen einen Link zum Zurücksetzen Ihres Passworts.",
+      "submit": "Link zum Zurücksetzen senden",
+      "success": "Falls diese E-Mail existiert, haben wir Ihnen einen Link zum Zurücksetzen gesendet."
     },
     "register": {
       "title": "Konto erstellen",
       "submit": "Konto erstellen",
-      "have_account": "Sie haben bereits ein Konto?"
+      "have_account": "Haben Sie bereits ein Konto?"
     },
     "account": {
       "title": "Konto",
-      "welcome": "Hallo {{ name }}",
+      "welcome": "Hallo, {{ name }}",
       "orders": "Bestellungen",
       "addresses": "Adressen",
       "logout": "Abmelden",
-      "details": "Kontodaten",
+      "details": "Kontodetails",
       "view_addresses": "Adressen anzeigen ({{ count }})"
     },
     "orders": {
       "order": "Bestellung",
       "date": "Datum",
-      "payment": "Zahlung",
-      "fulfillment": "Versand",
+      "payment": "Zahlungsstatus",
+      "fulfillment": "Versandstatus",
       "total": "Gesamt",
       "none": "Sie haben noch keine Bestellungen aufgegeben."
     },
@@ -255,7 +282,7 @@
     "address": {
       "company": "Firma",
       "address1": "Adresse",
-      "address2": "Wohnung, Etage usw.",
+      "address2": "Wohnung, Zimmer usw.",
       "city": "Stadt",
       "zip": "Postleitzahl",
       "country": "Land/Region",
@@ -267,7 +294,7 @@
       "add": "Neue Adresse hinzufügen",
       "edit": "Bearbeiten",
       "delete": "Löschen",
-      "delete_confirm": "Diese Adresse löschen?"
+      "delete_confirm": "Möchten Sie diese Adresse wirklich löschen?"
     },
     "activate": {
       "title": "Konto aktivieren",

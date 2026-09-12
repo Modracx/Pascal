@@ -1,14 +1,14 @@
 {
   "accessibility": {
-    "skip_to_content": "Aller au contenu",
+    "skip_to_content": "Passer au contenu",
     "open_menu": "Ouvrir le menu",
     "close_menu": "Fermer le menu",
     "close": "Fermer"
   },
   "general": {
-    "tagged": "Étiqueté « {{ tags }} »",
+    "tagged": "Balisé avec « {{ tags }} »",
     "search": {
-      "label": "Rechercher",
+      "label": "Recherche",
       "placeholder": "Rechercher des produits",
       "submit": "Rechercher",
       "results_count": "{{ count }} résultats pour « {{ terms }} »",
@@ -31,12 +31,12 @@
     "newsletter": {
       "label": "E-mail",
       "placeholder": "Adresse e-mail",
-      "submit": "S'abonner",
+      "submit": "S'inscrire",
       "success": "Merci pour votre inscription."
     },
     "not_found": {
-      "title": "Page introuvable",
-      "text": "La page que vous cherchez n'existe pas.",
+      "title": "Page non trouvée",
+      "text": "La page que vous recherchez n'existe pas.",
       "cta": "Continuer vos achats"
     },
     "continue_shopping": "Continuer vos achats",
@@ -66,7 +66,7 @@
       "required": "Ce champ est obligatoire",
       "invalid_email": "Saisissez une adresse e-mail valide",
       "password_short": "Utilisez au moins {{ count }} caractères",
-      "check_fields": "Veuillez vérifier les champs signalés."
+      "check_fields": "Veuillez vérifier les champs surlignés."
     }
   },
   "products": {
@@ -76,7 +76,7 @@
       "from": "À partir de"
     },
     "badge": {
-      "sale": "Promo",
+      "sale": "Solde",
       "sold_out": "Épuisé",
       "percent_off": "-{{ percent }} %"
     },
@@ -84,17 +84,17 @@
     "choose_options": "Choisir les options",
     "add_to_cart": "Ajouter au panier",
     "sold_out": "Épuisé",
-    "unavailable": "Indisponible",
+    "unavailable": "Non disponible",
     "added": "Ajouté au panier",
     "quantity": "Quantité",
-    "quantity_decrease": "Réduire la quantité",
+    "quantity_decrease": "Diminuer la quantité",
     "quantity_increase": "Augmenter la quantité",
     "description": "Description",
     "vendor": "Marque",
-    "sku": "Référence",
+    "sku": "SKU",
     "gallery_label": "Images du produit",
     "thumbnail": "Charger l'image {{ index }}",
-    "recommendations": "Vous aimerez aussi",
+    "recommendations": "Vous aimerez peut-être aussi",
     "complementary": "S'associe bien avec",
     "view_details": "Voir tous les détails",
     "quick_add_error": "Impossible de charger ce produit ici.",
@@ -104,38 +104,59 @@
       "available": "Retrait disponible à {{ location }}",
       "unavailable": "Retrait actuellement indisponible à {{ location }}",
       "check_other": "Vérifier la disponibilité dans {{ count }} boutiques",
-      "in_stock": "Disponible en retrait",
-      "out_of_stock": "Non disponible en retrait"
+      "in_stock": "Disponible pour retrait",
+      "out_of_stock": "Non disponible pour retrait"
     },
-    "placeholder_title": "Produit en vedette",
-    "placeholder_text": "Choisissez un produit dans les réglages de la section.",
+    "placeholder_title": "Produit vedette",
+    "placeholder_text": "Choisissez un produit dans les paramètres de section.",
     "rating_label": "Noté {{ rating }} sur 5 d'après {{ count }} avis",
-    "rating_stars": "{{ count }} étoiles sur 5",
+    "rating_stars": "{{ count }} sur 5 étoiles",
     "inventory": {
       "in_stock": "En stock",
       "low": "Stock faible",
-      "low_count": "Plus que {{ count }}",
-      "out": "Rupture de stock"
+      "low_count": "Plus que {{ count }} en stock",
+      "out": "Épuisé"
     },
     "recipient": {
-      "send_as_gift": "Envoyer en cadeau",
+      "send_as_gift": "Envoyer comme cadeau",
       "email": "E-mail du destinataire",
       "name": "Nom du destinataire (facultatif)",
       "message": "Message (facultatif)",
       "send_on": "Envoyer le (facultatif)",
-      "max_chars": "{{ max }} caractères max."
+      "max_chars": "{{ max }} caractères maximum"
     },
     "purchase_options": {
       "label": "Options d'achat",
       "one_time": "Achat unique"
     },
+    "preorder": "Précommander",
+    "preorder_notice": "Article en précommande. Expédié dès réception du stock.",
+    "wishlist": {
+      "title": "Liste d'envies",
+      "add": "Enregistrer",
+      "saved": "Enregistré",
+      "toggle": "Basculer la liste d'envies",
+      "empty": "Votre liste d'envies est actuellement vide."
+    },
+    "size_guide": {
+      "title": "Guide des tailles et mesures",
+      "unit": "Unités :"
+    },
     "quantity_rules": {
-      "min": "Minimum {{ quantity }}",
-      "max": "Maximum {{ quantity }}",
-      "increment": "Par {{ quantity }}",
-      "volume_pricing": "Tarifs dégressifs",
+      "min": "Minimum de {{ quantity }}",
+      "max": "Maximum de {{ quantity }}",
+      "increment": "Incréments de {{ quantity }}",
+      "volume_pricing": "Tarification dégressive",
       "quantity": "Quantité",
       "price_each": "Prix unitaire"
+    }
+  },
+  "order": {
+    "tracking": {
+      "title": "Suivre votre commande",
+      "subtitle": "Entrez votre numéro de commande et votre e-mail pour suivre la livraison en temps réel.",
+      "order_number": "Numéro de commande (ex. #1001)",
+      "submit": "Vérifier le statut"
     }
   },
   "collections": {
@@ -147,23 +168,29 @@
     "clear_all": "Tout effacer",
     "product_count": "{{ count }} produits",
     "empty": "Aucun produit ne correspond à vos filtres.",
-    "view_all": "Voir les {{ count }}"
+    "view_all": "Tout afficher ({{ count }})"
   },
   "cart": {
     "title": "Votre panier",
     "empty": "Votre panier est vide.",
     "subtotal": "Sous-total",
-    "taxes_note": "Taxes et frais de port calculés au paiement.",
+    "taxes_note": "Taxes et frais d'expédition calculés lors du paiement.",
     "update": "Mettre à jour le panier",
-    "remove": "Retirer",
+    "remove": "Supprimer",
     "checkout": "Payer",
     "note": "Note de commande",
     "quantity": "Quantité",
-    "free_shipping_remaining": "Plus que {{ amount }} pour la livraison offerte",
-    "free_shipping_unlocked": "Livraison offerte débloquée",
-    "view_cart": "Voir le panier",
-    "upsell_heading": "S'accorde bien avec votre commande",
-    "add": "Ajouter"
+    "free_shipping_remaining": "Plus que {{ amount }} pour bénéficier de la livraison gratuite",
+    "free_shipping_unlocked": "Vous bénéficiez de la livraison gratuite",
+    "view_cart": "Afficher le panier",
+    "upsell_heading": "Complétez votre commande",
+    "add": "Ajouter",
+    "share_cart": "Partager le panier",
+    "share_message": "Découvrez ma sélection dans le panier :",
+    "share_copied": "Lien copié !",
+    "gift_wrap_title": "Ajouter un emballage cadeau ou un message",
+    "gift_message_label": "Message personnalisé",
+    "gift_message_placeholder": "Écrivez votre message..."
   },
   "blog": {
     "by": "Par {{ author }}",
@@ -175,13 +202,13 @@
       "comment": "Commentaire",
       "submit": "Publier le commentaire",
       "posted": "Votre commentaire a été publié.",
-      "moderated": "Votre commentaire a été envoyé. Il apparaîtra après validation."
+      "moderated": "Votre commentaire a été envoyé et apparaîtra après modération."
     }
   },
   "gift_cards": {
     "issued": {
-      "title": "Voici votre carte cadeau de {{ value }} pour {{ shop }} !",
-      "subtext": "Votre carte cadeau",
+      "title": "Voici votre carte-cadeau de {{ value }} pour {{ shop }} !",
+      "subtext": "Votre carte-cadeau",
       "expired": "Expirée",
       "shop_link": "Continuer vos achats"
     }
@@ -191,7 +218,7 @@
     "email": "E-mail",
     "message": "Message",
     "send": "Envoyer le message",
-    "success": "Merci. Nous vous répondrons sous un jour ouvré."
+    "success": "Merci. Nous vous répondrons sous un jour ouvrable."
   },
   "customer": {
     "email": "E-mail",
@@ -208,29 +235,29 @@
       "guest": "Continuer en tant qu'invité"
     },
     "recover": {
-      "text": "Saisissez votre e-mail et nous vous enverrons un lien pour réinitialiser votre mot de passe.",
-      "submit": "Envoyer le lien",
-      "success": "Si cet e-mail existe, un lien de réinitialisation est en route."
+      "text": "Entrez votre e-mail et nous vous enverrons un lien pour réinitialiser votre mot de passe.",
+      "submit": "Envoyer le lien de réinitialisation",
+      "success": "Si cet e-mail existe, un lien de réinitialisation vous a été envoyé."
     },
     "register": {
       "title": "Créer un compte",
-      "submit": "Créer le compte",
+      "submit": "Créer un compte",
       "have_account": "Vous avez déjà un compte ?"
     },
     "account": {
       "title": "Compte",
-      "welcome": "Bonjour {{ name }}",
+      "welcome": "Bonjour, {{ name }}",
       "orders": "Commandes",
       "addresses": "Adresses",
       "logout": "Se déconnecter",
-      "details": "Informations du compte",
+      "details": "Détails du compte",
       "view_addresses": "Voir les adresses ({{ count }})"
     },
     "orders": {
       "order": "Commande",
       "date": "Date",
       "payment": "Paiement",
-      "fulfillment": "Expédition",
+      "fulfillment": "Statut de traitement",
       "total": "Total",
       "none": "Vous n'avez pas encore passé de commande."
     },
@@ -240,38 +267,38 @@
       "date": "Passée le {{ date }}",
       "cancelled": "Annulée le {{ date }}",
       "product": "Produit",
-      "sku": "Référence",
+      "sku": "SKU",
       "price": "Prix",
       "quantity": "Quantité",
       "total": "Total",
       "subtotal": "Sous-total",
-      "shipping": "Livraison",
+      "shipping": "Expédition",
       "tax": "Taxes",
       "billing": "Adresse de facturation",
-      "shipping_address": "Adresse de livraison",
-      "fulfilled": "Expédiée le {{ date }}",
-      "track": "Suivre le colis"
+      "shipping_address": "Adresse d'expédition",
+      "fulfilled": "Traitée le {{ date }}",
+      "track": "Suivre l'expédition"
     },
     "address": {
-      "company": "Société",
+      "company": "Entreprise",
       "address1": "Adresse",
-      "address2": "Appartement, étage, etc.",
+      "address2": "Appartement, suite, etc.",
       "city": "Ville",
       "zip": "Code postal",
       "country": "Pays/région",
-      "province": "Province",
+      "province": "Région/Province",
       "phone": "Téléphone",
       "default": "Définir comme adresse par défaut",
       "default_label": "Par défaut",
       "save": "Enregistrer l'adresse",
-      "add": "Ajouter une adresse",
+      "add": "Ajouter une nouvelle adresse",
       "edit": "Modifier",
       "delete": "Supprimer",
-      "delete_confirm": "Supprimer cette adresse ?"
+      "delete_confirm": "Voulez-vous vraiment supprimer cette adresse ?"
     },
     "activate": {
       "title": "Activer votre compte",
-      "text": "Choisissez un mot de passe pour terminer la création de votre compte.",
+      "text": "Choisissez un mot de passe pour finaliser la configuration de votre compte.",
       "submit": "Activer le compte",
       "decline": "Refuser l'invitation"
     },
